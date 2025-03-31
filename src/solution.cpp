@@ -1,14 +1,35 @@
-// Copyright <year> <You>
-#include <iostream>
+#include <SFML/Graphics.hpp>
 
-/**
- * @brief Start program execution.
- *
- * @return Status code to the operating system, 0 means success.
- */
-int main() {
-  // TODO(you): Analyze the problem and be sure you understand each piece of
-  // input and output. Solve the problem by creating an algorithm, and test it.
-  // Copy the algorithm within source code comments. Finally implement the
-  // algorithm's instructions in the C applying good programming practices.
+int main()
+{
+    // Crear la ventana
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Ventana con SFML");
+
+    // Crear un círculo
+    sf::CircleShape circle(100.f); // Radio de 100 píxeles
+    circle.setFillColor(sf::Color::Red);
+    circle.setPosition(300.f, 200.f); // Posición en la ventana
+
+    // Bucle principal
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // Cerrar la ventana si se presiona el botón de cerrar
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        // Limpiar la ventana con color negro
+        window.clear(sf::Color::Black);
+
+        // Dibujar el círculo
+        window.draw(circle);
+
+        // Mostrar lo que se ha dibujado
+        window.display();
+    }
+
+    return 0;
 }
