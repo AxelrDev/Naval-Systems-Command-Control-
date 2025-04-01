@@ -1,34 +1,67 @@
-#include "MenuUI.hpp"
-#include <SFML/Graphics.hpp>
+#include "GameMapUI.hpp"
+#include <iostream>
+#include <chrono>
+#include <unistd.h>
+#include <thread>
 
-RenderWindow window(VideoMode(910, 512), "Naval System", Style::Titlebar | Style::Close);
-
-int main(){
-    Menu menu;
-    bool isPlaying = false;
-    bool backToMenu = false;
-    while (window.isOpen()) {
-        Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == Event::Closed) {
-                window.close();
-            }
-            menu.handleEvent(window, event, isPlaying, backToMenu);
-        }
-
-        window.clear();
-        if (isPlaying) {
-            // Restablecer ventana escalable
-            window.create(sf::VideoMode(910, 512), "Battle");
-            window.setFramerateLimit(60);
-        }
-        else {
-            menu.draw(window);
-        }
-        window.display();
+GameMap::GameMap(){
+    // Load background
+    if (!backgroundTexture.loadFromFile("assets/img/background.png")) {
+        std::cerr << "Error al cargar la textura del fondo." << std::endl;
     }
+    backgroundSprite.setTexture(backgroundTexture);
+    // Center background
+    //backgroundSprite.setPosition(Vector2f(35, 0));
 
-
-
-    return EXIT_SUCCESS;
 }
+
+
+
+void GameMap::run(RenderWindow& window) {
+    bool endRound = false;
+    
+    while (window.isOpen()) {
+        
+        endRound = false;
+
+        while (endRound == false) {
+            Event event;
+            while (window.pollEvent(event)) {
+                this->handleEvent(window, event);
+            }
+
+            
+
+            // Sprites draw
+            window.clear();
+            draw(window);
+            window.display();
+
+        // new game wait        
+        
+        }
+    }
+}
+
+void GameMap::blackScreen(RenderWindow& window){
+        window.clear(sf::Color::Black);
+        window.display();
+        sf::sleep(sf::seconds(3));
+}
+
+
+void GameMap::handleEvent(RenderWindow& window, Event& event) {
+    if (event.type == Event::Closed) {
+        window.close();
+    }
+    if (event.type == Event::KeyPressed) {
+        blackScreen(window);
+    }
+}
+
+
+void GameMap::draw(RenderWindow& window) {
+    // Draw background
+    window.draw(backgroundSprite);
+}
+

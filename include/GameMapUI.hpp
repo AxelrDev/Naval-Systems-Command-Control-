@@ -14,7 +14,8 @@ public:
     // Game events
     void run(RenderWindow& window);
     void handleEvent(RenderWindow& window, Event& event);
-
+    void draw(RenderWindow& window);
+    void blackScreen(RenderWindow& window);
 private:
 
     // background
