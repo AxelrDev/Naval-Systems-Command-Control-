@@ -6,8 +6,8 @@
 Game::Game(int rows, int cols, int numShips) : rows(rows), cols(cols), numShips(numShips) {
     player = new Player(rows, cols);
     computer = new Player(rows, cols);
-    player->placeShips(numShips);
-    computer->placeShips(numShips);
+    player->placeShips(numShips,0);
+    computer->placeShips(numShips,0);
 }
 
 Game::~Game() {
