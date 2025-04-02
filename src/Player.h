@@ -12,7 +12,7 @@ public:
     ~Player();
 
     // Coloca los barcos en el tablero propio.
-    void placeShips(int numShips);
+    void placeShips(int numShips, int sizeShip);
 
     // Procesa un disparo recibido en el tablero propio (por parte del oponente).
     bool receiveShot(int row, int col);

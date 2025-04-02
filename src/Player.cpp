@@ -36,11 +36,21 @@ void Player::initializeBoards() {
 
 // Coloca numShips barcos de tamaño variable (entre 1 y 5 celdas) en el tablero propio.
 // Se verifica que las celdas estén libres y que el barco no se salga del tablero.
-void Player::placeShips(int numShips) {
+void Player::placeShips(int numShips, int sizeShip) {
     int placed = 0;
     while (placed < numShips) {
-        // Tamaño aleatorio entre 1 y 5
-        int length = 1 + std::rand() % 5;
+        int length;
+        if(numShips == 1){
+            if(sizeShip){
+                length = sizeShip;
+            }else{
+                // Tamaño aleatorio entre 1 y 5
+                length = 1 + std::rand() % 5;
+            }
+        }else{
+            // Tamaño aleatorio entre 1 y 5
+            length = 1 + std::rand() % 5;
+        }
         // Orientación aleatoria: true para horizontal, false para vertical
         bool horizontal = (std::rand() % 2) == 0;
         int r, c;
@@ -144,9 +154,13 @@ void Player::displayOwnBoard() const {
 // Muestra el tablero de disparos (tracking board) con los tiros realizados al oponente.
 void Player::displayTrackingBoard() const {
     std::cout << "Tablero de disparos:" << std::endl;
+    std::cout << "  0 1 2 3 4 5 6 7 8 9"<< std::endl;
     for (int i = 0; i < rows; i++){
-        for (int j = 0; j < cols; j++){
-            std::cout << trackingBoard[i][j] << " ";
+        for (int j = 0; j < cols+1; j++){
+            if(j==0){
+                std::cout << i <<" " ;
+            }
+            std::cout <<trackingBoard[i][j] << " ";
         }
         std::cout << std::endl;
     }
