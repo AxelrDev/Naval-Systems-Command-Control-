@@ -18,8 +18,8 @@ public:
     virtual ~Ship() = default;
     
     virtual int search(int target) = 0;
-    virtual int insert (int element) = 0;
-    virtual int remove(int element) = 0;
+    virtual void insert (int element) = 0;
+    virtual void remove(int element) = 0;
 
     virtual void upgrade();
 
