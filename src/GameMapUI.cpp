@@ -28,7 +28,7 @@ GameMap::GameMap(){
 void GameMap::printText(RenderWindow& window, const std::string& text, int x,
       int y) {
   infoText.setString(text);
-  infoText.setCharacterSize(24);
+  infoText.setCharacterSize(50);
   infoText.setFillColor(Color::Black);
   infoText.setStyle(Text::Bold);
   infoText.setPosition(x, y);
@@ -40,8 +40,9 @@ void GameMap::render(RenderWindow& window) {
   window.clear(sf::Color::Blue);
   draw(window);
   drawShips(window);
-  printText(window, "0", 575, 10);
-  printText(window, "5", 575, 30);
+  printText(window, "0", 575, 5);
+  printText(window, "0", 615, 85);
+  printText(window, "0", 615, 160);
   window.display();
 }
 void GameMap::drawShips(RenderWindow& window) {
