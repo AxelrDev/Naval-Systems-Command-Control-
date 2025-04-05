@@ -27,7 +27,7 @@ int main() {
       sound.stop();
       // Restablecer ventana escalable
       window.create(sf::VideoMode(CELL_SIZE*GRID_SIZE + 300, CELL_SIZE*
-              GRID_SIZE+1), "Battle");
+              GRID_SIZE+200), "Battle");
       window.setFramerateLimit(60);
       gameMap.run(window);
       if (event.type == Event::Closed) {

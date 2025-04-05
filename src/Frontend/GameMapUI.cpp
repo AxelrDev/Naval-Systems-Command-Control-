@@ -8,10 +8,35 @@
 
 GameMap::GameMap():
   buyButton(Vector2f(610, 400), "assets/img/buy.png", Vector2f(75, 50)),
-  leftButton(Vector2f(530, 400), "assets/img/left.png", Vector2f(75, 50)),
-  rightButton(Vector2f(690, 400), "assets/img/right.png", Vector2f(75, 50))
+  leftBuyButton(Vector2f(530, 400), "assets/img/left.png", Vector2f(75, 50)),
+  rightBuyButton(Vector2f(690, 400), "assets/img/right.png", Vector2f(75, 50)),
+  selectedButton(Vector2f(200, 650), "assets/img/buy.png", Vector2f(75, 50)),
+  leftShipButton(Vector2f(100, 650), "assets/img/left.png", Vector2f(75, 50)),
+  rightShipButton(Vector2f(300, 650), "assets/img/right.png", Vector2f(75, 50))
 {
-  
+  shipTextures.resize(6);
+  shipSprites.resize(6);
+  cost.resize(6);
+  cost[0] = "Price: $100";
+  cost[1] = "Price: $200";
+  cost[2] = "Price: $300";
+  cost[3] = "Price: $400";
+  cost[4] = "Price: $500";
+  cost[5] = "Price: $600";
+  if (!shipTextures[0].loadFromFile("assets/img/ship.png")) {
+    std::cerr << "Error loading ship texture" << std::endl;
+  }
+  shipTextures[1].loadFromFile("assets/img/shipGuerra.png");
+  shipTextures[2].loadFromFile("assets/img/shipPirate.png");
+  shipTextures[3].loadFromFile("assets/img/shipOnePiece.png");
+  shipTextures[4].loadFromFile("assets/img/shipEnd.png");
+  shipTextures[5].loadFromFile("assets/img/shipMoon.png");
+
+  for (int i = 0; i < 6; ++i) {
+    shipSprites[i].setTexture(shipTextures[i]);
+    shipSprites[i].setPosition(590, 250);
+  }
+
   if (!shipTexture.loadFromFile("assets/img/ship.png")) {
     std::cerr << "Error loading ship texture" << std::endl;
   }
@@ -24,7 +49,6 @@ GameMap::GameMap():
     std::cerr << "Error loading font" << std::endl;
     // manejar error
 }
-
 if (!explosionTexture.loadFromFile("assets/img/smoke.png")) {
     std::cerr << "Error loading explosion texture" << std::endl;
     // manejar error
@@ -32,6 +56,12 @@ if (!explosionTexture.loadFromFile("assets/img/smoke.png")) {
   explosionSprite.setTexture(explosionTexture);
   infoText.setFont(font);
   backgroundSprite.setTexture(backgroundTexture);
+
+  for (int i = 0; i < GRID_SIZE; ++i) {
+    for (int j = 0; j < GRID_SIZE; ++j) {
+      board[i][j] = WATER;
+    }
+  }
 
   //if (!hitTexture.loadFromFile("explosion.png")) return false;
 }
@@ -60,28 +90,34 @@ void GameMap::render(RenderWindow& window) {
   window.clear(sf::Color::Blue);
   draw(window);
   drawShips(window);
-  rightButton.draw(window);
-  leftButton.draw(window);
+  rightBuyButton.draw(window);
+  leftBuyButton.draw(window);
   buyButton.draw(window);
+  selectedButton.draw(window);
+  leftShipButton.draw(window);
+  rightShipButton.draw(window);
   printText(window, "0", 575, 5);
   printText(window, "0", 615, 85);
   printText(window, "0", 615, 160);
+  printText(window, cost[Ship], 540, 350);
+  window.draw(shipSprites[Ship]);
+  selectedButtonAction(window);
   window.display();
 }
 void GameMap::drawShips(RenderWindow& window) {
-  Sprite shipSprite(shipTexture);
-  shipSprite.setScale(
-      (float)CELL_SIZE / shipTexture.getSize().x,
-      (float)CELL_SIZE / shipTexture.getSize().y
-  );
-
   for (int row = 0; row < GRID_SIZE; ++row) {
-      for (int col = 0; col < GRID_SIZE; ++col) {
-          if (board[row][col] == SHIP) {
-              shipSprite.setPosition(col * CELL_SIZE, row * CELL_SIZE);
-              window.draw(shipSprite);
-          }
+    for (int col = 0; col < GRID_SIZE; ++col) {
+      int shipType = board[row][col];
+      if (shipType >= 0 && shipType < 6) {
+        Sprite shipSprite(shipTextures[shipType]);
+        shipSprite.setScale(
+          (float)CELL_SIZE / shipTextures[shipType].getSize().x,
+          (float)CELL_SIZE / shipTextures[shipType].getSize().y
+        );
+        shipSprite.setPosition(col * CELL_SIZE, row * CELL_SIZE);
+        window.draw(shipSprite);
       }
+    }
   }
 }
 
@@ -132,7 +168,7 @@ void GameMap::placeShip(int row, int col, int size, bool horizontal) {
   for(int i = 0; i < size; i++) {
     int r = row + (horizontal ? 0 : i);
     int c = col + (horizontal ? i : 0);
-    board[r][c] = SHIP;
+    board[r][c] = Ship;
   }
 }
 
@@ -176,11 +212,13 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
         removeShip(row, col);
       }
     }else if(buyButton.isMouseOver(window)) {
-      printf("Buy button pressed\n");
-    } else if(leftButton.isMouseOver(window)) {
-      printf("Left button pressed\n");
-    } else if(rightButton.isMouseOver(window)) {
-      printf("Right button pressed\n");
+    } else if(leftBuyButton.isMouseOver(window)) {
+      Ship= (Ship - 1) % 6;
+      if (Ship < 0) {
+        Ship = 5;
+      }
+    } else if(rightBuyButton.isMouseOver(window)) {
+      Ship= (Ship + 1) % 6;
     }
   }
 }
@@ -195,3 +233,10 @@ void GameMap::draw(RenderWindow& window) {
   window.draw(backgroundSprite);
 }
 
+void GameMap::selectedButtonAction(RenderWindow& window) {
+  // Implementar la acción del botón seleccionado
+  // Por ejemplo, cambiar el color del botón o realizar alguna acción
+  Sprite shipSprite = shipSprites[Ship];
+  shipSprite.setPosition(180, 500);
+  window.draw(shipSprite);
+}

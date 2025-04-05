@@ -12,7 +12,7 @@ using namespace sf;
 #define CELL_SIZE 50
 
 enum cellState{
-    WATER = 0,
+    WATER = -1,
     SHIP = 1,
     HIT = 2,
 };
@@ -39,10 +39,12 @@ public:
     void updateMatrix(int **matrix);
     void printText(RenderWindow& window, const std::string& text, int x, int y);
     void smokeExplosion(RenderWindow& window, int x, int y);
+    void selectedButtonAction(RenderWindow& window);
     
 
 private:
     // background
+    int Ship=0;
     Texture backgroundTexture;
     Sprite backgroundSprite;
     Texture explosionTexture;
@@ -51,11 +53,17 @@ private:
     Font font;
     Text infoText;
     Button buyButton;
-    Button leftButton;
-    Button rightButton;
+    Button leftBuyButton;
+    Button rightBuyButton;
+    Button selectedButton;
+    Button leftShipButton;
+    Button rightShipButton;
+    std::vector<Texture> shipTextures;
+    std::vector<Sprite> shipSprites;
+    std::vector<string> cost;
 
     // grid
-    int board[GRID_SIZE][GRID_SIZE]={0};
+    int board[GRID_SIZE][GRID_SIZE]={WATER};
     int shipCount = 0;
     int shipSize = 1;
     bool attack = false;
