@@ -6,7 +6,12 @@
 
 
 
-GameMap::GameMap(){
+GameMap::GameMap():
+  buyButton(Vector2f(610, 400), "assets/img/buy.png", Vector2f(75, 50)),
+  leftButton(Vector2f(530, 400), "assets/img/left.png", Vector2f(75, 50)),
+  rightButton(Vector2f(690, 400), "assets/img/right.png", Vector2f(75, 50))
+{
+  
   if (!shipTexture.loadFromFile("assets/img/ship.png")) {
     std::cerr << "Error loading ship texture" << std::endl;
   }
@@ -19,6 +24,12 @@ GameMap::GameMap(){
     std::cerr << "Error loading font" << std::endl;
     // manejar error
 }
+
+if (!explosionTexture.loadFromFile("assets/img/smoke.png")) {
+    std::cerr << "Error loading explosion texture" << std::endl;
+    // manejar error
+  }
+  explosionSprite.setTexture(explosionTexture);
   infoText.setFont(font);
   backgroundSprite.setTexture(backgroundTexture);
 
@@ -35,11 +46,23 @@ void GameMap::printText(RenderWindow& window, const std::string& text, int x,
   window.draw(infoText);
 }
 
+void GameMap::smokeExplosion(RenderWindow& window, int x, int y) {
+  explosionSprite.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+  explosionSprite.setScale(
+      (float)CELL_SIZE / explosionTexture.getSize().x,
+      (float)CELL_SIZE / explosionTexture.getSize().y
+  );
+  window.draw(explosionSprite);
+}
+
 void GameMap::render(RenderWindow& window) {
   // Draw background
   window.clear(sf::Color::Blue);
   draw(window);
   drawShips(window);
+  rightButton.draw(window);
+  leftButton.draw(window);
+  buyButton.draw(window);
   printText(window, "0", 575, 5);
   printText(window, "0", 615, 85);
   printText(window, "0", 615, 160);
@@ -136,6 +159,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
           attackShip(row, col);
         } else {
           placeShip(row, col, shipSize, horizontal);
+          
         }
       }
       if (event.mouseButton.button == Mouse::Right) {
@@ -151,6 +175,12 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
         updateMatrix(matrix);
         removeShip(row, col);
       }
+    }else if(buyButton.isMouseOver(window)) {
+      printf("Buy button pressed\n");
+    } else if(leftButton.isMouseOver(window)) {
+      printf("Left button pressed\n");
+    } else if(rightButton.isMouseOver(window)) {
+      printf("Right button pressed\n");
     }
   }
 }

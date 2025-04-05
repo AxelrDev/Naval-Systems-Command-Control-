@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <ButtonUI.hpp>
 
 using namespace sf;
 
@@ -16,11 +17,7 @@ enum cellState{
     HIT = 2,
 };
 
-struct Ship{
-    int size;
-    int row, col;
-    bool horizontal;
-};
+
 
 
 class GameMap {
@@ -41,37 +38,29 @@ public:
     void attackShip(int x, int y);
     void updateMatrix(int **matrix);
     void printText(RenderWindow& window, const std::string& text, int x, int y);
+    void smokeExplosion(RenderWindow& window, int x, int y);
     
 
 private:
     // background
     Texture backgroundTexture;
     Sprite backgroundSprite;
+    Texture explosionTexture;
+    Sprite explosionSprite;
     Texture shipTexture;
     Font font;
     Text infoText;
+    Button buyButton;
+    Button leftButton;
+    Button rightButton;
 
     // grid
     int board[GRID_SIZE][GRID_SIZE]={0};
-
-    std::vector<Ship> ships;
     int shipCount = 0;
     int shipSize = 1;
     bool attack = false;
     bool horizontal = false;
 
-    std::map<int, int>shipLimits = {
-        {2, 1},
-        {3, 2},
-        {4, 1},
-        {5, 1}
-    };
-    std::map<int, int>shipCountMap = {
-        {2, 0},
-        {3, 0},
-        {4, 0},
-        {5, 0}
-    };
 };
 
 #endif // !GAMEMAPUI
