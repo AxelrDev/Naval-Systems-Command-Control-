@@ -24,11 +24,11 @@ public:
     void recordShot(int row, int col, bool hit);
     
     // Visualiza el tablero propio y el tablero de disparos.
-    void displayOwnBoard() const;
-    void displayTrackingBoard() const;
+    void displayOwnBoard();
+    void displayTrackingBoard();
     
     // Retorna true si todos los barcos están hundidos (vida == 0).
-    bool allShipsSunk() const;
+    bool allShipsSunk();
     
     // Métodos para gestionar el número de acciones por turno.
     int getaction();

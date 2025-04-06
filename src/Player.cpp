@@ -10,6 +10,7 @@ Player::Player(int rows, int cols) : rows(rows), cols(cols), actions(3) {  // Ej
         trackingBoard[i] = new char[cols];
     }
     initializeBoards();
+    money = 1000;
 }
 
 Player::~Player() {
@@ -32,15 +33,13 @@ void Player::initializeBoards() {
 
 void Player::placeShips(int numShips, int mode) {
     // En este ejemplo, se ignora 'mode'. Se colocan barcos de tamaño 1.
-    int placed = 0;
-    while (placed < numShips) {
+    for(int index = 0; index < numShips; index++){
         int r = std::rand() % rows;
         int c = std::rand() % cols;
         if (ownBoard[r][c] == '-') {
             ownBoard[r][c] = 'S';
             // Se asignan valores por defecto: vida = 3, daño = 1.
             ships.push_back(Ship(r, c, 3, 1));
-            placed++;
         }
     }
 }
@@ -84,7 +83,7 @@ void Player::recordShot(int row, int col, bool hit) {
     trackingBoard[row][col] = hit ? 'X' : 'O';
 }
 
-void Player::displayOwnBoard() const {
+void Player::displayOwnBoard() {
     std::cout << "  0 1 2 3 4 5 6 7 8 9"<< std::endl;
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
@@ -97,7 +96,7 @@ void Player::displayOwnBoard() const {
     }
 }
 
-void Player::displayTrackingBoard() const {
+void Player::displayTrackingBoard() {
     std::cout << "  0 1 2 3 4 5 6 7 8 9"<< std::endl;
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
@@ -110,7 +109,7 @@ void Player::displayTrackingBoard() const {
     }
 }
 
-bool Player::allShipsSunk() const {
+bool Player::allShipsSunk() {
     for (size_t i = 0; i < ships.size(); i++) {
         if (ships[i].getVida() > 0)
             return false;
