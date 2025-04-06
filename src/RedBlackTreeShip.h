@@ -6,7 +6,25 @@
 
 class RedBlackTreeShip : public Ship {
 private:
-    std::map<int, int> rbtree;
+    struct Node {
+        int key;
+        bool red; // true = red, false = black
+        Node* left;
+        Node* right;
+        Node* parent;
+    };
+    
+    Node* root;
+
+    void rotateLeft(Node* x);
+    void rotateRight(Node* y);
+    void insertFixup(Node* z);
+    Node* insertNode(int key);
+    Node* searchNode(int key);
+    Node* minimum(Node* node);
+    void transplant(Node* u, Node* v);
+    Node* deleteNode(Node* z);
+    void deleteFixup(Node* x);
 
 public:
     RedBlackTreeShip();
@@ -16,4 +34,4 @@ public:
     void remove(int element) override;
 };
 
-#endif
+#endif // REDBLACKTREESHIP_H
