@@ -2,18 +2,19 @@
 #define REDBLACKTREESHIP_H
 
 #include "Ship.h"
-#include <map>
 
 class RedBlackTreeShip : public Ship {
 private:
     struct Node {
         int key;
-        bool red; // true = red, false = black
+        bool red;
         Node* left;
         Node* right;
         Node* parent;
+
+        Node(int k) : key(k), red(true), left(nullptr), right(nullptr), parent(nullptr) {}
     };
-    
+
     Node* root;
 
     void rotateLeft(Node* x);
@@ -21,10 +22,6 @@ private:
     void insertFixup(Node* z);
     Node* insertNode(int key);
     Node* searchNode(int key);
-    Node* minimum(Node* node);
-    void transplant(Node* u, Node* v);
-    Node* deleteNode(Node* z);
-    void deleteFixup(Node* x);
 
 public:
     RedBlackTreeShip();
