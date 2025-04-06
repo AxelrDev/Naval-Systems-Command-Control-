@@ -6,37 +6,50 @@
 
 class Player {
 public:
-    // Constructor que crea un jugador con tableros de tamaño rows x cols.
+    // Constructor y destructor.
     Player(int rows, int cols);
-    // Destructor para liberar la memoria de los tableros.
     ~Player();
 
-    // Coloca los barcos en el tablero propio.
-    void placeShips(int numShips, int sizeShip);
-
-    // Procesa un disparo recibido en el tablero propio (por parte del oponente).
+    // Coloca numShips barcos de una sola celda en posiciones aleatorias.
+    // El parámetro mode se incluye para compatibilidad (se puede ignorar en este ejemplo).
+    void placeShips(int numShips, int mode);
+    
+    // Procesa un disparo recibido en (row, col) en el tablero propio.
+    // Si hay un barco, se le aplica daño (se asume daño 1 por disparo).
+    // Se marca 'X' si se hunde, o 'D' si se impacta pero aún queda vida.
+    // Si se dispara al agua, se marca 'O'.
     bool receiveShot(int row, int col);
-
-    // Registra un disparo al oponente en el tablero de disparos.
+    
+    // Registra el resultado del disparo realizado al oponente en el tracking board.
     void recordShot(int row, int col, bool hit);
-
-    // Muestra el tablero propio.
+    
+    // Visualiza el tablero propio y el tablero de disparos.
     void displayOwnBoard() const;
-
-    // Muestra el tablero de disparos (tracking board).
     void displayTrackingBoard() const;
-
-    // Retorna true si todos los barcos han sido hundidos.
+    
+    // Retorna true si todos los barcos están hundidos (vida == 0).
     bool allShipsSunk() const;
+    
+    // Métodos para gestionar el número de acciones por turno.
+    int getaction();
+    void setLessAction();
+    void setaction(int newAction);
+    
+    // Permite mover un barco: quita el barco de su posición actual y lo coloca en una nueva posición.
+    bool moveShip();
 
 private:
     int rows;
     int cols;
-    char **ownBoard;      // Tablero donde se colocan los barcos y se reciben disparos.
+    // Dinero en el juego
+    int money;
+    char **ownBoard;      // Tablero donde se ubican los barcos del jugador.
     char **trackingBoard; // Tablero para registrar los disparos realizados al oponente.
-    std::vector<Ship> ships;
-
-    // Inicializa ambos tableros llenándolos de agua ('-').
+    std::vector<Ship> ships;  // Vector con los barcos del jugador.
+    
+    int actions;  // Acciones disponibles en el turno.
+    
+    // Inicializa ambos tableros llenándolos con '-'
     void initializeBoards();
 };
 

@@ -1,35 +1,36 @@
 #include "Ship.h"
 
-Ship::Ship(int row, int col, int length, bool horizontal)
-    : startRow(row), startCol(col), length(length), horizontal(horizontal), hits(length, false) {}
+Ship::Ship(int row, int col, int vida, int damage)
+    : row(row), col(col), vida(vida), damage(damage) {}
 
-bool Ship::occupies(int row, int col) const {
-    if (horizontal) {
-        return (row == startRow) && (col >= startCol && col < startCol + length);
-    } else {
-        return (col == startCol) && (row >= startRow && row < startRow + length);
-    }
+bool Ship::occupies(int r, int c) const {
+    return (r == row && c == col);
 }
 
-bool Ship::hitAt(int row, int col) {
-    if (!occupies(row, col))
-        return false;
-    int index = horizontal ? col - startCol : row - startRow;
-    if (!hits[index]) {
-        hits[index] = true;
-        return true;
-    }
-    return false;
+bool Ship::applyDamage(int damageAmount) {
+    vida -= damageAmount;
+    if (vida < 0)
+        vida = 0;
+    return (vida == 0);
 }
 
-bool Ship::isSunk() const {
-    for (bool hit : hits) {
-        if (!hit)
-            return false;
-    }
-    return true;
+int Ship::getVida() const {
+    return vida;
 }
 
-int Ship::getLength() const {
-    return length;
+int Ship::getDamage() const {
+    return damage;
+}
+
+int Ship::getRow() const {
+    return row;
+}
+
+int Ship::getCol() const {
+    return col;
+}
+
+void Ship::setPosition(int newRow, int newCol) {
+    row = newRow;
+    col = newCol;
 }

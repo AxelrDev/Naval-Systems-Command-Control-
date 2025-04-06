@@ -3,60 +3,94 @@
 #include <cstdlib>
 #include <ctime>
 
-Game::Game(int rows, int cols, int numShips) : rows(rows), cols(cols), numShips(numShips) {
-    player = new Player(rows, cols);
-    computer = new Player(rows, cols);
-    player->placeShips(numShips,0);
-    computer->placeShips(numShips,0);
+Game::Game(int rows, int cols, int numShips)
+    : rows(rows), cols(cols), numShips(numShips) {
+    // Se crean dos jugadores.
+    player1 = new Player(rows, cols);
+    player2 = new Player(rows, cols);
+    // Se colocan los barcos en ambos tableros.
+    player1->placeShips(numShips, 0);
+    player2->placeShips(numShips, 0);
 }
 
 Game::~Game() {
-    delete player;
-    delete computer;
+    delete player1;
+    delete player2;
 }
 
 void Game::play() {
+    // Se asignan, por ejemplo, 3 acciones por turno a cada jugador.
+    player1->setaction(3);
+    player2->setaction(3);
     while (true) {
-        std::cout << "\n----- TU TURNO -----" << std::endl;
-        std::cout << "\nTu tablero propio:" << std::endl;
-        player->displayOwnBoard();
-        std::cout << "\nTu tablero de disparos:" << std::endl;
-        player->displayTrackingBoard();
-
-        // El jugador dispara a la computadora.
-        playerTurn();
-        if (computer->allShipsSunk()) {
-            std::cout << "\n¡Felicidades! Has hundido todos los barcos de la computadora." << std::endl;
+        std::cout << "\n----- TURNO DEL JUGADOR 1 -----" << std::endl;
+        std::cout << "\nTablero propio (Jugador 1):" << std::endl;
+        player1->displayOwnBoard();
+        std::cout << "\nTablero de disparos (Jugador 1):" << std::endl;
+        player1->displayTrackingBoard();
+        playerTurn(player1, player2);
+        if (player2->allShipsSunk()) {
+            std::cout << "\n¡Felicidades! Jugador 1 ha hundido todos los barcos de Jugador 2." << std::endl;
             break;
         }
+        // Reinicia las acciones para el otro jugador.
+        player2->setaction(3);
         
-        std::cout << "\n----- TURNO DE LA COMPUTADORA -----" << std::endl;
-        // La computadora dispara al jugador.
-        computerTurn();
-        if (player->allShipsSunk()) {
-            std::cout << "\n¡Oh no! La computadora ha hundido todos tus barcos." << std::endl;
+        std::cout << "\n----- TURNO DEL JUGADOR 2 -----" << std::endl;
+        std::cout << "\nTablero propio (Jugador 2):" << std::endl;
+        player2->displayOwnBoard();
+        std::cout << "\nTablero de disparos (Jugador 2):" << std::endl;
+        player2->displayTrackingBoard();
+        playerTurn(player2, player1);
+        if (player1->allShipsSunk()) {
+            std::cout << "\n¡Felicidades! Jugador 2 ha hundido todos los barcos de Jugador 1." << std::endl;
             break;
         }
+        player1->setaction(3);
     }
 }
 
-void Game::playerTurn() {
-    int row, col;
-    std::cout << "Ingresa la fila y columna para disparar: \n";
-    std::cin >> row >> col;
-    // La computadora procesa el disparo en su tablero propio.
-    bool hit = computer->receiveShot(row, col);
-    // El jugador registra el resultado del disparo en su tracking board.
-    player->recordShot(row, col, hit);
-}
+void Game::playerTurn(Player* current, Player* opponent) {
+    int action = current->getaction();
+    int option;
+    while (action > 0) {
+        std::cout << "\nAcciones restantes: " << current->getaction() << std::endl;
+        std::cout << "1. Atacar" << std::endl;
+        //  (no implementado)
+        std::cout << "2. Upgrade ship" << std::endl;
+        std::cout << "3. Buy ship" << std::endl;
+        std::cout << "4. Mover barco" << std::endl;
+        std::cout << "5. Terminar turno" << std::endl;
+        std::cout << "Ingrese el número de opción: ";
+        std::cin >> option;
+        if (option == 1) {
+            int row, col;
+            std::cout << "Ingrese la fila y columna para atacar: ";
+            std::cin >> row >> col;
+            bool hit = opponent->receiveShot(row, col);
+            current->recordShot(row, col, hit);
+            current->setLessAction();
+        } else 
+            if (option == 2) {
 
-void Game::computerTurn() {
-    // Genera coordenadas aleatorias para disparar.
-    int row = std::rand() % rows;
-    int col = std::rand() % cols;
-    std::cout << "La computadora dispara a (" << row << ", " << col << "): ";
-    // El jugador procesa el disparo en su tablero propio.
-    bool hit = player->receiveShot(row, col);
-    // La computadora registra el disparo en su tracking board.
-    computer->recordShot(row, col, hit);
+                current->setLessAction();
+        } else 
+            if (option == 3) {
+                current->placeShips(1,0);
+                current->setLessAction();
+        } else 
+            if (option == 4) {
+                if (current->moveShip()) {
+                    current->setLessAction();
+                }
+        } else 
+            if (option == 5) {
+                current->setaction(0);
+                break;
+        } else {
+            // Para opciones 2 y 3, se resta una acción (lógica pendiente de implementar).
+            current->setLessAction();
+        }
+        action = current->getaction();
+    }
 }

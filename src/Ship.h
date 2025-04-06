@@ -1,33 +1,31 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include <vector>
-
 class Ship {
 public:
-    // Constructor: crea un barco que inicia en (row, col), de longitud "length" y orientación.
-    // Si horizontal es true, se extiende hacia la derecha; de lo contrario, hacia abajo.
-    Ship(int row, int col, int length, bool horizontal);
-    
-    // Retorna true si la celda (row, col) forma parte del barco.
+    // Constructor: recibe la posición (row, col), la vida y el daño.
+    Ship(int row, int col, int vida, int damage);
+
+    // Retorna true si la casilla (row, col) es la posición del barco.
     bool occupies(int row, int col) const;
     
-    // Procesa un disparo en (row, col); si la celda forma parte del barco y aún no estaba impactada,
-    // marca la posición y retorna true.
-    bool hitAt(int row, int col);
+    // Aplica daño al barco (por ejemplo, 1 punto por disparo) y retorna true si el barco se hunde.
+    bool applyDamage(int damageAmount);
     
-    // Retorna true si todas las celdas del barco han sido impactadas.
-    bool isSunk() const;
-
-    // Retorna la longitud del barco.
-    int getLength() const;
+    // Getters para la vida y el daño.
+    int getVida() const;
+    int getDamage() const;
+    
+    // Getters y setter para la posición.
+    int getRow() const;
+    int getCol() const;
+    void setPosition(int row, int col);
 
 private:
-    int startRow;
-    int startCol;
-    int length;
-    bool horizontal; // true: horizontal, false: vertical
-    std::vector<bool> hits; // Registra el impacto de cada segmento (inicialmente todos false).
+    int row;
+    int col;
+    int vida;    // Cantidad de vida del barco.
+    int damage;  // Daño que puede causar (para futuras lógicas, por ejemplo en ataques especiales).
 };
 
 #endif // SHIP_H
