@@ -104,7 +104,7 @@ void GameMap::render(RenderWindow& window) {
   leftShipButton.draw(window);
   rightShipButton.draw(window);
   buyPointsButton.draw(window);
-  printText(window, "0", 575, 5);
+  printText(window, currency, 575, 5);
   printText(window, "0", 615, 85);
   printText(window, "0", 615, 160);
   printText(window, cost[Ship], 540, 350);
@@ -138,18 +138,6 @@ void GameMap::updateMatrix(int **matrix) {
   }
 }
 
-
-void GameMap::drawGrid(RenderWindow& window) {
-    // Draw grid
-  for (int i = 0; i < GRID_SIZE; i++) {
-    Vertex line[] = { Vertex(Vector2f(i*CELL_SIZE, 0), Color::White),
-        Vertex(Vector2f(i*CELL_SIZE, GRID_SIZE*CELL_SIZE), Color::White) };
-    window.draw(line, 2, Lines);
-    Vertex line2[] = { Vertex(Vector2f(0, i*CELL_SIZE), Color::White),
-        Vertex(Vector2f(GRID_SIZE*CELL_SIZE, i*CELL_SIZE), Color::White)};
-    window.draw(line2, 2, Lines);
-  }
-}
 
 void GameMap::run(RenderWindow& window) {
   bool endRound = false;
@@ -204,20 +192,10 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
           attackShip(row, col);
         } else {
           placeShip(row, col, shipSize, horizontal);
-          
         }
       }
       if (event.mouseButton.button == Mouse::Right) {
         // Remove ship
-        int **matrix = new int*[GRID_SIZE];
-        for (int i = 0; i < GRID_SIZE; ++i) {
-          matrix[i] = new int[GRID_SIZE];
-          for (int j = 0; j < GRID_SIZE; ++j) {
-            matrix[i][j] = 0;
-          }
-        }
-        matrix[1][1] = SHIP;
-        updateMatrix(matrix);
         removeShip(row, col);
       }
     }else if(buyButton.isMouseOver(window)) {
@@ -240,6 +218,20 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       selectedShip = previousSelection;
     }else if(buyPointsButton.isMouseOver(window)) {
       printf("Buy points\n");
+    }
+  }else if(event.type==Event::KeyPressed) {
+    if (event.key.code == Keyboard::A) {
+      int **matrix= new int*[GRID_SIZE];
+      for (int i = 0; i < GRID_SIZE; ++i) {
+        matrix[i] = new int[GRID_SIZE];
+      }
+      for (int i = 0; i < GRID_SIZE; ++i) {
+        for (int j = 0; j < GRID_SIZE; ++j) {
+          matrix[i][j] = WATER;
+        }
+      }
+      attack = true;
+      updateMatrix(matrix);
     }
   }
 }

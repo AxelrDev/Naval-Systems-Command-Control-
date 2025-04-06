@@ -30,7 +30,6 @@ public:
     void draw(RenderWindow& window);
     void blackScreen(RenderWindow& window);
     void render(RenderWindow& window);
-    void drawGrid(RenderWindow& window);
     void drawShips(RenderWindow& window);
     void drawInfo(RenderWindow& window);
     void placeShip(int x, int y, int size, bool horizontal);
@@ -73,6 +72,7 @@ private:
     int previousSelection = 0;
     bool attack = false;
     bool horizontal = false;
+    string currency = "0";
 
 };
 
