@@ -44,12 +44,13 @@ public:
 
 private:
     // background
-    int Ship=0;
     Texture backgroundTexture;
     Sprite backgroundSprite;
     Texture explosionTexture;
     Sprite explosionSprite;
     Texture shipTexture;
+    Texture improvementPointsTexture;
+    Sprite improvementPointsSprite;
     Font font;
     Text infoText;
     Button buyButton;
@@ -58,6 +59,7 @@ private:
     Button selectedButton;
     Button leftShipButton;
     Button rightShipButton;
+    Button buyPointsButton;
     std::vector<Texture> shipTextures;
     std::vector<Sprite> shipSprites;
     std::vector<string> cost;
@@ -66,6 +68,9 @@ private:
     int board[GRID_SIZE][GRID_SIZE]={WATER};
     int shipCount = 0;
     int shipSize = 1;
+    int selectedShip = 0;
+    int Ship=0;
+    int previousSelection = 0;
     bool attack = false;
     bool horizontal = false;
 
