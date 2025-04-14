@@ -1,7 +1,9 @@
 #include "Ship.hpp"
 
 Ship::Ship(int row, int col, int vida, int damage, int level)
-    : row(row), col(col), vida(vida), damage(damage), level(level) {}
+    : row(row), col(col), vida(vida), damage(damage),
+    
+    level(level) {}
 
 bool Ship::occupies(int r, int c) const {
     return (r == row && c == col);

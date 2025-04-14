@@ -19,6 +19,7 @@ private:
     int increment;
     Player* player1;
     Player* player2;
+    Currency* currency;
     
     // Procesa el turno de un jugador. 'current' es el jugador activo y 'opponent' su rival.
     void playerTurn(Player* current, Player* opponent);

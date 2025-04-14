@@ -17,16 +17,26 @@ int Currency::getShip(int number) {
     } else {
         if (number == 1) {
             return ship01;
-        } else if (number == 2) {
-            return ship02;
-        } else if (number == 3) {
-            return ship03;
-        } else if (number == 4) {
-            return ship04;
-        } else if (number == 5) {
-            return ship05;
-        } else if (number == 6) {
-            return ship06;
+        } else {
+            if (number == 2) {
+                return ship02;
+            } else {
+                if (number == 3) {
+                    return ship03;
+                } else {
+                    if (number == 4) {
+                        return ship04;
+                    } else {
+                        if (number == 5) {
+                            return ship05;
+                        } else {
+                            if (number == 6) {
+                                return ship06;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     return -1; // Valor de error

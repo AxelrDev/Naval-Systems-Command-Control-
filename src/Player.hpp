@@ -12,13 +12,13 @@ public:
 
     // Coloca numShips barcos de una sola celda en posiciones aleatorias.
     // El parámetro mode se incluye para compatibilidad (se puede ignorar en este ejemplo).
-    void placeShips(int numShips);
+    void placeShips(int numShips, int levelShip);
     
     // Procesa un disparo recibido en (row, col) en el tablero propio.
     // Si hay un barco, se le aplica daño (se asume daño 1 por disparo).
     // Se marca 'X' si se hunde, o 'D' si se impacta pero aún queda vida.
     // Si se dispara al agua, se marca 'O'.
-    bool receiveShot(int row, int col, int damage, int increment, Player* current);
+    bool receiveShot(int row, int col, int damage);
     
     // Registra el resultado del disparo realizado al oponente en el tracking board.
     void recordShot(int row, int col, bool hit);

@@ -8,9 +8,10 @@ Game::Game(int rows, int cols, int numShips, int increment)
     // Se crean dos jugadores.
     player1 = new Player(rows, cols);
     player2 = new Player(rows, cols);
+    currency = new Currency();
     // Se colocan los barcos en ambos tableros.
-    player1->placeShips(numShips);
-    player2->placeShips(numShips);
+    player1->placeShips(numShips, -1);
+    player2->placeShips(numShips, -1);
 }
 
 Game::~Game() {
@@ -78,8 +79,14 @@ void Game::playerTurn(Player* current, Player* opponent) {
             } else {
                 std::cout << "Ingrese la fila y columna para atacar: \n";
                 std::cin >> row >> col;
-                bool hit = opponent->receiveShot(row, col, damage, increment, current);
+                bool hit = opponent->receiveShot(row, col, damage);
                 current->recordShot(row, col, hit);
+                current->displayOwnBoard();
+
+                std::cout << "\nTablero propio:" << std::endl;
+                current->displayOwnBoard();
+                std::cout << "\nTablero de disparos:" << std::endl;
+                current->displayTrackingBoard();
                 current->setLessAction();
             }
         } else 
@@ -91,8 +98,14 @@ void Game::playerTurn(Player* current, Player* opponent) {
         } else 
             // Buy ship
             if (option == 3) {
-                current->placeShips(1);
-                
+                // se obtiene el nivel del barco a comprar
+                int level = 1; 
+                current->placeShips(1,level);
+                current->lessMoney(currency->getShip(level));
+                std::cout << "\nTablero propio:" << std::endl;
+                current->displayOwnBoard();
+                std::cout << "\nTablero de disparos:" << std::endl;
+                current->displayTrackingBoard();
                 current->setLessAction();
         } else 
             // Move ship
@@ -111,4 +124,5 @@ void Game::playerTurn(Player* current, Player* opponent) {
         }
         action = current->getaction();
     }
+    current->plusMoney(increment);  // Se suma el dinero al jugador.
 }
