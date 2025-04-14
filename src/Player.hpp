@@ -1,8 +1,8 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include <vector>
-#include "Ship.h"
+#include "Ship.hpp"
 
 class Player {
 public:
@@ -12,17 +12,18 @@ public:
 
     // Coloca numShips barcos de una sola celda en posiciones aleatorias.
     // El parámetro mode se incluye para compatibilidad (se puede ignorar en este ejemplo).
-    void placeShips(int numShips, int mode);
+    void placeShips(int numShips);
     
     // Procesa un disparo recibido en (row, col) en el tablero propio.
     // Si hay un barco, se le aplica daño (se asume daño 1 por disparo).
     // Se marca 'X' si se hunde, o 'D' si se impacta pero aún queda vida.
     // Si se dispara al agua, se marca 'O'.
-    bool receiveShot(int row, int col);
+    bool receiveShot(int row, int col, int damage, int increment, Player* current);
     
     // Registra el resultado del disparo realizado al oponente en el tracking board.
     void recordShot(int row, int col, bool hit);
-    
+    int getShipDamage(int row, int col);
+
     // Visualiza el tablero propio y el tablero de disparos.
     void displayOwnBoard();
     void displayTrackingBoard();
@@ -37,6 +38,18 @@ public:
     
     // Permite mover un barco: quita el barco de su posición actual y lo coloca en una nueva posición.
     bool moveShip();
+
+    // Muestra la cantidad de dinero disponible.
+    int getMoney();
+
+    // Resta el costo del barco con el dinero que tiene.
+    bool lessMoney(int amount);
+
+    // Suma el dinero al total del jugador.
+    void plusMoney(int amount);
+
+    // Mejorar el barco en la posición (row, col).
+    void upGradeShip(int row, int col);
 
 private:
     int rows;
@@ -53,4 +66,4 @@ private:
     void initializeBoards();
 };
 
-#endif // PLAYER_H
+#endif // PLAYER_HPP

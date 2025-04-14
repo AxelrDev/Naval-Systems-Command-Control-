@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "Player.hpp"
 #include <iostream>
 #include <cstdlib>
 
@@ -31,37 +31,39 @@ void Player::initializeBoards() {
     }
 }
 
-void Player::placeShips(int numShips, int mode) {
+void Player::placeShips(int numShips) {
     // En este ejemplo, se ignora 'mode'. Se colocan barcos de tamaño 1.
     for(int index = 0; index < numShips; index++){
         int r = std::rand() % rows;
         int c = std::rand() % cols;
+        int level = std::rand() % 6 + 1; // Asignar un nivel aleatorio entre 1 y 6.
         if (ownBoard[r][c] == '-') {
             ownBoard[r][c] = 'S';
             // Se asignan valores por defecto: vida = 3, daño = 1.
-            ships.push_back(Ship(r, c, 3, 1));
+            ships.push_back(Ship(r, c, 3, 1, level));
         }
     }
 }
 
-bool Player::receiveShot(int row, int col) {
+bool Player::receiveShot(int row, int col, int damage, int increment, Player* current) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) {
         std::cout << "¡Disparo fuera de límites!" << std::endl;
         return false;
     }
     // Si ya se disparó en esta celda.
-    if (ownBoard[row][col] == 'X' || ownBoard[row][col] == 'O' || ownBoard[row][col] == 'D') {
+    if (ownBoard[row][col] == 'X' || ownBoard[row][col] == 'O') {
         std::cout << "¡Ya se disparó en esa posición!" << std::endl;
         return false;
     }
-    if (ownBoard[row][col] == 'S') {
+    if (ownBoard[row][col] == 'S'|| ownBoard[row][col] == 'D') {
         // Buscar el barco que ocupa esta celda.
         for (size_t i = 0; i < ships.size(); i++) {
             if (ships[i].occupies(row, col)) {
-                bool sunk = ships[i].applyDamage(1);  // Se aplica 1 punto de daño.
+                bool sunk = ships[i].applyDamage(damage);  // Se aplica 1 punto de daño.
                 if (sunk) {
                     ownBoard[row][col] = 'X';
                     std::cout << "¡Impacto y barco hundido!" << std::endl;
+                    current->plusMoney(increment);  // Se suma el dinero al jugador.
                 } else {
                     ownBoard[row][col] = 'D';  // 'D' indica que fue dañado.
                     std::cout << "¡Impacto!" << std::endl;
@@ -94,6 +96,15 @@ void Player::displayOwnBoard() {
         }
         std::cout << std::endl;
     }
+}
+
+int Player::getShipDamage(int row, int col) {
+    for (size_t i = 0; i < ships.size(); i++) {
+        if (ships[i].occupies(row, col)) {
+            return ships[i].getDamage();
+        }
+    }
+    return -1; // No hay barco en esa posición.
 }
 
 void Player::displayTrackingBoard() {
@@ -165,4 +176,30 @@ bool Player::moveShip() {
     ownBoard[newRow][newCol] = 'S';
     std::cout << "Barco movido exitosamente." << std::endl;
     return true;
+}
+
+int Player::getMoney() {
+    return money;
+}
+
+bool Player::lessMoney(int amount) {
+    money -= amount;
+    if(money < 0) {
+        return false; // No hay suficiente dinero
+    }
+    return true; // Dinero suficiente
+}
+
+void Player::plusMoney(int amount) {
+    money += amount;
+}
+
+void Player::upGradeShip(int row, int col) {
+    for (size_t i = 0; i < ships.size(); i++) {
+        if (ships[i].occupies(row, col)) {
+            // ships[i].upgrade();
+        } else {
+            std::cout << "No hay barco en esa posición." << std::endl;
+        }
+    }
 }

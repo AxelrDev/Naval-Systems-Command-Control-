@@ -1,5 +1,5 @@
-#ifndef CURRENCY_H
-#define CURRENCY_H
+#ifndef CURRENCY_HPP
+#define CURRENCY_HPP
 
 #include <iostream>
 
@@ -7,12 +7,7 @@ class Currency {
     public:
     Currency();
    // ~Currency();
-    int getShip01();
-    int getShip02();
-    int getShip03();
-    int getShip04();
-    int getShip05();
-    int getShip06();
+    int getShip(int number);
     private:
     int ship01;
     int ship02;
@@ -22,4 +17,4 @@ class Currency {
     int ship06;
 };
 
-#endif // CURRENCY_H
+#endif // CURRENCY_HPP

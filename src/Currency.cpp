@@ -1,4 +1,4 @@
-#include "Currency.h"
+#include "Currency.hpp"
 
 Currency::Currency() {
     ship01 = 100;
@@ -10,26 +10,24 @@ Currency::Currency() {
 }
 // Currency::~Currency() {}
 
-int Currency::getShip01() {
-    return ship01;
-}
-
-int Currency::getShip02() {
-    return ship02;
-}
-
-int Currency::getShip03() {
-    return ship03;
-}
-
-int Currency::getShip04() {
-    return ship04;
-}
-
-int Currency::getShip05() {
-    return ship05;
-}
-
-int Currency::getShip06() {
-    return ship06;
+int Currency::getShip(int number) {
+    if (number < 1 || number > 6) {
+        std::cerr << "Número de barco inválido. Debe estar entre 1 y 6." << std::endl;
+        return -1; // Valor de error
+    } else {
+        if (number == 1) {
+            return ship01;
+        } else if (number == 2) {
+            return ship02;
+        } else if (number == 3) {
+            return ship03;
+        } else if (number == 4) {
+            return ship04;
+        } else if (number == 5) {
+            return ship05;
+        } else if (number == 6) {
+            return ship06;
+        }
+    }
+    return -1; // Valor de error
 }

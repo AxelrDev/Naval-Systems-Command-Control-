@@ -1,7 +1,7 @@
-#include "Ship.h"
+#include "Ship.hpp"
 
-Ship::Ship(int row, int col, int vida, int damage)
-    : row(row), col(col), vida(vida), damage(damage) {}
+Ship::Ship(int row, int col, int vida, int damage, int level)
+    : row(row), col(col), vida(vida), damage(damage), level(level) {}
 
 bool Ship::occupies(int r, int c) const {
     return (r == row && c == col);
@@ -33,4 +33,8 @@ int Ship::getCol() const {
 void Ship::setPosition(int newRow, int newCol) {
     row = newRow;
     col = newCol;
+}
+
+int Ship::getLevel() {
+    return level;
 }

@@ -1,10 +1,10 @@
-#ifndef SHIP_H
-#define SHIP_H
+#ifndef SHIP_HPP
+#define SHIP_HPP
 
 class Ship {
 public:
     // Constructor: recibe la posición (row, col), la vida y el daño.
-    Ship(int row, int col, int vida, int damage);
+    Ship(int row, int col, int vida, int damage, int level);
 
     // Retorna true si la casilla (row, col) es la posición del barco.
     bool occupies(int row, int col) const;
@@ -21,11 +21,15 @@ public:
     int getCol() const;
     void setPosition(int row, int col);
 
+    // Get level
+    int getLevel();
+
 private:
     int row;
     int col;
     int vida;    // Cantidad de vida del barco.
     int damage;  // Daño que puede causar (para futuras lógicas, por ejemplo en ataques especiales).
+    int level; 
 };
 
-#endif // SHIP_H
+#endif // SHIP_HPP
