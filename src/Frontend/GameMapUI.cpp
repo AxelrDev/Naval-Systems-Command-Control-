@@ -1,3 +1,5 @@
+/// @file GameMapUI.hpp
+/// @brief Declara la clase GameMap que maneja la lógica de dibujo, interacción y renderizado del mapa de juego con barcos.
 #include "GameMapUI.hpp"
 #include <iostream>
 #include <chrono>
@@ -5,7 +7,12 @@
 #include <thread>
 
 
-
+/**
+ * @brief Constructor de la clase GameMap.
+ *
+ * Inicializa botones, texturas, sprites, fuentes, y el tablero del juego.
+ * Carga los recursos gráficos y define la posición inicial de cada elemento visual.
+ */
 GameMap::GameMap():
   buyButton(Vector2f(610, 400), "assets/img/buy.png", Vector2f(75, 50)),
   leftBuyButton(Vector2f(530, 400), "assets/img/left.png", Vector2f(75, 50)),
@@ -15,6 +22,7 @@ GameMap::GameMap():
   rightShipButton(Vector2f(300, 650), "assets/img/right.png", Vector2f(75, 50)),
   buyPointsButton(Vector2f(620, 620), "assets/img/buy.png", Vector2f(75, 50))
 {
+  Game game(10, 10, 5, 100);
   shipTextures.resize(6);
   shipSprites.resize(6);
   cost.resize(6);
@@ -104,10 +112,12 @@ void GameMap::render(RenderWindow& window) {
   leftShipButton.draw(window);
   rightShipButton.draw(window);
   buyPointsButton.draw(window);
-  printText(window, currency, 575, 5);
+  printText(window, to_string(currency), 575, 5);
   printText(window, "0", 615, 85);
   printText(window, "0", 615, 160);
   printText(window, cost[Ship], 540, 350);
+  printText(window, "Y:"+to_string(xCord), 440, 500);
+  printText(window, "X:"+to_string(yCord), 340, 500);
   window.draw(shipSprites[Ship]);
   selectedButtonAction(window);
   window.draw(improvementPointsSprite);
@@ -152,13 +162,25 @@ void GameMap::run(RenderWindow& window) {
       window.clear();
       render(window);
       window.display();
-      // new game wait     
+      // new game wait
+      // cambio de jugador y pantalla en negro
+      if (movement == 0) {
+        blackScreen(window);
+        movement = 5;
+        playerTurn = !playerTurn;
+      }
+      // Cambio de turno
+      if(playerTurn){
+        printf("Player turn\n");
+        //updateMatrix();
+      }  
     }
   }
 }
 
 void GameMap::attackShip(int row, int col) {
-  if (board[row][col] == SHIP) board[row][col] = HIT;
+  if (board[row][col] != -1) board[row][col] = HIT;
+  printf("Attacking ship at (%d, %d)\n", row, col);
 }
 
 void GameMap::placeShip(int row, int col, int size, bool horizontal) {
@@ -170,10 +192,10 @@ void GameMap::placeShip(int row, int col, int size, bool horizontal) {
 }
 
 void GameMap::blackScreen(RenderWindow& window) {
-  sf::sleep(sf::seconds(3));
+  sf::sleep(sf::seconds(1));
   window.clear(sf::Color::Black);
   window.display();
-  sf::sleep(sf::seconds(3));
+  sf::sleep(sf::seconds(5));
 }
 
 void GameMap::handleEvent(RenderWindow& window, Event& event) {
@@ -188,18 +210,38 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       int col = event.mouseButton.x / CELL_SIZE;
       int row = event.mouseButton.y / CELL_SIZE;
       if (event.mouseButton.button == Mouse::Left) {
+        // Ataca a los barcos
         if (attack){
+          printf("Atacar");
           attackShip(row, col);
         } else {
+          // Coloca un barco
+          printf("poner barco");
           placeShip(row, col, shipSize, horizontal);
         }
       }
       if (event.mouseButton.button == Mouse::Right) {
         // Remove ship
-        removeShip(row, col);
+        if (!selected){
+          printf("Remove ship");
+          // Remueve el barco
+          removeShip(row, col);
+          movement --;
+        } else {
+          // Select ship
+          // Veridificar si hay un barco en la posicion
+          if(isShipPlaced(row, col)) {
+            // coordenadas del barco que ataca
+            xCord = row;
+            yCord = col;      
+          }
+        }
       }
     }else if(buyButton.isMouseOver(window)) {
+      // comprar barco
+      // Ship contiene numero el barco a comprar
       printf("Buy ship\n");
+      movement --;
     } else if(leftBuyButton.isMouseOver(window)) {
       Ship= (Ship - 1) % 6;
       if (Ship < 0) {
@@ -216,10 +258,17 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       previousSelection = (previousSelection + 1) % 6;
     } else if(selectedButton.isMouseOver(window)) {
       selectedShip = previousSelection;
+      // coloca el barco seleccionado
+      // selectedShip posee el barco seleccionado
+      printf ("Selected ship: %d\n", selectedShip);
     }else if(buyPointsButton.isMouseOver(window)) {
+      // comprar puntos de mejora
       printf("Buy points\n");
+      movement --;
     }
   }else if(event.type==Event::KeyPressed) {
+    // Si preseiona la letra A ataca barcos y pasa a una matriz sin barcos
+    // Si presiona la letra S pasa a modo seleccion de barcos con click derecho
     if (event.key.code == Keyboard::A) {
       int **matrix= new int*[GRID_SIZE];
       for (int i = 0; i < GRID_SIZE; ++i) {
@@ -232,6 +281,8 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       }
       attack = true;
       updateMatrix(matrix);
+    }else if(event.key.code == Keyboard::S) {
+      selected = !selected;
     }
   }
 }
@@ -252,4 +303,13 @@ void GameMap::selectedButtonAction(RenderWindow& window) {
   Sprite shipSprite = shipSprites[previousSelection];
   shipSprite.setPosition(180, 500);
   window.draw(shipSprite);
+}
+
+bool GameMap::isShipPlaced(int x, int y) {
+  return board[x][y] != WATER;
+}
+
+void GameMap::reset() {
+  attack = false;
+  selected = false;
 }
