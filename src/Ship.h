@@ -29,6 +29,6 @@ public:
     std::string getName() const;
 
     virtual void logOperation(const std::string& type, int iterations, double time); // NOT FULLY IMPLEMENTED
-}
+};
 
 #endif
