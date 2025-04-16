@@ -56,8 +56,8 @@ private:
     int cols;
     // Dinero en el juego
     int money;
-    char **ownBoard;      // Tablero donde se ubican los barcos del jugador.
-    char **trackingBoard; // Tablero para registrar los disparos realizados al oponente.
+    int** ownBoard;      // Tablero donde se ubican los barcos del jugador.
+    int** trackingBoard; // Tablero para registrar los disparos realizados al oponente.
     std::vector<Ship> ships;  // Vector con los barcos del jugador.
     
     int actions;  // Acciones disponibles en el turno.

@@ -3,11 +3,11 @@
 #include <cstdlib>
 
 Player::Player(int rows, int cols) : rows(rows), cols(cols), actions(3) {  // Ejemplo: 3 acciones por turno.
-    ownBoard = new char*[rows];
-    trackingBoard = new char*[rows];
+    ownBoard = new int*[rows];
+    trackingBoard = new int*[rows];
     for (int i = 0; i < rows; i++) {
-        ownBoard[i] = new char[cols];
-        trackingBoard[i] = new char[cols];
+        ownBoard[i] = new int[cols];
+        trackingBoard[i] = new int[cols];
     }
     initializeBoards();
     money = 1000;
@@ -25,8 +25,8 @@ Player::~Player() {
 void Player::initializeBoards() {
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
-            ownBoard[i][j] = '-';
-            trackingBoard[i][j] = '-';
+            ownBoard[i][j] = -1;
+            trackingBoard[i][j] = -1;
         }
     }
 }
@@ -40,10 +40,15 @@ void Player::placeShips(int numShips, int levelShip) {
         if (levelShip == -1) {
             level = std::rand() % 6 + 1; // Asignar un nivel aleatorio entre 1 y 6.
         }
-        if (ownBoard[r][c] == '-') {
-            ownBoard[r][c] = 'S';
+        if (ownBoard[r][c] == -1) {
             // Se asignan valores por defecto: vida = 3, daño = 1.
             ships.push_back(Ship(r, c, 3, 1, level));
+            for (size_t i = 0; i < ships.size(); i++) {
+                if (ships[i].occupies(r, c)) {
+                    ownBoard[r][c] = ships[i].getLevel(); // 'S' indica que hay un barco.
+                    break;
+                }
+            }
         }
     }
 }
@@ -54,33 +59,33 @@ bool Player::receiveShot(int row, int col, int damage) {
         return false;
     }
     // Si ya se disparó en esta celda.
-    if (ownBoard[row][col] == 'X' || ownBoard[row][col] == 'O') {
-        std::cout << "¡Ya se disparó en esa posición!" << std::endl;
-        return false;
-    }
-    if (ownBoard[row][col] == 'S'|| ownBoard[row][col] == 'D') {
+    // if (ownBoard[row][col] == 'X' || ownBoard[row][col] == 'O') {
+    //     std::cout << "¡Ya se disparó en esa posición!" << std::endl;
+    //     return false;
+    // }
+    if (ownBoard[row][col] >= 0|| ownBoard[row][col] <= 5) {
         // Buscar el barco que ocupa esta celda.
         for (size_t i = 0; i < ships.size(); i++) {
             if (ships[i].occupies(row, col)) {
                 bool sunk = ships[i].applyDamage(damage);  // Se aplica 1 punto de daño.
                 if (sunk) {
-                    ownBoard[row][col] = 'X';
+                    // ownBoard[row][col] = 'X';
                     std::cout << "¡Impacto y barco hundido!" << std::endl;
                 } else {
-                    ownBoard[row][col] = 'D';  // 'D' indica que fue dañado.
+                    // ownBoard[row][col] = 'D';  // 'D' indica que fue dañado.
                     std::cout << "¡Impacto!" << std::endl;
                 }
                 return true;
             }
         }
-    } else if (ownBoard[row][col] == '-') {
-        ownBoard[row][col] = 'O';
+    } else if (ownBoard[row][col] == -1) {
+        // ownBoard[row][col] = 'O';
         std::cout << "¡Agua!" << std::endl;
         return false;
     }
     return false;
 }
-
+// NO se deberia de usar 
 void Player::recordShot(int row, int col, bool hit) {
     if (row < 0 || row >= rows || col < 0 || col >= cols)
         return;
@@ -162,7 +167,7 @@ bool Player::moveShip() {
     Ship &shipToMove = ships[shipIndex];
     int oldRow = shipToMove.getRow();
     int oldCol = shipToMove.getCol();
-    ownBoard[oldRow][oldCol] = '-';
+    ownBoard[oldRow][oldCol] = -1;
     
     int newRow, newCol;
     std::cout << "Ingrese la nueva fila y columna para el barco: ";
@@ -170,12 +175,12 @@ bool Player::moveShip() {
     if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols || ownBoard[newRow][newCol] != '-') {
         std::cout << "Posición inválida o ya ocupada." << std::endl;
         // Restaura la posición original.
-        ownBoard[oldRow][oldCol] = 'S';
+        ownBoard[oldRow][oldCol] = shipToMove.getLevel();
         return false;
     }
     // Coloca el barco en la nueva posición y actualiza su información.
     shipToMove.setPosition(newRow, newCol);
-    ownBoard[newRow][newCol] = 'S';
+    ownBoard[newRow][newCol] = shipToMove.getLevel();
     std::cout << "Barco movido exitosamente." << std::endl;
     return true;
 }

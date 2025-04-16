@@ -99,7 +99,7 @@ void Game::playerTurn(Player* current, Player* opponent) {
             // Buy ship
             if (option == 3) {
                 // se obtiene el nivel del barco a comprar
-                int level = 1; 
+                int level = 2; 
                 current->placeShips(1,level);
                 current->lessMoney(currency->getShip(level));
                 std::cout << "\nTablero propio:" << std::endl;
