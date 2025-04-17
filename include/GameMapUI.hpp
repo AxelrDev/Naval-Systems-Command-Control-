@@ -117,6 +117,8 @@ public:
     void addShipStorage(int row, int col, Player* player);
 
     int getAction();
+
+    void buyShips(Player* player);
     
 
 private:
@@ -154,7 +156,7 @@ private:
     // Barco seleccionado
     int selectedShip = 0;
     // Barco a comprado
-    int Ship=0;
+    int buyShip=0;
     int previousSelection = 0;
     // Atacar
     bool attack = false;

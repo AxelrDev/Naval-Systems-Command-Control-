@@ -126,11 +126,11 @@ void GameMap::render(RenderWindow& window) {
   printText(window, to_string(currency), 575, 5);
   printText(window, "0", 615, 85);
   printText(window, "0", 615, 160);
-  printText(window, cost[Ship], 540, 350);
+  printText(window, cost[buyShip], 540, 350);
   printText(window, "Y:"+to_string(xCord), 440, 500);
   printText(window, "X:"+to_string(yCord), 340, 500);
   printText(window, "Actions:"+to_string(getAction()), 340, 580);
-  window.draw(shipSprites[Ship]);
+  window.draw(shipSprites[buyShip]);
   selectedButtonAction(window);
   window.draw(improvementPointsSprite);
   window.display();
@@ -315,6 +315,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
             player2->setPlayerBoard();
             updateMatrix(player2->getChangeMatrix());
             player2->setLessAction();
+            printf("Actions Player 2: %d\n", player2->getaction());
             player2->displayOwnBoard();
           }
           // printf("poner barco");
@@ -360,14 +361,24 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
     }else if(buyButton.isMouseOver(window)) {
       // comprar barco
       // Ship contiene numero el barco a comprar
-      printf("Buy ship\n");
+      if(playerTurn) {
+        buyShips(player1);
+        player1->setLessAction();
+        printf("Actions Player 1: %d\n", player1->getaction());
+        updateMatrix(player1->getChangeMatrix());
+      } else {
+        buyShips(player2);
+        player2->setLessAction();
+        printf("Actions Player 2: %d\n", player2->getaction());
+        updateMatrix(player2->getChangeMatrix());
+      }
     } else if(leftBuyButton.isMouseOver(window)) {
-      Ship= (Ship - 1) % 6;
-      if (Ship < 0) {
-        Ship = 5;
+      buyShip= (buyShip - 1) % 6;
+      if (buyShip < 0) {
+        buyShip = 5;
       }
     } else if(rightBuyButton.isMouseOver(window)) {
-      Ship= (Ship + 1) % 6;
+      buyShip= (buyShip + 1) % 6;
     }else if(leftShipButton.isMouseOver(window)) {
       previousSelection = (previousSelection - 1) % 6;
       if (previousSelection < 0) {
@@ -451,4 +462,11 @@ int GameMap::getAction() {
   } else {
     return player2->getaction();
   }
+}
+
+void GameMap::buyShips(Player* player) {
+    Ship ship = Ship(1, 1, 3, 1, buyShip);
+    player->setShipStorage(ship);
+    player->lessMoney(100 * (buyShip + 1));
+    
 }

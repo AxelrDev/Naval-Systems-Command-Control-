@@ -1,6 +1,9 @@
 #ifndef SHIP_HPP
 #define SHIP_HPP
 
+#define LIFE 3
+#define DAMAGE 1
+
 class Ship {
 public:
     // Constructor: recibe la posición (row, col), la vida y el daño.
