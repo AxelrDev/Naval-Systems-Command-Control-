@@ -222,11 +222,12 @@ int** Player::getTrackingBoard() {
     return trackingBoard;
 }
 
-bool Player::isShipempty(Player* player) {
-    if (player->shipStorage.getEmpty() == true) {
-        return true;
+bool Player::isShipempty() {
+    if(shipStorage.getEmpty()) {
+        return true; // El barco está vacío
+    }else {
+        return false; // El barco no está vacío
     }
-    return false;
 }
 
 
@@ -239,4 +240,8 @@ void Player::setShipStorage(Ship ship) {
 
 std::vector<Ship>& Player::getShips() {
     return ships;
+}
+
+void Player::setShipStorageEmpty() {
+    shipStorage.setEmpty(true);
 }

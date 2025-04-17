@@ -53,9 +53,10 @@ public:
 
     int** getboard();
     int** getTrackingBoard();
+    void setShipStorageEmpty();
 
     // Revisa si hay barcos en el almacenamiento del jugador.
-    bool isShipempty(Player* player);
+    bool isShipempty();
     Ship getShipStorage();
     void setShipStorage(Ship ship);
     std::vector<Ship>& getShips();

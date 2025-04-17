@@ -16,7 +16,7 @@ using namespace sf;
 #define CELL_SIZE 50
 #define NUM_SHIPS 5
 #define INCREMENT 100
-#define TURNS 5
+#define TURNS 10
 
 enum cellState{
     WATER = -1,
