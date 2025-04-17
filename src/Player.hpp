@@ -52,8 +52,11 @@ public:
     void upGradeShip(int row, int col);
 
     int** getboard();
+    int** getChangeMatrix();
     int** getTrackingBoard();
     void setShipStorageEmpty();
+    void attackMatrix();
+    void setPlayerBoard();
 
     // Revisa si hay barcos en el almacenamiento del jugador.
     bool isShipempty();
@@ -67,7 +70,7 @@ private:
     // Dinero en el juego
     int money;
     int** ownBoard;      // Tablero donde se ubican los barcos del jugador.
-    int** trackingBoard; // Tablero para registrar los disparos realizados al oponente.
+    int** changeMatrix; // Tablero para registrar los disparos realizados al oponente.
     std::vector<Ship> ships;  // Vector con los barcos del jugador.
     Ship shipStorage; 
     

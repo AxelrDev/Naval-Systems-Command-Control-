@@ -4,10 +4,10 @@
 
 Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acciones por turno.
     ownBoard = new int*[rows];
-    trackingBoard = new int*[rows];
+    changeMatrix = new int*[rows];
     for (int i = 0; i < rows; i++) {
         ownBoard[i] = new int[cols];
-        trackingBoard[i] = new int[cols];
+        changeMatrix[i] = new int[cols];
     }
     initializeBoards();
     money = 1000;
@@ -17,17 +17,17 @@ Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acc
 Player::~Player() {
     for (int i = 0; i < rows; i++) {
         delete[] ownBoard[i];
-        delete[] trackingBoard[i];
+        delete[] changeMatrix[i];
     }
     delete[] ownBoard;
-    delete[] trackingBoard;
+    delete[] changeMatrix;
 }
 
 void Player::initializeBoards() {
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
             ownBoard[i][j] = -1;
-            trackingBoard[i][j] = -1;
+            changeMatrix[i][j] = -1;
         }
     }
 }
@@ -92,7 +92,7 @@ bool Player::receiveShot(int row, int col, int damage) {
 void Player::recordShot(int row, int col, bool hit) {
     if (row < 0 || row >= rows || col < 0 || col >= cols)
         return;
-    trackingBoard[row][col] = hit ? 'X' : 'O';
+    changeMatrix[row][col] = hit ? 'X' : 'O';
 }
 
 void Player::displayOwnBoard() {
@@ -124,7 +124,7 @@ void Player::displayTrackingBoard() {
             if(j==0){
                 std::cout << i <<" " ;
             }
-            std::cout << trackingBoard[i][j] << " ";
+            std::cout << changeMatrix[i][j] << " ";
         }
         std::cout << std::endl;
     }
@@ -218,8 +218,10 @@ int** Player::getboard() {
     return ownBoard;
 }
 
+
+
 int** Player::getTrackingBoard() {
-    return trackingBoard;
+    return changeMatrix;
 }
 
 bool Player::isShipempty() {
@@ -244,4 +246,24 @@ std::vector<Ship>& Player::getShips() {
 
 void Player::setShipStorageEmpty() {
     shipStorage.setEmpty(true);
+}
+
+void Player::attackMatrix() {
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            changeMatrix[i][j] = -1;
+        }
+    }
+}
+
+void Player::setPlayerBoard() {
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            changeMatrix[i][j] = ownBoard[i][j];
+        }
+    }
+}
+
+int **Player::getChangeMatrix() {
+    return changeMatrix;
 }

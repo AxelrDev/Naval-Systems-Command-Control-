@@ -101,6 +101,13 @@ void GameMap::smokeExplosion(RenderWindow& window, int x, int y) {
       (float)CELL_SIZE / explosionTexture.getSize().x,
       (float)CELL_SIZE / explosionTexture.getSize().y
   );
+  if(isShipPlaced(x, y, player2->getboard())) {
+    explosionSprite.setColor(Color::Red);
+  } else if(isShipPlaced(x, y, player2->getboard())) {
+    explosionSprite.setColor(Color::Green);
+  } else {
+    explosionSprite.setColor(Color::White);
+  }
   window.draw(explosionSprite);
 }
 
@@ -122,6 +129,7 @@ void GameMap::render(RenderWindow& window) {
   printText(window, cost[Ship], 540, 350);
   printText(window, "Y:"+to_string(xCord), 440, 500);
   printText(window, "X:"+to_string(yCord), 340, 500);
+  printText(window, "Actions:"+to_string(getAction()), 340, 580);
   window.draw(shipSprites[Ship]);
   selectedButtonAction(window);
   window.draw(improvementPointsSprite);
@@ -169,19 +177,26 @@ void GameMap::run(RenderWindow& window) {
       render(window);
       window.display();
       if (playerTurn == true) {
-        updateMatrix(player1->getboard());
+        currency = player1->getMoney();
+        updateMatrix(player1->getChangeMatrix());
       }
       if (playerTurn == false) {
-        updateMatrix(player2->getboard());
+        currency = player2->getMoney();
+        updateMatrix(player2->getChangeMatrix());
       }
       // new game wait
       // cambio de jugador y pantalla en negro
-      if (player1->getaction() == 0 || player2->getaction() == 0) {
+      if (player1->getaction() == 0 && playerTurn) {
         blackScreen(window);
-        movement = 5;
-        playerTurn = !playerTurn;
-        player1->setaction(TURNS);
-        player2->setaction(TURNS);
+        printf("Player 1 turn\n");
+        playerTurn = false;  // pasa a jugador 2
+        player2->setaction(TURNS);  // solo jugador 2 recibe nuevos turnos
+      }
+      else if (player2->getaction() == 0 && !playerTurn) {
+        blackScreen(window);
+        printf("Player 2 turn\n");
+        playerTurn = true;   // pasa a jugador 1
+        player1->setaction(TURNS);  // solo jugador 1 recibe nuevos turnos
       }
       // Cambio de turno
       if(playerTurn){
@@ -203,6 +218,16 @@ void GameMap::run(RenderWindow& window) {
         endRound = true;
         window.close();
       }
+
+      if(attack) {
+        // Si el jugador ataca, se muestra la matriz de ataque
+        player1->attackMatrix();
+        player2->attackMatrix();
+      }else{
+        // Si el jugador no ataca, se muestra la matriz de barcos
+        player1->setPlayerBoard();
+        player2->setPlayerBoard();
+      }
     }
   }
 }
@@ -221,10 +246,14 @@ void GameMap::placeShip(int row, int col, int size, bool horizontal) {
 }
 
 void GameMap::blackScreen(RenderWindow& window) {
+  changePlayer=true;
   sf::sleep(sf::seconds(1));
   window.clear(sf::Color::Black);
   window.display();
   sf::sleep(sf::seconds(5));
+  player1->setaction(TURNS);
+  player2->setaction(TURNS);
+  changePlayer=false;
 }
 
 void GameMap::handleEvent(RenderWindow& window, Event& event) {
@@ -257,7 +286,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
               player2->receiveShot(row, col, damage);
               player1->setLessAction();
               printf("Actions: %d\n", player1->getaction());
-              updateMatrix(player1->getboard());
+              updateMatrix(player1->getChangeMatrix());
               player1->plusMoney(INCREMENT);
               
             } else {
@@ -265,7 +294,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
               player1->receiveShot(row, col, damage);
               player2->setLessAction();
               printf("Actions: %d\n", player2->getaction());
-              updateMatrix(player2->getboard());
+              updateMatrix(player2->getChangeMatrix());
               player2->plusMoney(INCREMENT);
               
             }
@@ -277,11 +306,15 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
           // Coloca un barco
           if (playerTurn) {
             addShipStorage(row, col, player1);
-            updateMatrix(player1->getboard());
+            player1->setPlayerBoard();
+            updateMatrix(player1->getChangeMatrix());
+            player1->setLessAction();
             player1->displayOwnBoard();
           } else {
             addShipStorage(row, col, player2);
-            updateMatrix(player2->getboard());
+            player2->setPlayerBoard();
+            updateMatrix(player2->getChangeMatrix());
+            player2->setLessAction();
             player2->displayOwnBoard();
           }
           // printf("poner barco");
@@ -291,18 +324,20 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       if (event.mouseButton.button == Mouse::Right) {
         // Remove ship
         if (!selected){
-          if (playerTurn) {
+          if (playerTurn && isShipPlaced(row, col, player1->getboard())) {
             removeShip(row, col, player1);
-            player1->setLessAction();
+            //player1->setLessAction();
             player1->plusMoney(INCREMENT);
             player1->displayOwnBoard();
-            updateMatrix(player1->getboard());
-          } else {
+            updateMatrix(player1->getChangeMatrix());
+          } else if(isShipPlaced(row, col, player2->getboard())) {
             removeShip(row, col, player2);
-            player2->setLessAction();
+            //player2->setLessAction();
             player2->plusMoney(INCREMENT);
             player2->displayOwnBoard();
-            updateMatrix(player2->getboard());
+            updateMatrix(player2->getChangeMatrix());
+          }else {
+            printf("No hay barcos en esa posición\n");
           }
         } else {
           // Select ship
@@ -326,7 +361,6 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       // comprar barco
       // Ship contiene numero el barco a comprar
       printf("Buy ship\n");
-      movement --;
     } else if(leftBuyButton.isMouseOver(window)) {
       Ship= (Ship - 1) % 6;
       if (Ship < 0) {
@@ -349,23 +383,13 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
     }else if(buyPointsButton.isMouseOver(window)) {
       // comprar puntos de mejora
       printf("Buy points\n");
-      movement --;
     }
   }else if(event.type==Event::KeyPressed) {
     // Si preseiona la letra A ataca barcos y pasa a una matriz sin barcos
     // Si presiona la letra S pasa a modo seleccion de barcos con click derecho
     if (event.key.code == Keyboard::A) {
-      int **matrix= new int*[GRID_SIZE];
-      for (int i = 0; i < GRID_SIZE; ++i) {
-        matrix[i] = new int[GRID_SIZE];
-      }
-      for (int i = 0; i < GRID_SIZE; ++i) {
-        for (int j = 0; j < GRID_SIZE; ++j) {
-          matrix[i][j] = WATER;
-        }
-      }
-      attack = true;
-      updateMatrix(matrix);
+      // Cambia el estado de ataque
+      attack = !attack;
     }else if(event.key.code == Keyboard::S) {
       selected = !selected;
     }
@@ -419,4 +443,12 @@ bool GameMap::isShipPlaced(int x, int y, int** board) {
 void GameMap::reset() {
   attack = false;
   selected = false;
+}
+
+int GameMap::getAction() {
+  if(playerTurn) {
+    return player1->getaction();
+  } else {
+    return player2->getaction();
+  }
 }

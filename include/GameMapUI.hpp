@@ -16,7 +16,7 @@ using namespace sf;
 #define CELL_SIZE 50
 #define NUM_SHIPS 5
 #define INCREMENT 100
-#define TURNS 10
+#define TURNS 5
 
 enum cellState{
     WATER = -1,
@@ -115,6 +115,8 @@ public:
     void reset();
 
     void addShipStorage(int row, int col, Player* player);
+
+    int getAction();
     
 
 private:
@@ -160,7 +162,7 @@ private:
     // Barcos seleccionado para atacar
     bool selected = false;
     // Turno del jugador
-    bool playerTurn = false;
+    bool playerTurn = true;
     // Coordenadas barco que ataca
     int xCord = -1;
     int yCord = -1;
@@ -168,6 +170,8 @@ private:
     int movement = 5;
     // Dinero
     int currency = 0;
+
+    bool changePlayer = false;
 };
 
 #endif // !GAMEMAPUI
