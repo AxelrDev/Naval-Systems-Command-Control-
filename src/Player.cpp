@@ -222,12 +222,13 @@ int** Player::getTrackingBoard() {
     return trackingBoard;
 }
 
-bool Player::Shipempty(Player* player) {
+bool Player::isShipempty(Player* player) {
     if (player->shipStorage.getEmpty() == true) {
         return true;
     }
     return false;
 }
+
 
 Ship Player::getShipStorage() {
     return shipStorage;

@@ -369,7 +369,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
 }
 void GameMap::removeShip(int row, int col, Player* player) {
   // Comprueba si el jugador tiene barcos en el storage
-  if (player->Shipempty(player)) {
+  if (player->isShipempty(player)) {
       auto &ships = player->getShips();  // Referencia al vector interno de barcos
       // Recorre cada barco para encontrar el que ocupa la celda (row, col)
       for (size_t i = 0; i < ships.size(); ++i) {
@@ -386,7 +386,7 @@ void GameMap::removeShip(int row, int col, Player* player) {
 
 void GameMap::addShipStorage(int row, int col, Player* player) {
   // Solo actúa si hay un barco previamente guardado en el storage
-  if (!player->Shipempty(player)) {
+  if (!player->isShipempty(player)) {
       auto &ships = player->getShips();  // Referencia al vector interno de barcos
       // Posiciona el barco almacenado en (row, col)
       player->getShipStorage()->setPosition(row, col);
