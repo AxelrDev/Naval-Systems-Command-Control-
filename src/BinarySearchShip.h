@@ -2,18 +2,22 @@
 #define BINARYSEARCHSHIP_H
 
 #include "Ship.h"
-#include <vector>
 
 class BinarySearchShip : public Ship {
 private:
-    std::vector<int> sortedArray;
+    int* elementsArray;
+    int  elementCount;
+    int  maxCapacity;
+
+    void sortArray();
 
 public:
     BinarySearchShip();
+    ~BinarySearchShip();
 
-    int search(int target) override;
+    int  search(int target) override;
     void insert(int element) override;
     void remove(int element) override;
 };
 
-#endif
+#endif // BINARYSEARCHSHIP_H

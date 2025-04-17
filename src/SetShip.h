@@ -2,18 +2,22 @@
 #define SETSHIP_H
 
 #include "Ship.h"
-#include <set>
 
 class SetShip : public Ship {
 private:
-    std::set<int> internalSet;
+    int* elementsArray;
+    int  elementCount;
+    int  maxCapacity;
+
+    int findIndex(int element);
 
 public:
     SetShip();
+    ~SetShip();
 
-    int search(int target) override;
+    int  search(int target) override;
     void insert(int element) override;
     void remove(int element) override;
 };
 
-#endif
+#endif // SETSHIP_H

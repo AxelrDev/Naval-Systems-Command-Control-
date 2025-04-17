@@ -6,27 +6,27 @@
 class SplayTreeShip : public Ship {
 private:
     struct Node {
-        int key;
-        Node* left;
-        Node* right;
-        Node* parent;
+        int   key;
+        Node* leftChild;
+        Node* rightChild;
+        Node* parentNode;
+        Node(int k)
+          : key(k),
+            leftChild(nullptr), rightChild(nullptr), parentNode(nullptr)
+        {}
     };
+    Node* rootNode;
 
-    Node* root;
-
-    void splay(Node* node);
     void rotateLeft(Node* x);
     void rotateRight(Node* y);
-    Node* searchNode(int key);
+    void splayNode(Node* x);
     Node* insertNode(int key);
-    Node* deleteNode(Node* key);
-    Node* maximum(Node* node);
-    Node* join(Node* leftSubtree, Node* rightSubtree);
+    Node* searchNode(int key);
+    Node* joinTrees(Node* leftTree, Node* rightTree);
 
 public:
     SplayTreeShip();
-
-    int search(int target) override;
+    int  search(int target) override;
     void insert(int element) override;
     void remove(int element) override;
 };

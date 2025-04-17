@@ -1,26 +1,36 @@
 #include "Ship.h"
+#include "Constants.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 
-void Ship::logOperation(const std::string& type, int iterations, double time) {
-    // Abrimos (o creamos) un archivo de log
-    std::ofstream logFile("battle_log.txt", std::ios::app);
+Ship::Ship(const std::string& shipName_, int shipPrice_)
+  : shipName(shipName_), shipPrice(shipPrice_), shipHealth(100)
+{}
 
-    if (!logFile.is_open()) {
-        std::cerr << "Error opening battle log file." << std::endl;
+void Ship::logOperation(const std::string& operationType,
+                        int iterationCount,
+                        double executionTime) {
+    std::ofstream logFile("battle_log.txt", std::ios::app);
+    if (!logFile) {
+        std::cerr << "Error opening battle_log.txt\n";
         return;
     }
-
-    // Escribimos los datos de la operación
-    logFile << "=== Operation Log ===" << std::endl;
-    logFile << "Ship: " << name << std::endl;
-    logFile << "Operation: " << type << std::endl;
-    logFile << "Iterations: " << iterations << std::endl;
-    logFile << std::fixed << std::setprecision(6)
-            << "Execution Time: " << time << " seconds" << std::endl;
-    logFile << "Damage: " << calculateDamage(iterations) << std::endl;
-    logFile << "-----------------------" << std::endl;
-
-    logFile.close();
+    logFile << "=== Operation Log ===\n"
+            << "Ship: "      << shipName        << "\n"
+            << "Operation: " << operationType   << "\n"
+            << "Iterations: "<< iterationCount  << "\n"
+            << std::fixed << std::setprecision(6)
+            << "Time: "      << executionTime   << "s\n"
+            << "Damage: "    << calculateDamage(iterationCount) << "\n"
+            << "----------------------\n";
 }
+
+int Ship::calculateDamage(int iterationCount) {
+    return iterationCount > 0
+         ? DAMAGE_CONSTANT / iterationCount
+         : DAMAGE_CONSTANT;
+}
+
+const std::string& Ship::getName()  const { return shipName; }
+int                Ship::getPrice() const { return shipPrice; }

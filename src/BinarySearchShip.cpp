@@ -1,47 +1,71 @@
 #include "BinarySearchShip.h"
+#include "Constants.h"
 #include <chrono>
-#include <algorithm>
 #include <cstdlib>
 
-BinarySearchShip::BinarySearchShip() : Ship("BinarySearch", /*price=*/110) {
+BinarySearchShip::BinarySearchShip()
+  : Ship("BinarySearch", PRICE_BINARY_SEARCH),
+    elementCount(0), maxCapacity(MAX_NUM_ELEMENTS)
+{
+    elementsArray = new int[maxCapacity];
     for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        int val = rand() % 1000;
-        sortedArray.push_back(val);
-        elementSet.insert(val);
+        int value = rand() % 1000;
+        elementsArray[elementCount++] = value;
+        elementSet.insert(value);
     }
     sortArray();
 }
 
-int BinarySearchShip::search(int target) {
-    int iterations = 0;
-    auto start = std::chrono::high_resolution_clock::now();
+BinarySearchShip::~BinarySearchShip() {
+    delete[] elementsArray;
+}
 
-    int left = 0, right = sortedArray.size() - 1;
+void BinarySearchShip::sortArray() {
+    for (int i = 1; i < elementCount; ++i) {
+        int keyValue = elementsArray[i];
+        int j = i - 1;
+        while (j >= 0 && elementsArray[j] > keyValue) {
+            elementsArray[j+1] = elementsArray[j];
+            --j;
+        }
+        elementsArray[j+1] = keyValue;
+    }
+}
+
+int BinarySearchShip::search(int target) {
+    int iterationCount = 0;
+    int left = 0, right = elementCount - 1;
+    auto startTime = std::chrono::high_resolution_clock::now();
+
     while (left <= right) {
-        ++iterations;
+        ++iterationCount;
         int mid = (left + right) / 2;
-        if (sortedArray[mid] == target) break;
-        if (sortedArray[mid] < target) left = mid + 1;
-        else right = mid - 1;
+        if      (elementsArray[mid] == target) break;
+        else if (elementsArray[mid] <  target) left  = mid + 1;
+        else                                   right = mid - 1;
     }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    double time = std::chrono::duration<double>(end - start).count();
-    logOperation("search", iterations, time);
-    return iterations;
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("search", iterationCount, execTime);
+    return iterationCount;
 }
 
 void BinarySearchShip::insert(int element) {
-    sortedArray.push_back(element);
+    if (elementCount >= maxCapacity) return;
+    elementsArray[elementCount++] = element;
     elementSet.insert(element);
     sortArray();
 }
 
 void BinarySearchShip::remove(int element) {
-    sortedArray.erase(std::remove(sortedArray.begin(), sortedArray.end(), element), sortedArray.end());
-    elementSet.erase(element);
-}
-
-void BinarySearchShip::sortArray() {
-    std::sort(sortedArray.begin(), sortedArray.end());
+    for (int i = 0; i < elementCount; ++i) {
+        if (elementsArray[i] == element) {
+            for (int j = i; j < elementCount - 1; ++j)
+                elementsArray[j] = elementsArray[j+1];
+            --elementCount;
+            elementSet.erase(element);
+            break;
+        }
+    }
 }

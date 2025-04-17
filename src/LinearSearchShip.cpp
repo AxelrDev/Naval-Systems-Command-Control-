@@ -1,36 +1,61 @@
 #include "LinearSearchShip.h"
+#include "Constants.h"
 #include <chrono>
 #include <cstdlib>
 
-LinearSearchShip::LinearSearchShip() : Ship("LinearSearch", /*price=*/100) {
+LinearSearchShip::LinearSearchShip()
+  : Ship("LinearSearch", PRICE_LINEAR_SEARCH), headNode(nullptr)
+{
     for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        int val = rand() % 1000;
-        linkedList.push_back(val);
-        elementSet.insert(val);
+        int value = rand() % 1000;
+        Node* newNode = new Node(value);
+        newNode->nextNode = headNode;
+        headNode = newNode;
+        elementSet.insert(value);
+    }
+}
+
+LinearSearchShip::~LinearSearchShip() {
+    Node* current = headNode;
+    while (current) {
+        Node* toDelete = current;
+        current = current->nextNode;
+        delete toDelete;
     }
 }
 
 int LinearSearchShip::search(int target) {
-    int iterations = 0;
-    auto start = std::chrono::high_resolution_clock::now();
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (int val : linkedList) {
-        ++iterations;
-        if (val == target) break;
+    for (Node* current = headNode; current; current = current->nextNode) {
+        ++iterationCount;
+        if (current->nodeValue == target) break;
     }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    double time = std::chrono::duration<double>(end - start).count();
-    logOperation("search", iterations, time);
-    return iterations;
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("search", iterationCount, execTime);
+    return iterationCount;
 }
 
 void LinearSearchShip::insert(int element) {
-    linkedList.push_back(element);
+    Node* newNode = new Node(element);
+    newNode->nextNode = headNode;
+    headNode = newNode;
     elementSet.insert(element);
 }
 
 void LinearSearchShip::remove(int element) {
-    linkedList.remove(element);
+    Node* current = headNode;
+    Node* previous = nullptr;
+    while (current && current->nodeValue != element) {
+        previous = current;
+        current = current->nextNode;
+    }
+    if (!current) return;
+    if (!previous) headNode = current->nextNode;
+    else            previous->nextNode = current->nextNode;
+    delete current;
     elementSet.erase(element);
 }
