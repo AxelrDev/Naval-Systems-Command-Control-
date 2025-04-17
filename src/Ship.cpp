@@ -3,8 +3,13 @@
 Ship::Ship(int row, int col, int vida, int damage, int level)
     : row(row), col(col), vida(vida), damage(damage),
     
-    level(level) {}
+    level(level) {
+        empty = false;
+    }
 
+Ship::Ship() : row(-1), col(-1), vida(0), damage(0), level(-1) {
+    empty = true;
+}
 bool Ship::occupies(int r, int c) const {
     return (r == row && c == col);
 }
@@ -41,4 +46,11 @@ void Ship::setPosition(int newRow, int newCol) {
 
 int Ship::getLevel() {
     return level;
+}
+
+bool Ship::getEmpty() {
+    return empty;
+}
+void Ship::setEmpty(bool empty) {
+    this->empty = empty;
 }

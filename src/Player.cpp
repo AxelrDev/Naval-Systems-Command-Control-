@@ -11,7 +11,7 @@ Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acc
     }
     initializeBoards();
     money = 1000;
-    shipStorage = nullptr;
+    shipStorage = Ship(); // Marca el barco como vacío.
 }
 
 Player::~Player() {
@@ -40,7 +40,7 @@ void Player::placeShips(int numShips, int levelShip) {
         int level;
         if (levelShip == -1) {
             level = std::rand() % 6; // Asignar un nivel aleatorio entre 1 y 6.
-        }
+        } 
         if (ownBoard[r][c] == -1) {
             // Se asignan valores por defecto: vida = 3, daño = 1.
             ships.push_back(Ship(r, c, 3, 1, level));
@@ -223,16 +223,16 @@ int** Player::getTrackingBoard() {
 }
 
 bool Player::Shipempty(Player* player) {
-    if (player->shipStorage == nullptr) {
+    if (player->shipStorage.getEmpty() == true) {
         return true;
     }
     return false;
 }
 
-Ship* Player::getShipStorage() {
+Ship Player::getShipStorage() {
     return shipStorage;
 }
-void Player::setShipStorage(Ship* ship) {
+void Player::setShipStorage(Ship ship) {
     shipStorage = ship;
 }
 

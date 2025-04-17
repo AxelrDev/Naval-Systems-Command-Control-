@@ -286,7 +286,6 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
       }
       if (event.mouseButton.button == Mouse::Right) {
         // Remove ship
-        printf("Pointer01\n");
         if (!selected){
           if (playerTurn) {
             removeShip(row, col, player1);
@@ -294,12 +293,10 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
             player1->plusMoney(INCREMENT);
             player1->displayOwnBoard();
             updateMatrix(player1->getboard());
-            printf("Pointer02\n");
           } else {
             removeShip(row, col, player2);
             player2->setLessAction();
             player2->plusMoney(INCREMENT);
-            printf("Pointer03\n");
             player2->displayOwnBoard();
             updateMatrix(player2->getboard());
           }
@@ -370,33 +367,37 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
     }
   }
 }
-
 void GameMap::removeShip(int row, int col, Player* player) {
+  // Comprueba si el jugador tiene barcos en el storage
   if (player->Shipempty(player)) {
-    auto &ships = player->getShips();
-    for (size_t i = 0; i < ships.size(); i++) {
-      if (ships[i].occupies(row, col)) {
-        player->setShipStorage(&ships[i]);
-        player->getShips().erase(ships.begin() + i);
-        player->getboard()[row][col] = WATER;
-        return;
+      auto &ships = player->getShips();  // Referencia al vector interno de barcos
+      // Recorre cada barco para encontrar el que ocupa la celda (row, col)
+      for (size_t i = 0; i < ships.size(); ++i) {
+          if (ships[i].occupies(row, col)) {
+              player->setShipStorage(&ships[i]);             // Guarda el barco seleccionado
+              ships.erase(ships.begin() + i);                // Lo elimina del vector
+              player->getboard()[row][col] = WATER;          // Marca la celda como agua
+              return;                                        // Sale tras eliminar el barco
+          }
       }
-    }
   }
-  return;
+  // Si no hay barcos o no se encontró ninguno, no realiza ninguna acción
 }
 
 void GameMap::addShipStorage(int row, int col, Player* player) {
-  if (player->Shipempty(player) == false) {
-    auto &ships = player->getShips();
-    player->getShipStorage()->setPosition(row, col);
-    ships.push_back(*player->getShipStorage());
-    player->getboard()[row][col] = player->getShipStorage()->getLevel();
-    player->lessMoney(player->getShipStorage()->getLevel());
-    player->setShipStorage(nullptr);
+  // Solo actúa si hay un barco previamente guardado en el storage
+  if (!player->Shipempty(player)) {
+      auto &ships = player->getShips();  // Referencia al vector interno de barcos
+      // Posiciona el barco almacenado en (row, col)
+      player->getShipStorage()->setPosition(row, col);
+      ships.push_back(*player->getShipStorage());  // Añade el barco al vector
+      // Refleja el nivel del barco en la matriz del tablero
+      player->getboard()[row][col] = player->getShipStorage()->getLevel();
+      // Descarga el coste (nivel) del dinero del jugador
+      player->lessMoney(player->getShipStorage()->getLevel());
+      player->setShipStorage(nullptr);  // Limpia el puntero de storage
   }
 }
-
 void GameMap::draw(RenderWindow& window) {
   // Draw background
   window.draw(backgroundSprite);

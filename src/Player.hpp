@@ -54,9 +54,10 @@ public:
     int** getboard();
     int** getTrackingBoard();
 
+    // Revisa si hay barcos en el almacenamiento del jugador.
     bool Shipempty(Player* player);
-    Ship* getShipStorage();
-    void setShipStorage(Ship* ship);
+    Ship getShipStorage();
+    void setShipStorage(Ship ship);
     std::vector<Ship>& getShips();
 
 private:
@@ -67,7 +68,7 @@ private:
     int** ownBoard;      // Tablero donde se ubican los barcos del jugador.
     int** trackingBoard; // Tablero para registrar los disparos realizados al oponente.
     std::vector<Ship> ships;  // Vector con los barcos del jugador.
-    Ship* shipStorage; 
+    Ship shipStorage; 
     
     int actions;  // Acciones disponibles en el turno.
     
