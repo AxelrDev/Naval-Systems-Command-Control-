@@ -51,14 +51,23 @@ public:
     // Mejorar el barco en la posición (row, col).
     void upGradeShip(int row, int col);
 
+    int** getboard();
+    int** getTrackingBoard();
+
+    bool Shipempty(Player* player);
+    Ship* getShipStorage();
+    void setShipStorage(Ship* ship);
+    std::vector<Ship> getShips();
+
 private:
     int rows;
     int cols;
     // Dinero en el juego
     int money;
-    char **ownBoard;      // Tablero donde se ubican los barcos del jugador.
-    char **trackingBoard; // Tablero para registrar los disparos realizados al oponente.
+    int** ownBoard;      // Tablero donde se ubican los barcos del jugador.
+    int** trackingBoard; // Tablero para registrar los disparos realizados al oponente.
     std::vector<Ship> ships;  // Vector con los barcos del jugador.
+    Ship* shipStorage; 
     
     int actions;  // Acciones disponibles en el turno.
     

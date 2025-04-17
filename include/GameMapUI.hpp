@@ -5,12 +5,17 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <ButtonUI.hpp>
-#include "Game.hpp"
+// #include "Game.hpp"
+#include "Player.hpp"
+#include "Currency.hpp"
 
 using namespace sf;
 
 #define GRID_SIZE 10
 #define CELL_SIZE 50
+#define NUM_SHIPS 5
+#define INCREMENT 100
+#define TURNS 5
 
 enum cellState{
     WATER = -1,
@@ -68,7 +73,7 @@ public:
      * @param row Fila donde está el barco.
      * @param col Columna donde está el barco.
      */
-    void removeShip(int x, int y);
+    void removeShip(int x, int y, Player* player);
    
     /**
      * @brief Ejecuta un ataque a una celda específica del tablero.
@@ -101,7 +106,7 @@ public:
      * @param y Columna a verificar.
      * @return Verdadero si hay un barco, falso si es agua.
      */
-    bool isShipPlaced(int x, int y);
+    bool isShipPlaced(int x, int y, int** board);
     bool changePlayerTurn();
     /**
      * @brief Reinicia el estado de ataque y selección de barcos.
@@ -130,6 +135,10 @@ private:
     std::vector<Texture> shipTextures;
     std::vector<Sprite> shipSprites;
     std::vector<string> cost;
+    Player* player1;
+    Player* player2;
+    Currency* currencyClass;
+    
 
     // grid
     // Tablero de juego

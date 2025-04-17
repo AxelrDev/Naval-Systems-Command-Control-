@@ -11,9 +11,11 @@ bool Ship::occupies(int r, int c) const {
 
 bool Ship::applyDamage(int damageAmount) {
     vida -= damageAmount;
-    if (vida < 0)
+    if (vida < 0) {
         vida = 0;
     return (vida == 0);
+    }
+    return false;
 }
 
 int Ship::getVida() const {

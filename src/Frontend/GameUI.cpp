@@ -3,6 +3,8 @@
 #include "GameMapUI.hpp"
 #include <SFML/Graphics.hpp>
 #include "SoundUI.hpp"
+#include <time.h>
+#include <stdlib.h>
 using namespace sf;
 
 int main() {
@@ -10,6 +12,7 @@ int main() {
       Style::Titlebar | Style::Close);
   Menu menu;
   SoundUI sound;
+  std::srand(static_cast<unsigned int>(std::time(0)));
   GameMap gameMap = GameMap();
   bool isPlaying = false;
   bool backToMenu = false;
