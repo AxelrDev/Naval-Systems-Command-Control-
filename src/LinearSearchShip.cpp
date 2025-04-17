@@ -40,22 +40,44 @@ int LinearSearchShip::search(int target) {
 }
 
 void LinearSearchShip::insert(int element) {
+    int iterationCount = 1;
+    auto start = std::chrono::high_resolution_clock::now();
+    
     Node* newNode = new Node(element);
     newNode->nextNode = headNode;
     headNode = newNode;
     elementSet.insert(element);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    logOperation("insert", iterationCount,
+                 std::chrono::duration<double>(end-start).count());
 }
 
 void LinearSearchShip::remove(int element) {
+    int iterationCount = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+
     Node* current = headNode;
     Node* previous = nullptr;
     while (current && current->nodeValue != element) {
+        ++iterationCount;
         previous = current;
         current = current->nextNode;
     }
-    if (!current) return;
-    if (!previous) headNode = current->nextNode;
-    else            previous->nextNode = current->nextNode;
-    delete current;
-    elementSet.erase(element);
+    if (!current){
+        ++iterationCount;
+    }
+    else{
+        if (!previous){
+            headNode = current->nextNode;
+        }
+        else {
+            previous->nextNode = current->nextNode;
+        }
+        delete current;
+        elementSet.erase(element);
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    logOperation("remove", iterationCount,
+                 std::chrono::duration<double>(end-start).count());
 }
