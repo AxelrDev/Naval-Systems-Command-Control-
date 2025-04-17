@@ -57,7 +57,7 @@ public:
     bool Shipempty(Player* player);
     Ship* getShipStorage();
     void setShipStorage(Ship* ship);
-    std::vector<Ship> getShips();
+    std::vector<Ship>& getShips();
 
 private:
     int rows;

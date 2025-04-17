@@ -271,8 +271,17 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
 
         } else {
           // Coloca un barco
-          printf("poner barco");
-          placeShip(row, col, shipSize, horizontal);
+          if (playerTurn) {
+            addShipStorage(row, col, player1);
+            updateMatrix(player1->getboard());
+            player1->displayOwnBoard();
+          } else {
+            addShipStorage(row, col, player2);
+            updateMatrix(player2->getboard());
+            player2->displayOwnBoard();
+          }
+          // printf("poner barco");
+          // placeShip(row, col, shipSize, horizontal);
         }
       }
       if (event.mouseButton.button == Mouse::Right) {
@@ -283,12 +292,16 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
             removeShip(row, col, player1);
             player1->setLessAction();
             player1->plusMoney(INCREMENT);
+            player1->displayOwnBoard();
+            updateMatrix(player1->getboard());
             printf("Pointer02\n");
           } else {
             removeShip(row, col, player2);
             player2->setLessAction();
             player2->plusMoney(INCREMENT);
             printf("Pointer03\n");
+            player2->displayOwnBoard();
+            updateMatrix(player2->getboard());
           }
         } else {
           // Select ship
@@ -360,16 +373,28 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
 
 void GameMap::removeShip(int row, int col, Player* player) {
   if (player->Shipempty(player)) {
-    for (size_t i; i < player->getShips().size(); i++) {
-      if (player->getShips()[i].occupies(row, col)) {
-        player->setShipStorage(&player->getShips()[i]);
-        player->getShips().erase(player->getShips().begin() + i);
+    auto &ships = player->getShips();
+    for (size_t i = 0; i < ships.size(); i++) {
+      if (ships[i].occupies(row, col)) {
+        player->setShipStorage(&ships[i]);
+        player->getShips().erase(ships.begin() + i);
         player->getboard()[row][col] = WATER;
         return;
       }
     }
   }
   return;
+}
+
+void GameMap::addShipStorage(int row, int col, Player* player) {
+  if (player->Shipempty(player) == false) {
+    auto &ships = player->getShips();
+    player->getShipStorage()->setPosition(row, col);
+    ships.push_back(*player->getShipStorage());
+    player->getboard()[row][col] = player->getShipStorage()->getLevel();
+    player->lessMoney(player->getShipStorage()->getLevel());
+    player->setShipStorage(nullptr);
+  }
 }
 
 void GameMap::draw(RenderWindow& window) {

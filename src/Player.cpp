@@ -236,6 +236,6 @@ void Player::setShipStorage(Ship* ship) {
     shipStorage = ship;
 }
 
-std::vector<Ship> Player::getShips() {
+std::vector<Ship>& Player::getShips() {
     return ships;
 }

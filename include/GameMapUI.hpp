@@ -8,6 +8,7 @@
 // #include "Game.hpp"
 #include "Player.hpp"
 #include "Currency.hpp"
+#include "Ship.hpp"
 
 using namespace sf;
 
@@ -112,6 +113,8 @@ public:
      * @brief Reinicia el estado de ataque y selección de barcos.
      */
     void reset();
+
+    void addShipStorage(int row, int col, Player* player);
     
 
 private:
