@@ -94,7 +94,7 @@ public:
      * @param x Coordenada horizontal.
      * @param y Coordenada vertical.
      */
-    void printText(RenderWindow& window, const std::string& text, int x, int y);
+    void printText(RenderWindow& window, const std::string& text, int x, int y, const sf::Color color);
     void smokeExplosion(RenderWindow& window, int x, int y);
     /**
      * @brief Dibuja la acción del botón de selección de barco.
@@ -150,6 +150,10 @@ private:
     
   bool canAttack();
   bool canPutShip(Player* player, int row, int col,bool turn);
+
+  void selectedMode(RenderWindow &Window);
+
+
 
 
 private:

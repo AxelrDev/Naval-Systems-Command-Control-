@@ -34,24 +34,23 @@ void Player::initializeBoards() {
 }
 
 void Player::placeShips(int numShips, int levelShip) {
-    // En este ejemplo, se ignora 'mode'. Se colocan barcos de tamaño 1.
-    for(int index = 0; index < numShips; index++){
+    int barcosColocados = 0;
+
+    while (barcosColocados < numShips) {
         int r = std::rand() % rows;
         int c = std::rand() % cols;
-        int level;
-        if (levelShip == -1) {
-            level = std::rand() % 6; // Asignar un nivel aleatorio entre 1 y 6.
-        } 
+
         if (ownBoard[r][c] == -1) {
-            // Se asignan valores por defecto: vida = 3, daño = 1.
-            ships.push_back(Ship(r, c, 3, 1, level));
-            for (size_t i = 0; i < ships.size(); i++) {
-                if (ships[i].occupies(r, c)) {
-                    ownBoard[r][c] = ships[i].getLevel(); // Se asigna el nivel del barco a la posición.
-                }
+            int level;
+            if (levelShip == -1) {
+                level = std::rand() % 6; // Nivel aleatorio entre 1 y 6
             }
-            
+            printf("Colocado");
+            ships.push_back(Ship(r, c, 3, 1, level));
+            ownBoard[r][c] = level;
+            barcosColocados++;
         }
+
     }
 }
 
@@ -73,6 +72,7 @@ bool Player::receiveShot(int row, int col, int damage) {
                 if (sunk) {
                     ownBoard[row][col] = -1;
                     std::cout << "¡Impacto y barco hundido!" << std::endl;
+                    ships.erase(ships.begin()+i);
                 } else {
                     // ownBoard[row][col] = 'D';  // 'D' indica que fue dañado.
                     std::cout << "¡Impacto!" << std::endl;

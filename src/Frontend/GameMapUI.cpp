@@ -83,10 +83,10 @@ if (!explosionTexture.loadFromFile("assets/img/smoke.png")) {
 }
 
 void GameMap::printText(RenderWindow& window, const std::string& text, int x,
-      int y) {
+      int y, const sf::Color color) {
   infoText.setString(text);
   infoText.setCharacterSize(50);
-  infoText.setFillColor(Color::Black);
+  infoText.setFillColor(color);
   infoText.setStyle(Text::Bold);
   infoText.setPosition(x, y);
   window.draw(infoText);
@@ -117,14 +117,15 @@ void GameMap::render(RenderWindow& window) {
   leftBuyButton.draw(window);
   buyButton.draw(window);
   buyPointsButton.draw(window);
-  printText(window, to_string(currency), 575, 5);
-  printText(window, to_string(shipCount), 615, 85);
-  printText(window, "0", 615, 160);
-  printText(window, cost[buyShip], 540, 350);
-  printText(window, "Y:"+to_string(xCord), 440, 500);
-  printText(window, "X:"+to_string(yCord), 340, 500);
-  printText(window, "Actions:"+to_string(getAction()), 340, 580);
-  printText(window, "Points:"+to_string(improvementPoints), 340, 650);
+  printText(window, to_string(currency), 575, 5, sf::Color::Black);
+  printText(window, to_string(shipCount), 615, 85, sf::Color::Black);
+  printText(window, "0", 615, 160, sf::Color::Black);
+  printText(window, cost[buyShip], 540, 350, sf::Color::Black);
+  printText(window, "Y:"+to_string(xCord), 440, 500, sf::Color::Black);
+  printText(window, "X:"+to_string(yCord), 340, 500, sf::Color::Black);
+  printText(window, "Actions:"+to_string(getAction()), 340, 580, sf::Color::Black);
+  printText(window, "Points:"+to_string(improvementPoints), 340, 650, sf::Color::Black);
+  selectedMode(window);
   window.draw(shipSprites[buyShip]);
   selectedButtonAction(window);
   window.draw(improvementPointsSprite);
@@ -186,12 +187,14 @@ void GameMap::run(RenderWindow& window) {
       // cambio de jugador y pantalla en negro
       if (player1->getaction() == 0 && playerTurn) {
         blackScreen(window);
+        reset();
         printf("Player 1 turn\n");
         playerTurn = false;  // pasa a jugador 2
         player2->setaction(TURNS);  // solo jugador 2 recibe nuevos turnos
       }
       else if (player2->getaction() == 0 && !playerTurn) {
         blackScreen(window);
+        reset();
         printf("Player 2 turn\n");
         playerTurn = true;   // pasa a jugador 1
         player1->setaction(TURNS);  // solo jugador 1 recibe nuevos turnos
@@ -480,6 +483,8 @@ bool GameMap::isShipPlaced(int x, int y, int** board) {
 void GameMap::reset() {
   attack = false;
   selected = false;
+  yCord = -1;
+  xCord = -1;
 }
 
 int GameMap::getAction() {
@@ -522,4 +527,18 @@ void GameMap::freeMemory() {
   cost.clear();
 
   std::cout << "Memoria liberada correctamente." << std::endl;
+}
+
+void GameMap::selectedMode(RenderWindow &window){
+  if(attack){
+    printText(window, "Attack", 10, 500, sf::Color::Red);
+  }else{
+    printText(window, "Put", 10, 500, sf::Color::Red);
+  }
+
+  if(selected){
+    printText(window, "Select", 10, 530, sf::Color::Red);
+  }else{
+    printText(window, "Remove", 10, 530, sf::Color::Red);
+  }
 }
