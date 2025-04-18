@@ -199,6 +199,8 @@ private:
     int currency = 0;
 
     bool changePlayer = false;
+
+    int improvementPoints = 0;
 };
 
 #endif // !GAMEMAPUI

@@ -58,6 +58,7 @@ public:
     void setShipStorageEmpty();
     void attackMatrix();
     void setPlayerBoard();
+    int getImprovementPoints();
 
     // Revisa si hay barcos en el almacenamiento del jugador.
     bool isShipempty();

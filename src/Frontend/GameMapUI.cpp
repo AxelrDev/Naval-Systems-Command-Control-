@@ -118,12 +118,13 @@ void GameMap::render(RenderWindow& window) {
   buyButton.draw(window);
   buyPointsButton.draw(window);
   printText(window, to_string(currency), 575, 5);
-  printText(window, "0", 615, 85);
+  printText(window, to_string(shipCount), 615, 85);
   printText(window, "0", 615, 160);
   printText(window, cost[buyShip], 540, 350);
   printText(window, "Y:"+to_string(xCord), 440, 500);
   printText(window, "X:"+to_string(yCord), 340, 500);
   printText(window, "Actions:"+to_string(getAction()), 340, 580);
+  printText(window, "Points:"+to_string(improvementPoints), 340, 650);
   window.draw(shipSprites[buyShip]);
   selectedButtonAction(window);
   window.draw(improvementPointsSprite);
@@ -154,7 +155,6 @@ void GameMap::updateMatrix(int **matrix) {
   }
 }
 
-
 void GameMap::run(RenderWindow& window) {
   bool endRound = false;
   player1->setaction(TURNS);
@@ -171,11 +171,15 @@ void GameMap::run(RenderWindow& window) {
       render(window);
       window.display();
       if (playerTurn == true) {
+        shipCount = player2->getShips().size();
         currency = player1->getMoney();
+        improvementPoints = player1->getImprovementPoints();
         updateMatrix(player1->getChangeMatrix());
       }
       if (playerTurn == false) {
+        shipCount = player1->getShips().size();
         currency = player2->getMoney();
+        player2->getImprovementPoints();
         updateMatrix(player2->getChangeMatrix());
       }
       // new game wait
@@ -265,7 +269,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
         event.mouseButton.y >= 0 && event.mouseButton.y <= GRID_SIZE * CELL_SIZE) {
       handleGridClick(row, col, event.mouseButton.button);
     } else {
-      if(player1->isShipempty() && player2->isShipempty()) {
+      if(player1->isShipempty() && player2->isShipempty() and currency > 0) {
         handleBuyActions(window);
       }
       
@@ -399,6 +403,19 @@ void GameMap::handleBuyActions(RenderWindow& window) {
     buyShip= (buyShip + 1) % 6;
   }else if(buyPointsButton.isMouseOver(window)) {
     // comprar puntos de mejora
+    if(playerTurn) {
+      player1->plusImprovementPoints();
+      player1->lessMoney(100);
+      player1->setLessAction();
+      printf("Actions Player 1: %d\n", player1->getaction());
+      updateMatrix(player1->getChangeMatrix());
+    } else {
+      player2->plusImprovementPoints();
+      player2->lessMoney(100);
+      player2->setLessAction();
+      printf("Actions Player 2: %d\n", player2->getaction());
+      updateMatrix(player2->getChangeMatrix());
+    }
     printf("Buy points\n");
   }
 }

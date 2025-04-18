@@ -272,3 +272,7 @@ int **Player::getChangeMatrix() {
 void Player::plusImprovementPoints() {
     improvementPoints++;
 }
+
+int Player::getImprovementPoints() {
+    return improvementPoints;
+}
