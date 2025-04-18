@@ -366,13 +366,15 @@ void GameMap::handleLeftClick(int row, int col) {
 void GameMap::handleRightClick(int row, int col) {
   // Remove ship
   if (!selected){
-    if (playerTurn && isShipPlaced(row, col, player1->getboard())) {
+    if (playerTurn && isShipPlaced(row, col, player1->getboard()) &&
+        player1->isShipempty()) {
       removeShip(row, col, player1);
       //player1->setLessAction();
       player1->plusMoney(INCREMENT);
       player1->displayOwnBoard();
       updateMatrix(player1->getChangeMatrix());
-    } else if(isShipPlaced(row, col, player2->getboard())) {
+    } else if(isShipPlaced(row, col, player2->getboard()) &&
+        player2->isShipempty()) {
       removeShip(row, col, player2);
       //player2->setLessAction();
       player2->plusMoney(INCREMENT);
