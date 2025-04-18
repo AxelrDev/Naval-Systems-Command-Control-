@@ -14,7 +14,7 @@ using namespace sf;
 
 #define GRID_SIZE 10
 #define CELL_SIZE 50
-#define NUM_SHIPS 5
+#define NUM_SHIPS 0
 #define INCREMENT 100
 #define TURNS 5
 
@@ -119,7 +119,35 @@ public:
     int getAction();
 
     void buyShips(Player* player);
+
+
+private:
+  /// @brief Maneja clics sobre el área de la grilla del mapa.
+  /// @param row Fila clickeada.
+  /// @param col Columna clickeada.
+  /// @param button Botón del mouse presionado.
+  void handleGridClick(int row, int col, sf::Mouse::Button button);
+
+  /// @brief Maneja acciones del clic izquierdo (colocar barcos o atacar).
+  /// @param row Fila del clic.
+  /// @param col Columna del clic.
+  void handleLeftClick(int row, int col);
+
+  /// @brief Maneja acciones del clic derecho (remover o seleccionar barcos).
+  /// @param row Fila del clic.
+  /// @param col Columna del clic.
+  void handleRightClick(int row, int col);
+
+  /// @brief Maneja clics sobre botones de compra, selección, y navegación.
+  /// @param window Referencia a la ventana donde se detectan los clics.
+  void handleBuyActions(sf::RenderWindow& window);
+
+  /// @brief Maneja eventos del teclado para cambiar de modo.
+  /// @param key Tecla presionada.
+  void handleKeyInput(sf::Keyboard::Key key);
     
+  bool canAttack();
+  bool canPutShip(Player* player, int row, int col,bool turn);
 
 private:
     // background
@@ -135,9 +163,6 @@ private:
     Button buyButton;
     Button leftBuyButton;
     Button rightBuyButton;
-    Button selectedButton;
-    Button leftShipButton;
-    Button rightShipButton;
     Button buyPointsButton;
     std::vector<Texture> shipTextures;
     std::vector<Sprite> shipSprites;
@@ -154,7 +179,7 @@ private:
     int shipCount = 0;
     int shipSize = 1;
     // Barco seleccionado
-    int selectedShip = 0;
+    int selectedShip = -1;
     // Barco a comprado
     int buyShip=0;
     int previousSelection = 0;
