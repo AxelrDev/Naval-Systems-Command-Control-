@@ -11,6 +11,7 @@ Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acc
     }
     initializeBoards();
     money = 1000;
+    improvementPoints = 0; // Inicializa los puntos de mejora.
     shipStorage = Ship(); // Marca el barco como vacío.
 }
 
@@ -266,4 +267,8 @@ void Player::setPlayerBoard() {
 
 int **Player::getChangeMatrix() {
     return changeMatrix;
+}
+
+void Player::plusImprovementPoints() {
+    improvementPoints++;
 }

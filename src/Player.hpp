@@ -54,6 +54,7 @@ public:
     int** getboard();
     int** getChangeMatrix();
     int** getTrackingBoard();
+    void plusImprovementPoints();
     void setShipStorageEmpty();
     void attackMatrix();
     void setPlayerBoard();
@@ -73,7 +74,7 @@ private:
     int** changeMatrix; // Tablero para registrar los disparos realizados al oponente.
     std::vector<Ship> ships;  // Vector con los barcos del jugador.
     Ship shipStorage; 
-    
+    int improvementPoints; // Puntos de mejora disponibles.
     int actions;  // Acciones disponibles en el turno.
     
     // Inicializa ambos tableros llenándolos con '-'
