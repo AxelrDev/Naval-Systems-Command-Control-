@@ -27,10 +27,12 @@ void Ship::logOperation(const std::string& operationType,
 }
 
 int Ship::calculateDamage(int iterationCount) {
-    return iterationCount > 0
-         ? DAMAGE_CONSTANT / iterationCount
-         : DAMAGE_CONSTANT;
+    return iterationCount > 0 ? DAMAGE_CONSTANT / iterationCount : DAMAGE_CONSTANT;
 }
 
-const std::string& Ship::getName()  const { return shipName; }
-int                Ship::getPrice() const { return shipPrice; }
+const std::string& Ship::getName()  const {
+  return shipName; 
+}
+int Ship::getPrice() const {
+  return shipPrice;
+}
