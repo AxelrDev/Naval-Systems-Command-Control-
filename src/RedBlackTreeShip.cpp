@@ -18,7 +18,6 @@ RedBlackTreeShip::~RedBlackTreeShip() {
     deleteSubtree(rootNode);
 }
 
-// Método privado que recorre en postorden y elimina
 void RedBlackTreeShip::deleteSubtree(Node* node) {
     if (!node) return;
     deleteSubtree(node->leftChild);
