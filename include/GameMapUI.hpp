@@ -152,8 +152,10 @@ private:
   bool canPutShip(Player* player, int row, int col,bool turn);
 
   void selectedMode(RenderWindow &Window);
-
-
+  void drawBackground(RenderWindow& window);
+  void drawButtons(RenderWindow& window);
+  void drawTexts(RenderWindow& window);
+  void drawSelection(RenderWindow& window);
 
 
 private:

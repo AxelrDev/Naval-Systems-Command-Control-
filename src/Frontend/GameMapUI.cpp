@@ -109,28 +109,46 @@ void GameMap::smokeExplosion(RenderWindow& window, int x, int y) {
 }
 
 void GameMap::render(RenderWindow& window) {
-  // Draw background
   window.clear(sf::Color::Blue);
-  draw(window);
+  drawBackground(window);
+  drawButtons(window);
+  drawTexts(window);
+  drawSelection(window);
+  selectedMode(window);
+  window.display();
+}
+
+void GameMap::drawBackground(RenderWindow& window) {
+  window.draw(backgroundSprite);
   drawShips(window);
+}
+
+void GameMap::drawButtons(RenderWindow& window) {
   rightBuyButton.draw(window);
   leftBuyButton.draw(window);
   buyButton.draw(window);
   buyPointsButton.draw(window);
+  window.draw(shipSprites[buyShip]);
+  window.draw(improvementPointsSprite);
+}
+
+void GameMap::drawTexts(RenderWindow& window) {
   printText(window, to_string(currency), 575, 5, sf::Color::Black);
   printText(window, to_string(shipCount), 615, 85, sf::Color::Black);
   printText(window, "0", 615, 160, sf::Color::Black);
   printText(window, cost[buyShip], 540, 350, sf::Color::Black);
-  printText(window, "Y:"+to_string(xCord), 440, 500, sf::Color::Black);
-  printText(window, "X:"+to_string(yCord), 340, 500, sf::Color::Black);
-  printText(window, "Actions:"+to_string(getAction()), 340, 580, sf::Color::Black);
-  printText(window, "Points:"+to_string(improvementPoints), 340, 650, sf::Color::Black);
-  selectedMode(window);
-  window.draw(shipSprites[buyShip]);
-  selectedButtonAction(window);
-  window.draw(improvementPointsSprite);
-  window.display();
+  printText(window, "Y:" + to_string(xCord), 440, 500, sf::Color::Black);
+  printText(window, "X:" + to_string(yCord), 340, 500, sf::Color::Black);
+  printText(window, "Actions:" + to_string(getAction()), 340, 580, sf::Color::Black);
+  printText(window, "Points:" + to_string(improvementPoints), 340, 650, sf::Color::Black);
 }
+
+void GameMap::drawSelection(RenderWindow& window) {
+  selectedMode(window);
+  selectedButtonAction(window);
+}
+
+
 void GameMap::drawShips(RenderWindow& window) {
   for (int row = 0; row < GRID_SIZE; ++row) {
     for (int col = 0; col < GRID_SIZE; ++col) {
