@@ -506,3 +506,20 @@ bool GameMap::canPutShip(Player* player, int row, int col, bool turn) {
   return ((turn) && (!isShipPlaced(row, col, player->getboard())) &&
   (!player->isShipempty()) && !attack);
 }
+
+void GameMap::freeMemory() {
+  if (player1 != nullptr) {
+    delete player1;
+    player1 = nullptr;
+  }
+  if (player2 != nullptr) {
+    delete player2;
+    player2 = nullptr;
+  }
+  // Limpiar recursos gráficos si es necesario
+  shipTextures.clear();
+  shipSprites.clear();
+  cost.clear();
+
+  std::cout << "Memoria liberada correctamente." << std::endl;
+}

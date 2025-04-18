@@ -43,4 +43,5 @@ int main() {
     window.display();
       // Esperar 1 segundo antes de mostrar la pantalla negra
   }
+  gameMap.freeMemory();
 }

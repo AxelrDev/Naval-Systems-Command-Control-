@@ -120,6 +120,8 @@ public:
 
     void buyShips(Player* player);
 
+    void freeMemory();
+
 
 private:
   /// @brief Maneja clics sobre el área de la grilla del mapa.
@@ -148,6 +150,7 @@ private:
     
   bool canAttack();
   bool canPutShip(Player* player, int row, int col,bool turn);
+
 
 private:
     // background
