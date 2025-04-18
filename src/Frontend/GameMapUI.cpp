@@ -226,10 +226,12 @@ void GameMap::run(RenderWindow& window) {
         // updateMatrix();
       }
       if (player1->allShipsSunk() && player1->isShipempty()) {
+        showVictoryScreen(window, "Player 2 Wins!");
         printf("Player 1 wins\n");
         endRound = true;
       }
       if (player2->allShipsSunk() && player2->isShipempty()) {
+        showVictoryScreen(window, "Player 1 Wins!");
         printf("Player 2 wins\n");
         endRound = true;
       }
@@ -561,4 +563,24 @@ void GameMap::selectedMode(RenderWindow &window){
   }else{
     printText(window, "Remove", 10, 530, sf::Color::Red);
   }
+}
+
+void GameMap::showVictoryScreen(RenderWindow& window, const std::string& winnerText) {
+  sf::Text text;
+  text.setFont(font);
+  text.setString(winnerText);
+  text.setCharacterSize(80);
+  text.setFillColor(sf::Color::Yellow);
+  text.setStyle(sf::Text::Bold);
+  // Centrar el texto
+  FloatRect textRect = text.getLocalBounds();
+  text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+  text.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+
+  window.clear(sf::Color::Black);
+  window.draw(text);
+  window.display();
+
+  // Esperar unos segundos antes de cerrar
+  sf::sleep(sf::seconds(5));
 }

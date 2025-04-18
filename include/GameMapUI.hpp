@@ -156,6 +156,7 @@ private:
   void drawButtons(RenderWindow& window);
   void drawTexts(RenderWindow& window);
   void drawSelection(RenderWindow& window);
+  void showVictoryScreen(RenderWindow& window, const std::string& winnerText);
 
 
 private:
