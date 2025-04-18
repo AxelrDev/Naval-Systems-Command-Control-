@@ -14,7 +14,7 @@ using namespace sf;
 
 #define GRID_SIZE 10
 #define CELL_SIZE 50
-#define NUM_SHIPS 0
+#define NUM_SHIPS 4
 #define INCREMENT 100
 #define TURNS 5
 
