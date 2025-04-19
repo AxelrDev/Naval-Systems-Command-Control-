@@ -1,56 +1,52 @@
-#include "Ship.hpp"
+#include "Ship.h"
+#include "Constants.h"
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 
-Ship::Ship(int row, int col, int vida, int damage, int level)
-    : row(row), col(col), vida(vida), damage(damage),
-    
-    level(level) {
-        empty = false;
+Ship::Ship(const std::string& shipName_, int shipPrice_)
+  : shipName(shipName_), shipPrice(shipPrice_), shipHealth(100)
+{}
+
+void Ship::logOperation(const std::string& operationType,
+                        int iterationCount,
+                        double executionTime) {
+    std::ofstream logFile("battle_log.txt", std::ios::app);
+    if (!logFile) {
+        std::cerr << "Error opening battle_log.txt\n";
+        return;
     }
-
-Ship::Ship() : row(-1), col(-1), vida(0), damage(0), level(-1) {
-    empty = true;
+    logFile << "=== Operation Log ===\n"
+            << "Ship: "      << shipName        << "\n"
+            << "Operation: " << operationType   << "\n"
+            << "Iterations: "<< iterationCount  << "\n"
+            << std::fixed << std::setprecision(6)
+            << "Time: "      << executionTime   << "s\n"
+            << "Damage: "    << calculateDamage(iterationCount) << "\n"
+            << "----------------------\n";
 }
-bool Ship::occupies(int r, int c) const {
-    return (r == row && c == col);
+
+int Ship::calculateDamage(int iterationCount) {
+    return iterationCount > 0 ? DAMAGE_CONSTANT / iterationCount : DAMAGE_CONSTANT;
 }
 
-bool Ship::applyDamage(int damageAmount) {
-    vida -= damageAmount;
-    if (vida < 0) {
-        vida = 0;
-    return (vida == 0);
+const std::string& Ship::getName()  const {
+  return shipName; 
+}
+int Ship::getPrice() const {
+  return shipPrice;
+}
+
+
+int Ship::getElement(){
+    bool exist = true;
+    int element=0;
+    while(exist){
+        element = rand() % 1000;
+        auto it = elementSet.find(element);
+        if(it != elementSet.end()){
+            exist=false;
+        }
     }
-    return false;
-}
-
-int Ship::getVida() const {
-    return vida;
-}
-
-int Ship::getDamage() const {
-    return damage;
-}
-
-int Ship::getRow() const {
-    return row;
-}
-
-int Ship::getCol() const {
-    return col;
-}
-
-void Ship::setPosition(int newRow, int newCol) {
-    row = newRow;
-    col = newCol;
-}
-
-int Ship::getLevel() {
-    return level;
-}
-
-bool Ship::getEmpty() {
-    return empty;
-}
-void Ship::setEmpty(bool empty) {
-    this->empty = empty;
+    return element;
 }

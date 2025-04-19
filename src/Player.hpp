@@ -2,7 +2,7 @@
 #define PLAYER_HPP
 
 #include <vector>
-#include "Ship.hpp"
+#include "GameShip.hpp"
 
 class Player {
 public:
@@ -62,9 +62,9 @@ public:
 
     // Revisa si hay barcos en el almacenamiento del jugador.
     bool isShipempty();
-    Ship getShipStorage();
-    void setShipStorage(Ship ship);
-    std::vector<Ship>& getShips();
+    GameShip getShipStorage();
+    void setShipStorage(GameShip ship);
+    std::vector<GameShip>& getShips();
 
 private:
     int rows;
@@ -73,8 +73,8 @@ private:
     int money;
     int** ownBoard;      // Tablero donde se ubican los barcos del jugador.
     int** changeMatrix; // Tablero para registrar los disparos realizados al oponente.
-    std::vector<Ship> ships;  // Vector con los barcos del jugador.
-    Ship shipStorage; 
+    std::vector<GameShip> ships;  // Vector con los barcos del jugador.
+    GameShip shipStorage; 
     int improvementPoints; // Puntos de mejora disponibles.
     int actions;  // Acciones disponibles en el turno.
     

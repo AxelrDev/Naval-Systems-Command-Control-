@@ -522,7 +522,7 @@ void GameMap::buyShips(Player* player) {
     int cost = currencyClass.canBuy(player->getMoney(),
         currencyClass.getShip(buyShip));
     if(cost != -1){
-      Ship ship = Ship(1, 1, 3, 1, buyShip);
+      GameShip ship = GameShip(1, 1, 3, 1, buyShip);
       player->setShipStorage(ship);
       player->lessMoney(currencyClass.getShip(buyShip));
     }else{

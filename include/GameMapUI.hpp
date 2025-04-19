@@ -8,7 +8,7 @@
 // #include "Game.hpp"
 #include "Player.hpp"
 #include "Currency.hpp"
-#include "Ship.hpp"
+#include "GameShip.hpp"
 
 using namespace sf;
 
