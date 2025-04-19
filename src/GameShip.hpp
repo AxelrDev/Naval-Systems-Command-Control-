@@ -1,6 +1,7 @@
 #ifndef SHIP_HPP
 #define SHIP_HPP
 
+#include "Ship.h"
 #include "BinarySearchShip.h"
 #include "BTreeShip.h"
 #include "LinearSearchShip.h"
@@ -34,6 +35,8 @@ public:
     // Getter and Setter for empty
     bool getEmpty();
     void setEmpty(bool empty);
+    void typeOfShip();
+    Ship *getTypeShip();
 
 private:
     int row;
@@ -42,6 +45,7 @@ private:
     int damage;  // Daño que puede causar (para futuras lógicas, por ejemplo en ataques especiales).
     int level; 
     bool empty;
+    Ship *typeShip;
 };
 
 #endif // SHIP_HPP

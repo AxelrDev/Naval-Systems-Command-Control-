@@ -113,7 +113,9 @@ void Player::displayOwnBoard() {
 int Player::getShipDamage(int row, int col) {
     for (size_t i = 0; i < ships.size(); i++) {
         if (ships[i].occupies(row, col)) {
-            return ships[i].getDamage();
+            int dam = ships[i].getTypeShip()->calculateDamage(ships[i].getTypeShip()->search(ships[i].getTypeShip()->getElement()));
+            printf("DAMAGE: %d",dam);
+            return dam;
         }
     }
     return -1; // No hay barco en esa posición.

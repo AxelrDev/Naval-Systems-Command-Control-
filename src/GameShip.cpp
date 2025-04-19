@@ -2,14 +2,14 @@
 
 
 GameShip::GameShip(int row, int col, int vida, int damage, int level)
-    : row(row), col(col), vida(vida), damage(damage),
-    
-    level(level) {
+    : row(row), col(col), vida(vida), damage(damage),level(level){
         empty = false;
+        typeOfShip();
     }
 
 GameShip::GameShip() : row(-1), col(-1), vida(0), damage(0), level(-1) {
     empty = true;
+    typeShip = nullptr;
 }
 bool GameShip::occupies(int r, int c) const {
     return (r == row && c == col);
@@ -29,6 +29,7 @@ int GameShip::getVida() const {
 }
 
 int GameShip::getDamage() const {
+    printf(typeShip->getName().c_str());
     return damage;
 }
 
@@ -56,3 +57,22 @@ void GameShip::setEmpty(bool empty) {
     this->empty = empty;
 }
 
+void GameShip::typeOfShip(){
+    if(level == 0){
+        typeShip = new LinearSearchShip();
+    }else if(level == 1){
+        typeShip = new BinarySearchShip();
+    }else if(level == 2){
+        typeShip = new BTreeShip();
+    }else if(level == 3){
+        typeShip = new SplayTreeShip();
+    }else if(level == 4){
+        typeShip = new SetShip();
+    }else if(level == 5){
+        typeShip =  new SetShip();
+    }
+}
+
+Ship * GameShip::getTypeShip(){
+    return typeShip;
+}

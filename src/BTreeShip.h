@@ -1,46 +1,63 @@
-#ifndef BREESHIP_H
-#define BTREESHIP_H
+#ifndef BTREE_SHIP_HPP
+#define BTREE_SHIP_HPP
 
 #include "Ship.h"
-#include "Includes.h"
+#include "Constants.h"   //  NUM_OF_ELEMENTS, PRICE_BTREE (defínelo)
+#include <vector>
+#include <set>
+#include <chrono>
 
-#define MAX 4
-#define MIN 2
+#define MAX_KEYS 4          // (2 * MIN_KEYS)
+#define MIN_KEYS 3
 
-class BTreeShip : public Ship {
-    private:
-        struct BTreeNode {
-            int val[MAX + 1], count;
-            BTreeNode* link[MAX + 1];
-        };
-    
-        BTreeNode* root;
-        std::vector<int> elements;
-    
-        BTreeNode* createNode(int val, BTreeNode* child);
-        void addValToNode(int val, int pos, BTreeNode* node, BTreeNode* child);
-        void splitNode(int val, int* pval, int pos, BTreeNode* node, BTreeNode* child, BTreeNode** newNode);
-        int setValueInNode(int val, int* pval, BTreeNode* node, BTreeNode** child);
-        int delValFromNode(int val, BTreeNode* myNode);
-    
-        void copySuccessor(BTreeNode* myNode, int pos);
-        void removeVal(BTreeNode* myNode, int pos);
-        void doRightShift(BTreeNode* myNode, int pos);
-        void doLeftShift(BTreeNode* myNode, int pos);
-        void mergeNodes(BTreeNode* myNode, int pos);
-        void adjustNode(BTreeNode* myNode, int pos);
-        void searchingRecursive(int val, int* pos, BTreeNode* myNode);
-        void traversal(BTreeNode* myNode);
-    
-    public:
-        BTreeShip(std::string name, int price);
-        ~BTreeShip();
-    
-        int search(int target) override;
-        void insert(int element) override;
-        void remove(int element) override;
+class BTreeShip : public Ship
+{
+private:
+    /* -----------------------------------------------------------
+     *   NODO B‑tree (índices 1 … count, enlaces 0 … count)
+     * ----------------------------------------------------------- */
+    struct Node {
+        int  key[MAX_KEYS + 1]{};
+        int  count{0};
+        Node* child[MAX_KEYS + 2]{};   // +2 para evitar overrun en splits
     };
 
+    Node* rootNode{nullptr};
 
+    /* -- helpers -- */
+    Node* createNode(int key, Node* child0, Node* child1);
+    void  destroy   (Node* n);
 
-#endif
+    /* inserción */
+    bool  insertRec (int key, Node* cur,
+                     int& upKey, Node*& newChild);
+
+    void  addKeyToNode(int key, Node* child,
+                       Node* target, int pos);
+
+    void  splitNode (int key, Node* child, Node* cur,
+                     int  pos,  int& upKey, Node*& newChild);
+
+    /* eliminación */
+    bool  removeRec  (int key, Node* cur);
+    void  fixUnderflow(Node* cur, int pos);
+    void  merge      (Node* parent, int pos);
+    void  shiftLeft  (Node* parent, int pos);
+    void  shiftRight (Node* parent, int pos);
+    int   getPred    (Node* cur);
+
+    /* búsqueda */
+    void  searchRec  (int key, Node* cur,
+                      int& iterations) const;
+
+public:
+    BTreeShip();
+    ~BTreeShip() override;
+
+    /* interface Ship */
+    int  search (int key)      override;
+    void insert (int key)      override;
+    void remove (int key)      override;
+};
+
+#endif  // BTREE_SHIP_HPP

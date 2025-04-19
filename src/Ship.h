@@ -10,6 +10,7 @@ protected:
     int         shipPrice;
     int         shipHealth;
     std::set<int> elementSet;
+    int iterations;
 
 public:
     Ship(const std::string& shipName, int shipPrice);
@@ -25,6 +26,7 @@ public:
 
     const std::string& getName()  const;
     int                getPrice() const;
+    int getElement();
 };
 
 #endif // SHIP_H

@@ -37,3 +37,16 @@ int Ship::getPrice() const {
   return shipPrice;
 }
 
+
+int Ship::getElement(){
+    bool exist = true;
+    int element=0;
+    while(exist){
+        element = rand() % 1000;
+        auto it = elementSet.find(element);
+        if(it != elementSet.end()){
+            exist=false;
+        }
+    }
+    return element;
+}
