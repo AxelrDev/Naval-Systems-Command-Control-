@@ -1,7 +1,7 @@
-#ifndef REDBLACKTREESHIP_H
-#define REDBLACKTREESHIP_H
+#ifndef REDBLACKTREESHIP_HPP
+#define REDBLACKTREESHIP_HPP
 
-#include "Ship.h"
+#include "Ship.hpp"
 
 class RedBlackTreeShip : public Ship {
 private:
@@ -49,4 +49,4 @@ public:
     void remove(int element) override;
 };
 
-#endif // REDBLACKTREESHIP_H
+#endif // REDBLACKTREESHIP_HPP

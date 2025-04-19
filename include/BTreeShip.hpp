@@ -1,8 +1,8 @@
 #ifndef BTREE_SHIP_HPP
 #define BTREE_SHIP_HPP
 
-#include "Ship.h"
-#include "Constants.h"   //  NUM_OF_ELEMENTS, PRICE_BTREE (defínelo)
+#include "Ship.hpp"
+#include "Constants.hpp"   //  NUM_OF_ELEMENTS, PRICE_BTREE (defínelo)
 #include <vector>
 #include <set>
 #include <chrono>

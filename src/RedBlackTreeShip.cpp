@@ -1,5 +1,5 @@
-#include "RedBlackTreeShip.h"
-#include "Constants.h"
+#include "RedBlackTreeShip.hpp"
+#include "Constants.hpp"
 #include <chrono>
 #include <cstdlib>
 

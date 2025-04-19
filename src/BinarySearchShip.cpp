@@ -1,5 +1,5 @@
-#include "BinarySearchShip.h"
-#include "Constants.h"
+#include "BinarySearchShip.hpp"
+#include "Constants.hpp"
 #include <chrono>
 #include <cstdlib>
 

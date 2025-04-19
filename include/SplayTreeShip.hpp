@@ -1,7 +1,7 @@
-#ifndef SPLAYTREESHIP_H
-#define SPLAYTREESHIP_H
+#ifndef SPLAYTREESHIP_HPP
+#define SPLAYTREESHIP_HPP
 
-#include "Ship.h"
+#include "Ship.hpp"
 
 class SplayTreeShip : public Ship {
 private:

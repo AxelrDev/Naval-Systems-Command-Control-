@@ -1,7 +1,7 @@
 #include "Player.hpp"
 #include <iostream>
 #include <cstdlib>
-#include "Constants.h"
+#include "Constants.hpp"
 
 Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acciones por turno.
     ownBoard = new int*[rows];

@@ -1,5 +1,5 @@
-#include "LinearSearchShip.h"
-#include "Constants.h"
+#include "LinearSearchShip.hpp"
+#include "Constants.hpp"
 #include <chrono>
 #include <cstdlib>
 

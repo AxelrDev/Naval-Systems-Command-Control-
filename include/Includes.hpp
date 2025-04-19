@@ -1,5 +1,5 @@
-#ifndef INCLUDE_H
-#define INCLUDE_H
+#ifndef INCLUDE_HPP
+#define INCLUDE_HPP
 
 // Librerías estándar
 using namespace std;

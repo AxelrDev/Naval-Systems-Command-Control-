@@ -1,5 +1,5 @@
-#ifndef SHIP_H
-#define SHIP_H
+#ifndef SHIP_HPP
+#define SHIP_HPP
 
 #include <string>
 #include <set>
@@ -29,4 +29,4 @@ public:
     int getElement();
 };
 
-#endif // SHIP_H
+#endif // SHIP_HPP

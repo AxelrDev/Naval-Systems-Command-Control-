@@ -1,5 +1,5 @@
-#include "SetShip.h"
-#include "Constants.h"
+#include "SetShip.hpp"
+#include "Constants.hpp"
 #include <chrono>
 #include <cstdlib>
 
