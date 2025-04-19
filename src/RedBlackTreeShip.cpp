@@ -73,41 +73,63 @@ RedBlackTreeShip::Node* RedBlackTreeShip::insertNode(int key) {
 }
 
 void RedBlackTreeShip::fixInsertion(Node* z) {
-    while (z->parentNode && z->parentNode->isRed) {
+    // Repetimos mientras el padre exista, sea rojo y tenga abuelo
+    while (z->parentNode 
+           && z->parentNode->isRed 
+           && z->parentNode->parentNode)
+    {
         Node* p = z->parentNode;
         Node* g = p->parentNode;
+
+        // Si el padre es hijo izquierdo de su abuelo
         if (p == g->leftChild) {
-            Node* y = g->rightChild;
+            Node* y = g->rightChild;  // tío derecho
             if (y && y->isRed) {
-                p->isRed = false; y->isRed = false; g->isRed = true;
+                // Caso 1: tío rojo
+                p->isRed = false;
+                y->isRed = false;
+                g->isRed = true;
                 z = g;
             } else {
+                // Caso 2: z es hijo derecho → rotación izquierda sobre p
                 if (z == p->rightChild) {
                     z = p;
                     rotateLeft(z);
                 }
+                // Caso 3: rotación derecha sobre g
                 p->isRed = false;
                 g->isRed = true;
                 rotateRight(g);
             }
-        } else {
-            Node* y = g->leftChild;
+        } 
+        // Espejo: padre es hijo derecho de su abuelo
+        else {
+            Node* y = g->leftChild;   // tío izquierdo
             if (y && y->isRed) {
-                p->isRed = false; y->isRed = false; g->isRed = true;
+                // Caso 1: tío rojo
+                p->isRed = false;
+                y->isRed = false;
+                g->isRed = true;
                 z = g;
             } else {
+                // Caso 2: z es hijo izquierdo → rotación derecha sobre p
                 if (z == p->leftChild) {
                     z = p;
                     rotateRight(z);
                 }
+                // Caso 3: rotación izquierda sobre g
                 p->isRed = false;
                 g->isRed = true;
                 rotateLeft(g);
             }
         }
     }
-    rootNode->isRed = false;
+
+    // Aseguramos siempre que la raíz sea negra
+    if (rootNode)
+        rootNode->isRed = false;
 }
+
 
 void RedBlackTreeShip::rotateLeft(Node* x) {
     Node* y = x->rightChild;

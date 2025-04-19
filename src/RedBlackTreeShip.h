@@ -5,17 +5,21 @@
 
 class RedBlackTreeShip : public Ship {
 private:
-    struct Node {
-        int   key;
-        bool  isRed;
-        Node* leftChild;
-        Node* rightChild;
-        Node* parentNode;
-        Node(int k)
-          : key(k), isRed(true),
-            leftChild(nullptr), rightChild(nullptr), parentNode(nullptr)
-        {}
-    };
+struct Node {
+    int    key;
+    bool   isRed;
+    Node*  parentNode;
+    Node*  leftChild;
+    Node*  rightChild;
+
+    Node(int k)
+      : key(k)
+      , isRed(true)
+      , parentNode(nullptr)
+      , leftChild(nullptr)
+      , rightChild(nullptr)
+    {}
+};
     Node* rootNode;
 
     // Rotaciones

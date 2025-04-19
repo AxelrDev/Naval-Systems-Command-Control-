@@ -67,7 +67,7 @@ void GameShip::typeOfShip(){
     }else if(level == 3){
         typeShip = new SplayTreeShip();
     }else if(level == 4){
-        typeShip = new SetShip();
+        typeShip = new RedBlackTreeShip();
     }else if(level == 5){
         typeShip =  new SetShip();
     }
