@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cstdlib>
 
+// Constructor: llena aleatoriamente
 RedBlackTreeShip::RedBlackTreeShip()
   : Ship("RedBlackTree", PRICE_REDBLACK_TREE),
     rootNode(nullptr)
@@ -57,114 +58,80 @@ void RedBlackTreeShip::remove(int element) {
 }
 
 RedBlackTreeShip::Node* RedBlackTreeShip::insertNode(int key) {
-    Node* newNode = new Node(key);
-    Node* parent   = nullptr;
-    Node* current  = rootNode;
-
-    while (current) {
-        parent = current;
-        if (newNode->key < current->key)
-            current = current->leftChild;
-        else
-            current = current->rightChild;
+    Node* z = new Node(key);
+    Node* y = nullptr;
+    Node* x = rootNode;
+    while (x) {
+        y = x;
+        x = (z->key < x->key) ? x->leftChild : x->rightChild;
     }
-
-    newNode->parentNode = parent;
-
-    if (!parent){
-        rootNode = newNode;
-    }
-    else if (newNode->key < parent->key){
-        parent->leftChild = newNode;
-    }
-    else{
-        parent->rightChild = newNode;
-    }
-    return newNode;
+    z->parentNode = y;
+    if (!y)       rootNode = z;
+    else if (z->key < y->key) y->leftChild  = z;
+    else                       y->rightChild = z;
+    return z;
 }
 
 void RedBlackTreeShip::fixInsertion(Node* z) {
-    while (z != rootNode && z->parentNode->isRed) {
-        Node* parent      = z->parentNode;
-        Node* grandparent = parent->parentNode;
-
-        if (parent == grandparent->leftChild) {
-            Node* uncle = grandparent->rightChild;
-            if (uncle && uncle->isRed) {
-                parent->isRed = uncle->isRed = false;
-                grandparent->isRed = true;
-                z = grandparent;
+    while (z->parentNode && z->parentNode->isRed) {
+        Node* p = z->parentNode;
+        Node* g = p->parentNode;
+        if (p == g->leftChild) {
+            Node* y = g->rightChild;
+            if (y && y->isRed) {
+                p->isRed = false; y->isRed = false; g->isRed = true;
+                z = g;
             } else {
-                if (z == parent->rightChild) {
-                    z = parent;
+                if (z == p->rightChild) {
+                    z = p;
                     rotateLeft(z);
-                    parent = z->parentNode;
                 }
-                parent->isRed      = false;
-                grandparent->isRed = true;
-                rotateRight(grandparent);
+                p->isRed = false;
+                g->isRed = true;
+                rotateRight(g);
             }
         } else {
-            Node* uncle = grandparent->leftChild;
-            if (uncle && uncle->isRed) {
-                parent->isRed = uncle->isRed = false;
-                grandparent->isRed = true;
-                z = grandparent;
+            Node* y = g->leftChild;
+            if (y && y->isRed) {
+                p->isRed = false; y->isRed = false; g->isRed = true;
+                z = g;
             } else {
-                if (z == parent->leftChild) {
-                    z = parent;
+                if (z == p->leftChild) {
+                    z = p;
                     rotateRight(z);
-                    parent = z->parentNode;
                 }
-                parent->isRed      = false;
-                grandparent->isRed = true;
-                rotateLeft(grandparent);
+                p->isRed = false;
+                g->isRed = true;
+                rotateLeft(g);
             }
         }
     }
     rootNode->isRed = false;
 }
 
-void RedBlackTreeShip::rotateLeft(Node* node) {
-    // Pivotar hacia la izquierda en 'node'
-    Node* pivot = node->rightChild;
-    node->rightChild = pivot->leftChild;
-
-    if (pivot->leftChild)
-        pivot->leftChild->parentNode = node;
-
-    pivot->parentNode = node->parentNode;
-    if (!node->parentNode)
-        rootNode = pivot;
-    else if (node == node->parentNode->leftChild)
-        node->parentNode->leftChild = pivot;
-    else
-        node->parentNode->rightChild = pivot;
-
-    pivot->leftChild = node;
-    node->parentNode = pivot;
+void RedBlackTreeShip::rotateLeft(Node* x) {
+    Node* y = x->rightChild;
+    x->rightChild = y->leftChild;
+    if (y->leftChild) y->leftChild->parentNode = x;
+    y->parentNode = x->parentNode;
+    if (!x->parentNode)           rootNode = y;
+    else if (x == x->parentNode->leftChild)  x->parentNode->leftChild  = y;
+    else                                      x->parentNode->rightChild = y;
+    y->leftChild = x;
+    x->parentNode = y;
 }
 
-void RedBlackTreeShip::rotateRight(Node* node) {
-    // Pivotar hacia la derecha en 'node'
-    Node* pivot = node->leftChild;
-    node->leftChild = pivot->rightChild;
-
-    if (pivot->rightChild)
-        pivot->rightChild->parentNode = node;
-
-    pivot->parentNode = node->parentNode;
-    if (!node->parentNode)
-        rootNode = pivot;
-    else if (node == node->parentNode->rightChild)
-        node->parentNode->rightChild = pivot;
-    else
-        node->parentNode->leftChild = pivot;
-
-    pivot->rightChild = node;
-    node->parentNode   = pivot;
+void RedBlackTreeShip::rotateRight(Node* y) {
+    Node* x = y->leftChild;
+    y->leftChild = x->rightChild;
+    if (x->rightChild) x->rightChild->parentNode = y;
+    x->parentNode = y->parentNode;
+    if (!y->parentNode)           rootNode = x;
+    else if (y == y->parentNode->rightChild) y->parentNode->rightChild = x;
+    else                                      y->parentNode->leftChild  = x;
+    x->rightChild = y;
+    y->parentNode = x;
 }
-
 
 RedBlackTreeShip::Node* RedBlackTreeShip::searchNode(int key) {
     Node* current = rootNode;
@@ -188,132 +155,94 @@ RedBlackTreeShip::Node* RedBlackTreeShip::treeMinimum(Node* x) {
     return x;
 }
 
-void RedBlackTreeShip::deleteNode(Node* targetNode) {
-    Node* nodeToRemove     = targetNode;
-    bool originalWasRed     = nodeToRemove->isRed;
-    Node* replacementNode  = nullptr;
+void RedBlackTreeShip::deleteNode(Node* z) {
+    Node* y = z;
+    bool yOriginalRed = y->isRed;
+    Node* x = nullptr;
 
-    // Si no tiene hijo izquierdo
-    if (!targetNode->leftChild) {
-        replacementNode = targetNode->rightChild;
-        transplant(targetNode, targetNode->rightChild);
-
-    // Si no tiene hijo derecho
-    } else if (!targetNode->rightChild) {
-        replacementNode = targetNode->leftChild;
-        transplant(targetNode, targetNode->leftChild);
-
-    // Caso: dos hijos
+    if (!z->leftChild) {
+        x = z->rightChild;
+        transplant(z, z->rightChild);
+    } else if (!z->rightChild) {
+        x = z->leftChild;
+        transplant(z, z->leftChild);
     } else {
-        // Encontrar el sucesor (mínimo en subárbol derecho)
-        Node* successor    = treeMinimum(targetNode->rightChild);
-        originalWasRed     = successor->isRed;
-        replacementNode    = successor->rightChild;
-
-        if (successor->parentNode == targetNode) {
-            if (replacementNode)
-                replacementNode->parentNode = successor;
+        y = treeMinimum(z->rightChild);
+        yOriginalRed = y->isRed;
+        x = y->rightChild;
+        if (y->parentNode == z) {
+            if (x) x->parentNode = y;
         } else {
-            transplant(successor, successor->rightChild);
-            successor->rightChild = targetNode->rightChild;
-            successor->rightChild->parentNode = successor;
+            transplant(y, y->rightChild);
+            y->rightChild = z->rightChild;
+            y->rightChild->parentNode = y;
         }
-
-        transplant(targetNode, successor);
-        successor->leftChild = targetNode->leftChild;
-        successor->leftChild->parentNode = successor;
-        successor->isRed = targetNode->isRed;
+        transplant(z, y);
+        y->leftChild = z->leftChild;
+        y->leftChild->parentNode = y;
+        y->isRed = z->isRed;
     }
-
-    delete targetNode;
-
-    // Si removimos un nodo negro, reparar posibles desequilibrios
-    if (!originalWasRed) {
-        fixDeletion(replacementNode);
+    delete z;
+    if (!yOriginalRed) {
+        fixDeletion(x);
     }
 }
 
-void RedBlackTreeShip::fixDeletion(Node* node) {
-    // Reparar hasta que el nodo llegue a la raíz o se vuelva rojo
-    while (node != rootNode && (!node || !node->isRed)) {
-        Node* parent  = node ? node->parentNode : nullptr;
-
-        // Si es hijo izquierdo
-        if (parent && node == parent->leftChild) {
-            Node* sibling = parent->rightChild;
-
-            // 1) Hermano rojo → recolorear y rotar a la izquierda
-            if (sibling && sibling->isRed) {
-                sibling->isRed    = false;
-                parent->isRed     = true;
-                rotateLeft(parent);
-                sibling = parent->rightChild;
+void RedBlackTreeShip::fixDeletion(Node* x) {
+    while (x != rootNode && (!x || !x->isRed)) {
+        Node* p = x ? x->parentNode : nullptr;
+        if (p && x == p->leftChild) {
+            Node* w = p->rightChild;
+            if (w && w->isRed) {
+                w->isRed = false;
+                p->isRed = true;
+                rotateLeft(p);
+                w = p->rightChild;
             }
-
-            // 2) Ambos hijos del hermano son negros → pintar hermano de rojo
-            if (sibling
-                && (!sibling->leftChild  || !sibling->leftChild->isRed)
-                && (!sibling->rightChild || !sibling->rightChild->isRed)) {
-                sibling->isRed = true;
-                node = parent;
-
-            // 3) Al menos un hijo del hermano es rojo
+            if (w && (!w->leftChild || !w->leftChild->isRed)
+                  && (!w->rightChild || !w->rightChild->isRed)) {
+                w->isRed = true;
+                x = p;
             } else {
-                // 3a) El hijo derecho del hermano es negro → rotar a la derecha en el hermano
-                if (sibling && (!sibling->rightChild || !sibling->rightChild->isRed)) {
-                    if (sibling->leftChild)
-                        sibling->leftChild->isRed = false;
-                    sibling->isRed = true;
-                    rotateRight(sibling);
-                    sibling = parent->rightChild;
+                if (w && (!w->rightChild || !w->rightChild->isRed)) {
+                    if (w->leftChild) w->leftChild->isRed = false;
+                    w->isRed = true;
+                    rotateRight(w);
+                    w = p->rightChild;
                 }
-                // 3b) Recolor y rotar a la izquierda en el padre
-                if (sibling)
-                    sibling->isRed = parent->isRed;
-                parent->isRed = false;
-                if (sibling && sibling->rightChild)
-                    sibling->rightChild->isRed = false;
-                rotateLeft(parent);
-                node = rootNode;
+                if (w) w->isRed = p->isRed;
+                p->isRed = false;
+                if (w && w->rightChild) w->rightChild->isRed = false;
+                rotateLeft(p);
+                x = rootNode;
             }
-
-        // Caso espejo: si es hijo derecho
         } else {
-            if (!parent) break;
-            Node* sibling = parent->leftChild;
-
-            if (sibling && sibling->isRed) {
-                sibling->isRed    = false;
-                parent->isRed     = true;
-                rotateRight(parent);
-                sibling = parent->leftChild;
+            if (!p) break;
+            Node* w = p->leftChild;
+            if (w && w->isRed) {
+                w->isRed = false;
+                p->isRed = true;
+                rotateRight(p);
+                w = p->leftChild;
             }
-
-            if (sibling
-                && (!sibling->leftChild  || !sibling->leftChild->isRed)
-                && (!sibling->rightChild || !sibling->rightChild->isRed)) {
-                sibling->isRed = true;
-                node = parent;
+            if (w && (!w->rightChild || !w->rightChild->isRed)
+                  && (!w->leftChild || !w->leftChild->isRed)) {
+                w->isRed = true;
+                x = p;
             } else {
-                if (sibling && (!sibling->leftChild || !sibling->leftChild->isRed)) {
-                    if (sibling->rightChild)
-                        sibling->rightChild->isRed = false;
-                    sibling->isRed = true;
-                    rotateLeft(sibling);
-                    sibling = parent->leftChild;
+                if (w && (!w->leftChild || !w->leftChild->isRed)) {
+                    if (w->rightChild) w->rightChild->isRed = false;
+                    w->isRed = true;
+                    rotateLeft(w);
+                    w = p->leftChild;
                 }
-                if (sibling)
-                    sibling->isRed = parent->isRed;
-                parent->isRed = false;
-                if (sibling && sibling->leftChild)
-                    sibling->leftChild->isRed = false;
-                rotateRight(parent);
-                node = rootNode;
+                if (w) w->isRed = p->isRed;
+                p->isRed = false;
+                if (w && w->leftChild) w->leftChild->isRed = false;
+                rotateRight(p);
+                x = rootNode;
             }
         }
     }
-
-    if (node)
-        node->isRed = false;
+    if (x) x->isRed = false;
 }
-
