@@ -2,19 +2,16 @@
 #define CURRENCY_HPP
 
 #include <iostream>
+#include <vector>   
 
 class Currency {
     public:
     Currency();
    // ~Currency();
     int getShip(int number);
+    int canBuy(int cash, int cost);
     private:
-    int ship01;
-    int ship02;
-    int ship03;
-    int ship04;
-    int ship05;
-    int ship06;
+    std::vector<int> shipcost;
 };
 
 #endif // CURRENCY_HPP

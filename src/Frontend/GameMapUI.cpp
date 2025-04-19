@@ -24,6 +24,7 @@ GameMap::GameMap():
   player2 = new Player(GRID_SIZE, GRID_SIZE);
   player1->placeShips(NUM_SHIPS+1, -1);
   player2->placeShips(NUM_SHIPS+1, -1);
+  currencyClass = Currency();
   shipTextures.resize(6);
   shipSprites.resize(6);
   cost.resize(6);
@@ -369,14 +370,14 @@ void GameMap::handleRightClick(int row, int col) {
   // Remove ship
   if (!selected){
     if (playerTurn && isShipPlaced(row, col, player1->getboard()) &&
-        player1->isShipempty()) {
+        player1->isShipempty() && player1->getaction()>0) {
       removeShip(row, col, player1);
       //player1->setLessAction();
       player1->plusMoney(INCREMENT);
       player1->displayOwnBoard();
       updateMatrix(player1->getChangeMatrix());
-    } else if(isShipPlaced(row, col, player2->getboard()) &&
-        player2->isShipempty()) {
+    } else if(!playerTurn && isShipPlaced(row, col, player2->getboard()) &&
+        player2->isShipempty() && player2->getaction() > 0) {
       removeShip(row, col, player2);
       //player2->setLessAction();
       player2->plusMoney(INCREMENT);
@@ -518,9 +519,15 @@ int GameMap::getAction() {
 }
 
 void GameMap::buyShips(Player* player) {
-    Ship ship = Ship(1, 1, 3, 1, buyShip);
-    player->setShipStorage(ship);
-    player->lessMoney(100 * (buyShip + 1));
+    int cost = currencyClass.canBuy(player->getMoney(),
+        currencyClass.getShip(buyShip));
+    if(cost != -1){
+      Ship ship = Ship(1, 1, 3, 1, buyShip);
+      player->setShipStorage(ship);
+      player->lessMoney(currencyClass.getShip(buyShip));
+    }else{
+      printf("Dinero insuficiente");
+    }
 }
 
 bool GameMap::canAttack() {

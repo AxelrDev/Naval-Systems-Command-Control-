@@ -179,7 +179,7 @@ private:
     std::vector<string> cost;
     Player* player1;
     Player* player2;
-    Currency* currencyClass;
+    Currency currencyClass;
     
 
     // grid
