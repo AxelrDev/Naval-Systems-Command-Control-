@@ -36,3 +36,4 @@ const std::string& Ship::getName()  const {
 int Ship::getPrice() const {
   return shipPrice;
 }
+

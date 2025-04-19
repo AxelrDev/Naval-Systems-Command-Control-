@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include <iostream>
 #include <cstdlib>
+#include "Constants.h"
 
 Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acciones por turno.
     ownBoard = new int*[rows];
@@ -12,7 +13,7 @@ Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acc
     initializeBoards();
     money = 1000;
     improvementPoints = 0; // Inicializa los puntos de mejora.
-    shipStorage = Ship(); // Marca el barco como vacío.
+    shipStorage = GameShip(); // Marca el barco como vacío.
 }
 
 Player::~Player() {
@@ -46,7 +47,7 @@ void Player::placeShips(int numShips, int levelShip) {
                 level = std::rand() % 6; // Nivel aleatorio entre 1 y 6
             }
             printf("Colocado");
-            ships.push_back(Ship(r, c, 3, 1, level));
+            ships.push_back(GameShip(r, c, LIFE, DAMAGE_CONSTANT, level));
             ownBoard[r][c] = level;
             barcosColocados++;
         }
@@ -168,7 +169,7 @@ bool Player::moveShip() {
         return false;
     }
     // Quitar el barco del tablero actual.
-    Ship &shipToMove = ships[shipIndex];
+    GameShip &shipToMove = ships[shipIndex];
     int oldRow = shipToMove.getRow();
     int oldCol = shipToMove.getCol();
     ownBoard[oldRow][oldCol] = -1 ;
@@ -234,14 +235,14 @@ bool Player::isShipempty() {
 }
 
 
-Ship Player::getShipStorage() {
+GameShip Player::getShipStorage() {
     return shipStorage;
 }
-void Player::setShipStorage(Ship ship) {
+void Player::setShipStorage(GameShip ship) {
     shipStorage = ship;
 }
 
-std::vector<Ship>& Player::getShips() {
+std::vector<GameShip>& Player::getShips() {
     return ships;
 }
 

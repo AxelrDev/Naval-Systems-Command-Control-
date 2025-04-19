@@ -18,5 +18,6 @@ constexpr int PRICE_SPLAY_TREE      = 160;
 
 // Constante usada para calcular daño: DAMAGE = DAMAGE_CONSTANT / iterations
 constexpr int DAMAGE_CONSTANT       = 1000;
+constexpr int LIFE                  = 1000;
 
 #endif // CONSTANTS_H

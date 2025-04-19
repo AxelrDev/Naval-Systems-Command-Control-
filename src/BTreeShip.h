@@ -2,6 +2,7 @@
 #define BTREESHIP_H
 
 #include "Ship.h"
+#include "Includes.h"
 
 #define MAX 4
 #define MIN 2
@@ -14,6 +15,7 @@ class BTreeShip : public Ship {
         };
     
         BTreeNode* root;
+        std::vector<int> elements;
     
         BTreeNode* createNode(int val, BTreeNode* child);
         void addValToNode(int val, int pos, BTreeNode* node, BTreeNode* child);

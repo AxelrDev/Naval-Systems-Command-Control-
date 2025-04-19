@@ -14,6 +14,7 @@ protected:
 public:
     Ship(const std::string& shipName, int shipPrice);
     virtual ~Ship() = default;
+    Ship(int row, int col, int vida, int damage, int level);
 
     virtual int  search(int target) = 0;
     virtual void insert(int element) = 0;
