@@ -7,12 +7,12 @@ JC=javac
 DEFS=#= Preprocessor symbols, e.g: DEFS=-DVERBOSE
 CSTD=-std=c17#= Force compliance to a C standard, e.g: c11|gnu11|c17|c2x
 XSTD=-std=c++17#= Force compliance to a C++ standard, e.g: c++11|gnu++11|c++17|c++2x
-FLAG=#= Compiler flags for both C and C++
+FLAG=-Iinclude
 FLAGS=$(strip -Wall -Wextra $(FLAG) $(DEFS))
 FLAGC=$(strip $(FLAGS) $(CSTD))
 FLAGX=$(strip $(FLAGS) $(XSTD))
 FLAGJ=$(strip $(FLAG))
-LIBS=#= Libraries to be linked, e.g: LIBS=-lm
+LIBS= -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 LINTF=-build/header_guard,-build/include_subdir,-runtime/int
 LINTC=$(LINTF),-readability/casting
 LINTX=$(LINTF),-build/c++11,-runtime/references
