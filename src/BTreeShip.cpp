@@ -9,14 +9,9 @@
 BTreeShip::BTreeShip()
     : Ship("BTree", 200)
 {
-    int elements = 0;
-  while(elements < NUM_OF_ELEMENTS){
-    int value = rand() % 1000;
-    if(elementSet.find(value) == elementSet.end()){
-      insert(value);
-      elements ++;
+    for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
+        insert(rand()%1000);
     }
-  }
         
 }
 
@@ -234,10 +229,13 @@ bool BTreeShip::removeRec(int key, Node* cur, int &iterationCount)
 
 int BTreeShip::getPred(Node* cur, int& iterationCount)
 {
-    while (cur->child[cur->count])
-    iterationCount ++;
+    if (!cur) return -1; // o lanza una excepción si prefieres
+
+    while (cur->child[cur->count]) {
         cur = cur->child[cur->count];
-    return cur->key[cur->count];
+        iterationCount++;
+    }
+    return cur->key[cur->count]; // ← esto ya es seguro
 }
 
 void BTreeShip::fixUnderflow(Node* parent, int pos,int &iterationCount)
@@ -295,28 +293,41 @@ void BTreeShip::shiftRight(Node* parent, int pos, int& iterationCount)
     --left->count;
 }
 
-void BTreeShip::merge(Node* parent, int pos,int& iterationCount)
+void BTreeShip::merge(Node* parent, int pos, int& iterationCount)
 {
-    iterationCount ++;
+    iterationCount++;
     Node* left  = parent->child[pos - 1];
     Node* right = parent->child[pos];
 
+    // Agregamos la clave del padre
+    if (left->count + 1 > MAX_KEYS) {
+        std::cerr << "Error: overflow en merge (clave del padre)\n";
+        return;
+    }
     ++left->count;
     left->key [left->count]  = parent->key[pos];
     left->child[left->count] = right->child[0];
 
+    // Movemos claves del hijo derecho
     for (int i = 1; i <= right->count; ++i) {
+        if (left->count + 1 > MAX_KEYS) {
+            std::cerr << "Error: overflow en merge (right->key)\n";
+            return;
+        }
         ++left->count;
-        left->key [left->count]  = right->key [i];
+        left->key [left->count]  = right->key[i];
         left->child[left->count] = right->child[i];
-        iterationCount ++;
+        iterationCount++;
     }
+
     delete right;
+    parent->child[pos] = nullptr;
 
     for (int i = pos; i < parent->count; ++i) {
-        parent->key  [i] = parent->key  [i + 1];
+        parent->key[i]   = parent->key[i + 1];
         parent->child[i] = parent->child[i + 1];
-        iterationCount ++;
+        iterationCount++;
     }
+    parent->child[parent->count] = nullptr;
     --parent->count;
 }
