@@ -16,52 +16,99 @@ SetShip::~SetShip() {
 }
 
 int SetShip::findIndex(int element) {
-    int left = 0, right = elementCount - 1;
-    while (left <= right) {
-        int mid = (left + right) / 2;
-        if      (elementsArray[mid] == element) return mid;
-        else if (elementsArray[mid] < element)  left  = mid + 1;
-        else                                     right = mid - 1;
+    int leftIndex  = 0;
+    int rightIndex = elementCount - 1;
+    while (leftIndex <= rightIndex) {
+        int middleIndex = (leftIndex + rightIndex) / 2;
+        if      (elementsArray[middleIndex] == element)
+            return middleIndex;
+        else if (elementsArray[middleIndex] < element)
+            leftIndex = middleIndex + 1;
+        else
+            rightIndex = middleIndex - 1;
     }
     return -1;
 }
 
 int SetShip::search(int target) {
     int iterationCount = 0;
-    int left = 0, right = elementCount - 1;
+    int leftIndex  = 0;
+    int rightIndex = elementCount - 1;
+
     auto startTime = std::chrono::high_resolution_clock::now();
-
-    while (left <= right) {
+    while (leftIndex <= rightIndex) {
         ++iterationCount;
-        int mid = (left + right) / 2;
-        if      (elementsArray[mid] == target) break;
-        else if (elementsArray[mid] < target)  left  = mid + 1;
-        else                                    right = mid - 1;
+        int middleIndex = (leftIndex + rightIndex) / 2;
+        if      (elementsArray[middleIndex] == target)
+            break;
+        else if (elementsArray[middleIndex] < target)
+            leftIndex = middleIndex + 1;
+        else
+            rightIndex = middleIndex - 1;
     }
-
     auto endTime = std::chrono::high_resolution_clock::now();
-    double execTime = std::chrono::duration<double>(endTime - startTime).count();
-    logOperation("search", iterationCount, execTime);
+
+    double executionTime =
+      std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("search", iterationCount, executionTime);
     return iterationCount;
 }
 
 void SetShip::insert(int element) {
-    if (findIndex(element) != -1) return;
-    int i = elementCount - 1;
-    while (i >= 0 && elementsArray[i] > element) {
-        elementsArray[i+1] = elementsArray[i];
-        --i;
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    // If already present, nothing to do
+    if (findIndex(element) != -1) {
+        double executionTime =
+          std::chrono::duration<double>(
+            std::chrono::high_resolution_clock::now() - startTime
+          ).count();
+        logOperation("insert", iterationCount, executionTime);
+        return;
     }
-    elementsArray[i+1] = element;
+
+    // Shift right until we find the insertion point
+    int currentIndex = elementCount - 1;
+    while (currentIndex >= 0 && elementsArray[currentIndex] > element) {
+        ++iterationCount;
+        elementsArray[currentIndex + 1] = elementsArray[currentIndex];
+        --currentIndex;
+    }
+    elementsArray[currentIndex + 1] = element;
     ++elementCount;
     elementSet.insert(element);
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double executionTime =
+      std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("insert", iterationCount, executionTime);
 }
 
 void SetShip::remove(int element) {
-    int idx = findIndex(element);
-    if (idx == -1) return;
-    for (int i = idx; i < elementCount - 1; ++i)
-        elementsArray[i] = elementsArray[i+1];
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    int foundIndex = findIndex(element);
+    if (foundIndex == -1) {
+        double executionTime =
+          std::chrono::duration<double>(
+            std::chrono::high_resolution_clock::now() - startTime
+          ).count();
+        logOperation("remove", iterationCount, executionTime);
+        return;
+    }
+
+    // Shift left to overwrite the removed slot
+    for (int currentIndex = foundIndex; currentIndex < elementCount - 1; ++currentIndex) {
+        ++iterationCount;
+        elementsArray[currentIndex] = elementsArray[currentIndex + 1];
+    }
     --elementCount;
     elementSet.erase(element);
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double executionTime =
+      std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("remove", iterationCount, executionTime);
 }
