@@ -47,21 +47,33 @@ int SetShip::search(int target) {
 
 void SetShip::insert(int element) {
     if (findIndex(element) != -1) return;
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
     int i = elementCount - 1;
     while (i >= 0 && elementsArray[i] > element) {
         elementsArray[i+1] = elementsArray[i];
         --i;
+        ++iterationCount;
     }
     elementsArray[i+1] = element;
     ++elementCount;
     elementSet.insert(element);
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("insert", iterationCount, execTime);
 }
 
 void SetShip::remove(int element) {
     int idx = findIndex(element);
     if (idx == -1) return;
-    for (int i = idx; i < elementCount - 1; ++i)
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    for (int i = idx; i < elementCount - 1; ++i) {
         elementsArray[i] = elementsArray[i+1];
+    }
     --elementCount;
     elementSet.erase(element);
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("remove", iterationCount, execTime);
 }
