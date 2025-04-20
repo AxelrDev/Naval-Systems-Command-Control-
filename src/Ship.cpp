@@ -64,6 +64,11 @@ void Ship::generateElements(){
 
 int Ship::getElementInSet(){
   int element = -1;
+  if (elementSet.empty()) {
+    std::cerr << "Error: elementSet está vacío.\n";
+    return -1; // o lanzar una excepción si preferís
+  }
+  
   while(elementSet.find(element) == elementSet.end()){
     element = rand()%1000;
   }
