@@ -1,5 +1,5 @@
-#include "Ship.h"
-#include "Constants.h"
+#include "Ship.hpp"
+#include "Constants.hpp"
 #include <fstream>
 #include <iomanip>
 #include <iostream>

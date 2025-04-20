@@ -1,7 +1,7 @@
-#ifndef BINARYSEARCHSHIP_H
-#define BINARYSEARCHSHIP_H
+#ifndef BINARYSEARCHSHIP_HPP
+#define BINARYSEARCHSHIP_HPP
 
-#include "Ship.h"
+#include "Ship.hpp"
 
 class BinarySearchShip : public Ship {
 private:
@@ -9,7 +9,7 @@ private:
     int  elementCount;
     int  maxCapacity;
 
-    void sortArray();
+    int sortArray();
 
 public:
     BinarySearchShip();
@@ -20,4 +20,4 @@ public:
     void remove(int element) override;
 };
 
-#endif // BINARYSEARCHSHIP_H
+#endif // BINARYSEARCHSHIP_HPP

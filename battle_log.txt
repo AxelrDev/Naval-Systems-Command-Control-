@@ -159,3 +159,458 @@ Iterations: 5
 Time: 0.000000s
 Damage: 200
 ----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 6
+Time: 0.000000s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 7
+Time: 0.000000s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 5
+Time: 0.000000s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 3
+Time: 0.000001s
+Damage: 333
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 6
+Time: 0.000001s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 5
+Time: 0.000001s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 7
+Time: 0.000000s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 7
+Time: 0.000000s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 5
+Time: 0.000001s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000001s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 12
+Time: 0.000001s
+Damage: 83
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000000s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 4
+Time: 0.000001s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: SplayTree
+Operation: search
+Iterations: 1
+Time: 0.000003s
+Damage: 1000
+----------------------
+=== Operation Log ===
+Ship: SplayTree
+Operation: search
+Iterations: 1
+Time: 0.000002s
+Damage: 1000
+----------------------
+=== Operation Log ===
+Ship: SplayTree
+Operation: search
+Iterations: 1
+Time: 0.000003s
+Damage: 1000
+----------------------
+=== Operation Log ===
+Ship: SplayTree
+Operation: search
+Iterations: 1
+Time: 0.000004s
+Damage: 1000
+----------------------
+=== Operation Log ===
+Ship: SplayTree
+Operation: search
+Iterations: 1
+Time: 0.000001s
+Damage: 1000
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000000s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 6
+Time: 0.000001s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 5
+Time: 0.000000s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 5
+Time: 0.000001s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 4
+Time: 0.000000s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 3
+Time: 0.000000s
+Damage: 333
+----------------------
+=== Operation Log ===
+Ship: BinarySearch
+Operation: search
+Iterations: 6
+Time: 0.000000s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 4
+Time: 0.000000s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 9
+Time: 0.000002s
+Damage: 111
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000000s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 6
+Time: 0.000000s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 6
+Time: 0.000000s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 4
+Time: 0.000000s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 4
+Time: 0.000001s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 1
+Time: 0.000000s
+Damage: 1000
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 6
+Time: 0.000000s
+Damage: 166
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000001s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 5
+Time: 0.000000s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 7
+Time: 0.000001s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 5
+Time: 0.000001s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: Set
+Operation: search
+Iterations: 5
+Time: 0.000001s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 9
+Time: 0.000001s
+Damage: 111
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000002s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 3
+Time: 0.000000s
+Damage: 333
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 9
+Time: 0.000001s
+Damage: 111
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 5
+Time: 0.000000s
+Damage: 200
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000000s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 4
+Time: 0.000000s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000000s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 7
+Time: 0.000000s
+Damage: 142
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 2
+Time: 0.000000s
+Damage: 500
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 9
+Time: 0.000001s
+Damage: 111
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 8
+Time: 0.000001s
+Damage: 125
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 4
+Time: 0.000001s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: RedBlackTree
+Operation: search
+Iterations: 2
+Time: 0.000000s
+Damage: 500
+----------------------
+=== Operation Log ===
+Ship: BTree
+Operation: search
+Iterations: 4
+Time: 0.000001s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: BTree
+Operation: search
+Iterations: 4
+Time: 0.000000s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: BTree
+Operation: search
+Iterations: 4
+Time: 0.000001s
+Damage: 250
+----------------------
+=== Operation Log ===
+Ship: BTree
+Operation: search
+Iterations: 2
+Time: 0.000001s
+Damage: 500
+----------------------

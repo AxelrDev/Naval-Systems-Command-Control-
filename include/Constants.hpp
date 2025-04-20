@@ -1,5 +1,5 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef CONSTANTS_HPP
+#define CONSTANTS_HPP
 
 // Número de elementos que se inicializan aleatoriamente en cada barco
 constexpr int NUM_OF_ELEMENTS    = 100;
@@ -20,4 +20,4 @@ constexpr int PRICE_SPLAY_TREE      = 160;
 constexpr int DAMAGE_CONSTANT       = 1000;
 constexpr int LIFE                  = 1000;
 
-#endif // CONSTANTS_H
+#endif // CONSTANTS_HPP

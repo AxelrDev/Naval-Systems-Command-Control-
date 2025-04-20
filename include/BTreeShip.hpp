@@ -1,13 +1,13 @@
 #ifndef BTREE_SHIP_HPP
 #define BTREE_SHIP_HPP
 
-#include "Ship.h"
-#include "Constants.h"   //  NUM_OF_ELEMENTS, PRICE_BTREE (defínelo)
+#include "Ship.hpp"
+#include "Constants.hpp"   //  NUM_OF_ELEMENTS, PRICE_BTREE (defínelo)
 #include <vector>
 #include <set>
 #include <chrono>
 
-#define MAX_KEYS 4          // (2 * MIN_KEYS)
+#define MAX_KEYS 5          // (2 * MIN_KEYS)
 #define MIN_KEYS 3
 
 class BTreeShip : public Ship

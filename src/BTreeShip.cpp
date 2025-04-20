@@ -1,4 +1,4 @@
-#include "BTreeShip.h"
+#include "BTreeShip.hpp"
 #include <algorithm>
 #include <cstdlib>   // rand()
 #include <iostream>  // mensajes de depuración opcionales

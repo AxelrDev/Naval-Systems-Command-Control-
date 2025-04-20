@@ -1,7 +1,7 @@
-#ifndef SETSHIP_H
-#define SETSHIP_H
+#ifndef SETSHIP_HPP
+#define SETSHIP_HPP
 
-#include "Ship.h"
+#include "Ship.hpp"
 
 class SetShip : public Ship {
 private:
@@ -20,4 +20,4 @@ public:
     void remove(int element) override;
 };
 
-#endif // SETSHIP_H
+#endif // SETSHIP_HPP

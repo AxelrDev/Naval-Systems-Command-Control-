@@ -1,5 +1,5 @@
-#include "BinarySearchShip.h"
-#include "Constants.h"
+#include "BinarySearchShip.hpp"
+#include "Constants.hpp"
 #include <chrono>
 #include <cstdlib>
 
@@ -10,26 +10,28 @@ BinarySearchShip::BinarySearchShip()
     elementsArray = new int[maxCapacity];
     for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
         int value = rand() % 1000;
-        elementsArray[elementCount++] = value;
+        insert(value);
         elementSet.insert(value);
     }
-    sortArray();
 }
 
 BinarySearchShip::~BinarySearchShip() {
     delete[] elementsArray;
 }
 
-void BinarySearchShip::sortArray() {
+int BinarySearchShip::sortArray() {
+    int iterationCount = 0;
     for (int i = 1; i < elementCount; ++i) {
         int keyValue = elementsArray[i];
         int j = i - 1;
         while (j >= 0 && elementsArray[j] > keyValue) {
+            iterationCount++;
             elementsArray[j+1] = elementsArray[j];
             --j;
         }
         elementsArray[j+1] = keyValue;
     }
+    return iterationCount;
 }
 
 int BinarySearchShip::search(int target) {
@@ -53,13 +55,20 @@ int BinarySearchShip::search(int target) {
 
 void BinarySearchShip::insert(int element) {
     if (elementCount >= maxCapacity) return;
+    auto startTime = std::chrono::high_resolution_clock::now();
     elementsArray[elementCount++] = element;
     elementSet.insert(element);
-    sortArray();
+    int iterationCount = sortArray();
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("insert", iterationCount, execTime);
 }
 
 void BinarySearchShip::remove(int element) {
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < elementCount; ++i) {
+        iterationCount++;
         if (elementsArray[i] == element) {
             for (int j = i; j < elementCount - 1; ++j)
                 elementsArray[j] = elementsArray[j+1];
@@ -68,4 +77,7 @@ void BinarySearchShip::remove(int element) {
             break;
         }
     }
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("remove", iterationCount, execTime);
 }

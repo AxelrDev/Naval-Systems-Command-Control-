@@ -1,13 +1,13 @@
-#ifndef SHIP_HPP
-#define SHIP_HPP
+#ifndef GAMESHIP_HPP
+#define GAMESHIP_HPP
 
-#include "Ship.h"
-#include "BinarySearchShip.h"
-#include "BTreeShip.h"
-#include "LinearSearchShip.h"
-#include "RedBlackTreeShip.h"
-#include "SetShip.h"
-#include "SplayTreeShip.h"
+#include "Ship.hpp"
+#include "BinarySearchShip.hpp"
+#include "BTreeShip.hpp"
+#include "LinearSearchShip.hpp"
+#include "RedBlackTreeShip.hpp"
+#include "SetShip.hpp"
+#include "SplayTreeShip.hpp"
 
 class GameShip {
 public:
@@ -48,4 +48,4 @@ private:
     Ship *typeShip;
 };
 
-#endif // SHIP_HPP
+#endif // GAMESHIP_HPP

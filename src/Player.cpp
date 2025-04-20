@@ -1,7 +1,7 @@
 #include "Player.hpp"
 #include <iostream>
 #include <cstdlib>
-#include "Constants.h"
+#include "Constants.hpp"
 
 Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acciones por turno.
     ownBoard = new int*[rows];
@@ -212,6 +212,7 @@ void Player::upGradeShip(int row, int col) {
     for (size_t i = 0; i < ships.size(); i++) {
         if (ships[i].occupies(row, col)) {
             // ships[i].upgrade();
+            ships[i].getTypeShip()->remove(ships[i].getTypeShip()->getElement());
         } else {
             std::cout << "No hay barco en esa posición." << std::endl;
         }

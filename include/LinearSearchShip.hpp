@@ -1,7 +1,7 @@
-#ifndef LINEARSEARCHSHIP_H
-#define LINEARSEARCHSHIP_H
+#ifndef LINEARSEARCHSHIP_HPP
+#define LINEARSEARCHSHIP_HPP
 
-#include "Ship.h"
+#include "Ship.hpp"
 
 class LinearSearchShip : public Ship {
 private:

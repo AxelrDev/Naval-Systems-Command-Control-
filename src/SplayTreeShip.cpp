@@ -1,5 +1,5 @@
-#include "SplayTreeShip.h"
-#include "Constants.h"
+#include "SplayTreeShip.hpp"
+#include "Constants.hpp"
 #include <chrono>
 #include <cstdlib>
 
