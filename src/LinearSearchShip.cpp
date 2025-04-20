@@ -6,13 +6,7 @@
 LinearSearchShip::LinearSearchShip()
   : Ship("LinearSearch", PRICE_LINEAR_SEARCH), headNode(nullptr)
 {
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        int value = rand() % 1000;
-        Node* newNode = new Node(value);
-        newNode->nextNode = headNode;
-        headNode = newNode;
-        elementSet.insert(value);
-    }
+    generateElements();
 }
 
 LinearSearchShip::~LinearSearchShip() {

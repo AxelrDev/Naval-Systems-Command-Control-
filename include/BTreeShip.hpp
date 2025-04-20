@@ -30,21 +30,21 @@ private:
 
     /* inserción */
     bool  insertRec (int key, Node* cur,
-                     int& upKey, Node*& newChild);
+                     int& upKey, Node*& newChild,int &iterationCount );
 
     void  addKeyToNode(int key, Node* child,
-                       Node* target, int pos);
+                       Node* target, int pos, int &iterationCount);
 
     void  splitNode (int key, Node* child, Node* cur,
-                     int  pos,  int& upKey, Node*& newChild);
+                     int  pos,  int& upKey, Node*& newChild, int &iterationCount);
 
     /* eliminación */
-    bool  removeRec  (int key, Node* cur);
-    void  fixUnderflow(Node* cur, int pos);
-    void  merge      (Node* parent, int pos);
-    void  shiftLeft  (Node* parent, int pos);
-    void  shiftRight (Node* parent, int pos);
-    int   getPred    (Node* cur);
+    bool  removeRec  (int key, Node* cur, int &iterationCount);
+    void  fixUnderflow(Node* cur, int pos, int &iterationCount);
+    void shiftLeft(Node* parent, int pos, int& iterationCount);
+    void shiftRight(Node* parent, int pos, int& iterationCount);
+    void merge(Node* parent, int pos, int& iterationCount);
+    int   getPred    (Node* cur, int& iterationCount);
 
     /* búsqueda */
     void  searchRec  (int key, Node* cur,
