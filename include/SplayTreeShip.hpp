@@ -19,10 +19,10 @@ private:
 
     void rotateLeft(Node* x);
     void rotateRight(Node* y);
-    void splayNode(Node* x);
-    Node* insertNode(int key);
-    Node* searchNode(int key);
-    Node* joinTrees(Node* leftTree, Node* rightTree);
+    void  splayNode(Node* node, int &iterationCount);
+    Node* insertNode(int key, int &iterationCount);
+    Node* searchNode(int key, int &iterationCount);
+    Node* joinTrees(Node* leftTree, Node* rightTree, int &iterationCount);
 
 public:
     SplayTreeShip();
