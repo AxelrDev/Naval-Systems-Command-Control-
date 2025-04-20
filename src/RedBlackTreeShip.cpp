@@ -130,25 +130,31 @@ void RedBlackTreeShip::fixInsertion(Node* z) {
 
 
 void RedBlackTreeShip::rotateLeft(Node* x) {
+    // Evita hacer y = x->rightChild cuando ese hijo no exista
+    if (!x || !x->rightChild) return;
+
     Node* y = x->rightChild;
     x->rightChild = y->leftChild;
     if (y->leftChild) y->leftChild->parentNode = x;
     y->parentNode = x->parentNode;
-    if (!x->parentNode)           rootNode = y;
+    if (!x->parentNode)                rootNode = y;
     else if (x == x->parentNode->leftChild)  x->parentNode->leftChild  = y;
-    else                                      x->parentNode->rightChild = y;
-    y->leftChild = x;
+    else                                     x->parentNode->rightChild = y;
+    y->leftChild  = x;
     x->parentNode = y;
 }
 
 void RedBlackTreeShip::rotateRight(Node* y) {
+    // Evita hacer x = y->leftChild cuando ese hijo no exista
+    if (!y || !y->leftChild) return;
+
     Node* x = y->leftChild;
     y->leftChild = x->rightChild;
     if (x->rightChild) x->rightChild->parentNode = y;
     x->parentNode = y->parentNode;
-    if (!y->parentNode)           rootNode = x;
+    if (!y->parentNode)                rootNode = x;
     else if (y == y->parentNode->rightChild) y->parentNode->rightChild = x;
-    else                                      y->parentNode->leftChild  = x;
+    else                                    y->parentNode->leftChild  = x;
     x->rightChild = y;
     y->parentNode = x;
 }
