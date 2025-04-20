@@ -433,12 +433,14 @@ void GameMap::handleBuyActions(RenderWindow& window) {
       player1->plusImprovementPoints();
       player1->lessMoney(100);
       player1->setLessAction();
+      player1->upGradeShip(xCord,yCord);
       printf("Actions Player 1: %d\n", player1->getaction());
       updateMatrix(player1->getChangeMatrix());
     } else {
       player2->plusImprovementPoints();
       player2->lessMoney(100);
       player2->setLessAction();
+      player2->upGradeShip(xCord,yCord);
       printf("Actions Player 2: %d\n", player2->getaction());
       updateMatrix(player2->getChangeMatrix());
     }
@@ -522,7 +524,7 @@ void GameMap::buyShips(Player* player) {
     int cost = currencyClass.canBuy(player->getMoney(),
         currencyClass.getShip(buyShip));
     if(cost != -1){
-      GameShip ship = GameShip(1, 1, 3, 1, buyShip);
+      GameShip ship = GameShip(1, 1, LIFE, DAMAGE_CONSTANT, buyShip);
       player->setShipStorage(ship);
       player->lessMoney(currencyClass.getShip(buyShip));
     }else{

@@ -212,6 +212,7 @@ void Player::upGradeShip(int row, int col) {
     for (size_t i = 0; i < ships.size(); i++) {
         if (ships[i].occupies(row, col)) {
             // ships[i].upgrade();
+            ships[i].getTypeShip()->remove(ships[i].getTypeShip()->getElement());
         } else {
             std::cout << "No hay barco en esa posición." << std::endl;
         }

@@ -7,7 +7,7 @@
 #include <set>
 #include <chrono>
 
-#define MAX_KEYS 4          // (2 * MIN_KEYS)
+#define MAX_KEYS 5          // (2 * MIN_KEYS)
 #define MIN_KEYS 3
 
 class BTreeShip : public Ship
