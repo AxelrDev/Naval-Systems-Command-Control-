@@ -113,7 +113,7 @@ void Player::displayOwnBoard() {
 int Player::getShipDamage(int row, int col) {
     for (size_t i = 0; i < ships.size(); i++) {
         if (ships[i].occupies(row, col)) {
-            int dam = ships[i].getTypeShip()->calculateDamage(ships[i].getTypeShip()->search(ships[i].getTypeShip()->getElement()));
+            int dam = ships[i].getTypeShip()->calculateDamage(ships[i].getTypeShip()->search(ships[i].getTypeShip()->getElementInSet()));
             printf("DAMAGE: %d",dam);
             return dam;
         }
@@ -212,7 +212,7 @@ void Player::upGradeShip(int row, int col) {
     for (size_t i = 0; i < ships.size(); i++) {
         if (ships[i].occupies(row, col)) {
             // ships[i].upgrade();
-            ships[i].getTypeShip()->remove(ships[i].getTypeShip()->getElement());
+            ships[i].getTypeShip()->remove(ships[i].getTypeShip()->getElementInSet());
         } else {
             std::cout << "No hay barco en esa posición." << std::endl;
         }

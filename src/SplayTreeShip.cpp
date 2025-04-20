@@ -6,8 +6,7 @@
 SplayTreeShip::SplayTreeShip()
   : Ship("SplayTree", PRICE_SPLAY_TREE), rootNode(nullptr)
 {
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i)
-        insert(rand() % 1000);
+    generateElements();
 }
 
 int SplayTreeShip::search(int target) {

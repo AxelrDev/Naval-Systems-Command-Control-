@@ -20,7 +20,7 @@ BinarySearchShip::~BinarySearchShip() {
 }
 
 int BinarySearchShip::sortArray() {
-    int iterationCount = 0;
+    int iterationCount = 1;
     for (int i = 1; i < elementCount; ++i) {
         int keyValue = elementsArray[i];
         int j = i - 1;
@@ -70,8 +70,10 @@ void BinarySearchShip::remove(int element) {
     for (int i = 0; i < elementCount; ++i) {
         iterationCount++;
         if (elementsArray[i] == element) {
-            for (int j = i; j < elementCount - 1; ++j)
+            for (int j = i; j < elementCount - 1; ++j){
                 elementsArray[j] = elementsArray[j+1];
+                iterationCount++;
+            }
             --elementCount;
             elementSet.erase(element);
             break;

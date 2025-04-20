@@ -9,8 +9,10 @@
 BTreeShip::BTreeShip()
     : Ship("BTree", 200)
 {
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i)
+    for (int i = 0; i < NUM_OF_ELEMENTS; ++i){
         insert(std::rand() % 1000);
+    }
+        
 }
 
 BTreeShip::~BTreeShip() { destroy(rootNode); }
@@ -144,7 +146,7 @@ void BTreeShip::searchRec(int key, Node* cur,
     ++iters;
 
     int pos;
-    for (pos = 1; pos <= cur->count && key > cur->key[pos]; ++pos);
+    for (pos = 1; pos <= cur->count && key > cur->key[pos]; ++pos) iters++;
 
     if (pos <= cur->count && key == cur->key[pos]) return;
 

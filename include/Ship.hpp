@@ -27,6 +27,8 @@ public:
     const std::string& getName()  const;
     int                getPrice() const;
     int getElement();
+    int getElementInSet();
+    void generateElements();
 };
 
 #endif // SHIP_HPP

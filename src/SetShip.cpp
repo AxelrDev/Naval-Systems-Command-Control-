@@ -8,10 +8,7 @@ SetShip::SetShip()
     elementCount(0), maxCapacity(MAX_NUM_ELEMENTS)
 {
     elementsArray = new int[maxCapacity];
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        int value = rand() % 1000;
-        insert(value);
-    }
+    generateElements();
 }
 
 SetShip::~SetShip() {

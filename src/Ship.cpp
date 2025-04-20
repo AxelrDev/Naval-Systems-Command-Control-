@@ -50,3 +50,22 @@ int Ship::getElement(){
     }
     return element;
 }
+void Ship::generateElements(){
+  int elements = 0;
+  while(elements < NUM_OF_ELEMENTS){
+    int value = rand() % 1000;
+    if(elementSet.find(value) == elementSet.end()){
+      elementSet.insert(value);
+      insert(value);
+      elements ++;
+    }
+  }
+}
+
+int Ship::getElementInSet(){
+  int element = -1;
+  while(elementSet.find(element) == elementSet.end()){
+    element = rand()%1000;
+  }
+  return element;
+}

@@ -8,9 +8,7 @@ RedBlackTreeShip::RedBlackTreeShip()
   : Ship("RedBlackTree", PRICE_REDBLACK_TREE),
     rootNode(nullptr)
 {
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        insert(rand() % 1000);
-    }
+    generateElements();
 }
 
 
