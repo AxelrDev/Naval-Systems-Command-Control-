@@ -117,7 +117,7 @@ void SetShip::remove(int element) {
 void SetShip::generateElements(){
     int elements = 0;
     while(elements < NUM_OF_ELEMENTS){
-      int value = generateRandom(0,1000);
+      int value = generateRandom(0,MAX_NUM_ELEMENTS);
       if(elementSet.find(value) == elementSet.end()){
         insert(value);
         elements ++;

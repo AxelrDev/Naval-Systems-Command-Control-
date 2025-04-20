@@ -287,8 +287,8 @@ void BTreeShip::remove(int k) {
 
 void BTreeShip::generateElements(){
     int elements = 0;
-    while(elements < 50){
-      int value = generateRandom(0,1000);
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,MAX_NUM_ELEMENTS);
       if(elementSet.find(value) == elementSet.end()){
         insert(value);
         elements ++;

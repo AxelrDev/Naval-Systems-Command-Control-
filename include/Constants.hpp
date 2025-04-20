@@ -2,9 +2,9 @@
 #define CONSTANTS_HPP
 
 // Número de elementos que se inicializan aleatoriamente en cada barco
-constexpr int NUM_OF_ELEMENTS    = 50;
+constexpr int NUM_OF_ELEMENTS    = 1000000;
 
-constexpr int MAX_NUM_ELEMENTS   = NUM_OF_ELEMENTS * 2;
+constexpr int MAX_NUM_ELEMENTS   = NUM_OF_ELEMENTS * 3;
 
 // Moneda que recibe cada jugador por turno
 constexpr int CURRENCY_PER_TURN  = 50;
@@ -15,6 +15,8 @@ constexpr int PRICE_BINARY_SEARCH   = 110;
 constexpr int PRICE_SET             = 120;
 constexpr int PRICE_REDBLACK_TREE   = 150;
 constexpr int PRICE_SPLAY_TREE      = 160;
+
+
 
 // Constante usada para calcular daño: DAMAGE = DAMAGE_CONSTANT / iterations
 constexpr int DAMAGE_CONSTANT       = 1000;
