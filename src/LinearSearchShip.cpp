@@ -53,24 +53,25 @@ void LinearSearchShip::remove(int element) {
 
     Node* current = headNode;
     Node* previous = nullptr;
-    while (current && current->nodeValue != element) {
+
+    while (current) {
         ++iterationCount;
+        if (current->nodeValue == element) break;
         previous = current;
         current = current->nextNode;
     }
-    if (!current){
-        ++iterationCount;
-    }
-    else{
-        if (!previous){
+
+    if (current) {
+        // Element found
+        if (!previous) {
             headNode = current->nextNode;
-        }
-        else {
+        } else {
             previous->nextNode = current->nextNode;
         }
         delete current;
         elementSet.erase(element);
     }
+
     auto end = std::chrono::high_resolution_clock::now();
     logOperation("remove", iterationCount,
                  std::chrono::duration<double>(end-start).count());
