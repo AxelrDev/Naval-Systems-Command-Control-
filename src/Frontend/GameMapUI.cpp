@@ -427,7 +427,7 @@ void GameMap::handleBuyActions(RenderWindow& window) {
     }
   } else if(rightBuyButton.isMouseOver(window)) {
     buyShip= (buyShip + 1) % 6;
-  }else if(buyPointsButton.isMouseOver(window)) {
+  }else if(buyPointsButton.isMouseOver(window) && (xCord!=-1 && yCord!=-1)) {
     // comprar puntos de mejora
     if(playerTurn) {
       player1->plusImprovementPoints();
