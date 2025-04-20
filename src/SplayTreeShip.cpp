@@ -111,21 +111,25 @@ void SplayTreeShip::splayNode(Node* node, int &iterationCount) {
         // Zig-Zig step
         else if (node == parentNode->leftChild
               && parentNode == grandParent->leftChild) {
+            iterationCount++;
             rotateRight(grandParent);
             rotateRight(parentNode);
         }
         else if (node == parentNode->rightChild
               && parentNode == grandParent->rightChild) {
+            iterationCount++;
             rotateLeft(grandParent);
             rotateLeft(parentNode);
         }
         // Zig-Zag step
         else if (node == parentNode->leftChild
               && parentNode == grandParent->rightChild) {
+            iterationCount++;
             rotateRight(parentNode);
             rotateLeft(grandParent);
         }
         else {
+            iterationCount++;
             rotateLeft(parentNode);
             rotateRight(grandParent);
         }
@@ -157,8 +161,10 @@ SplayTreeShip::Node* SplayTreeShip::insertNode(int key, int &iterationCount) {
                       : currentNode->rightChild;
     }
     newNode->parentNode = parentNode;
-    if (!parentNode)
+    if (!parentNode){
         rootNode = newNode;
+        iterationCount++;
+    }
     else if (key < parentNode->key)
         parentNode->leftChild  = newNode;
     else
