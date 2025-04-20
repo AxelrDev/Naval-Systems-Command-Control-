@@ -38,18 +38,7 @@ int Ship::getPrice() const {
 }
 
 
-int Ship::getElement(){
-    bool exist = true;
-    int element=0;
-    while(exist){
-        element = rand() % 1000;
-        auto it = elementSet.find(element);
-        if(it != elementSet.end()){
-            exist=false;
-        }
-    }
-    return element;
-}
+
 
 int Ship::getElementInSet(){
   int element = -1;
@@ -59,7 +48,7 @@ int Ship::getElementInSet(){
   }
   
   while(elementSet.find(element) == elementSet.end()){
-    element = generateRandom(0,1000);
+    element = generateRandom(0,999);
   }
   return element;
 }

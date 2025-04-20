@@ -1,342 +1,307 @@
 #include "BTreeShip.hpp"
-#include <algorithm>
-#include <cstdlib>   // rand()
-#include <iostream>  // mensajes de depuración opcionales
+#include <iostream>
+using namespace std;
 
-/* ============================================================
- *   Construcción / destrucción
- * ============================================================ */
-BTreeShip::BTreeShip()
-    : Ship("BTree", 200)
-{
-    generateElements();
-        
+BTreeNode::BTreeNode(bool _leaf) : n(0), leaf(_leaf) {
+    for(int i = 0; i < 2*T; ++i)
+        C[i] = nullptr;
 }
 
-BTreeShip::~BTreeShip() { destroy(rootNode); }
-
-void BTreeShip::destroy(Node* n)
-{
-    if (!n) return;
-    for (int i = 0; i <= n->count; ++i)
-        destroy(n->child[i]);
-    delete n;
-}
-
-/* ============================================================
- *   Utils
- * ============================================================ */
-BTreeShip::Node*
-BTreeShip::createNode(int key, Node* child0, Node* child1)
-{
-    Node* n  = new Node;
-    n->count = 1;
-    n->key[1]   = key;
-    n->child[0] = child0;
-    n->child[1] = child1;
-    return n;
-}
-
-void BTreeShip::addKeyToNode(int key, Node* child,
-                             Node* target, int pos, int &iterationCount)
-{
-    /* abre espacio desde el final hacia 'pos'                       */
-    for (int i = target->count; i > pos; --i) {
-        target->key  [i + 1] = target->key  [i];
-        target->child[i + 1] = target->child[i];
-        iterationCount ++;
+void BTreeNode::traverse() {
+    int i;
+    for(i = 0; i < n; ++i) {
+        if(!leaf) C[i]->traverse();
+        cout << keys[i] << " ";
     }
-    target->key  [pos + 1] = key;
-    target->child[pos + 1] = child;
-    ++target->count;
-    iterationCount ++;
+    if(!leaf) C[i]->traverse();
 }
 
-/* ============================================================
- *   Inserción recursiva
- * ============================================================ */
-bool BTreeShip::insertRec(int key, Node* cur,
-                          int& upKey, Node*& newChild, int &iterationCount)
-{
-    iterationCount ++;
-    /* caso hoja */
-    if (!cur) { upKey = key; newChild = nullptr; return true; }
-
-    /* encontrar posición */
-    int pos;
-    for (pos = cur->count;
-         pos >= 1 && key < cur->key[pos];
-         --pos) iterationCount ++;
-
-    if (pos >= 1 && key == cur->key[pos]) {
-        std::cout << "Valor duplicado no permitido\n";
-        return false;
-    }
-
-    if (insertRec(key, cur->child[pos], upKey, newChild, iterationCount)) {
-
-        if (cur->count < MAX_KEYS) {          // cabe
-            addKeyToNode(upKey, newChild, cur, pos,iterationCount);
-            return false;                     // nada que propagar
-        }
-        /* overflow -> split */
-        splitNode(upKey, newChild, cur, pos, upKey, newChild, iterationCount);
-        return true;                          // propaga median
-    }
-    return false;
-}
-
-void BTreeShip::splitNode(int key, Node* child, Node* cur,
-                          int pos, int& upKey, Node*& newChild, int &iterationCount)
-{
-    int mid = (pos > MIN_KEYS) ? MIN_KEYS + 1 : MIN_KEYS;
-
-    /*  nuevo nodo                                                  */
-    newChild = new Node;
-
-    /* mover segunda mitad                                          */
-    for (int i = mid + 1, j = 1; i <= MAX_KEYS; ++i, ++j) {
-        newChild->key  [j] = cur->key  [i];
-        newChild->child[j] = cur->child[i];
-        iterationCount ++;
-    }
-    newChild->child[0] = cur->child[mid];
-
-    newChild->count = MAX_KEYS - mid;
-    cur->count      = mid - 1;          // median queda fuera
-
-    /* inserta clave en el lado adecuado                            */
-    if (pos <= MIN_KEYS)
-        addKeyToNode(key, child, cur, pos, iterationCount);
-    else
-        addKeyToNode(key, child, newChild, pos - mid, iterationCount);
-
-    /* mediana que sube                                             */
-    upKey = cur->key[mid];
-    iterationCount ++;
-}
-
-void BTreeShip::insert(int key)
-{
-    if (elementSet.count(key)) return;          // duplicado
-    auto start = std::chrono::high_resolution_clock::now();
-
-    int upKey;
-    Node* newChild;
-    int iterationCount = 0;
-    if (insertRec(key, rootNode, upKey, newChild, iterationCount)) {
-        rootNode = createNode(upKey, rootNode, newChild);
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    double exec = std::chrono::duration<double>(end - start).count();
-    logOperation("insert", iterationCount, exec);
-
-    elementSet.insert(key);
-}
-
-/* ============================================================
- *   Búsqueda
- * ============================================================ */
-void BTreeShip::searchRec(int key, Node* cur,
-                          int& iters) const
-{
-    if (!cur) return;
-    ++iters;
-
-    int pos;
-    for (pos = 1; pos <= cur->count && key > cur->key[pos]; ++pos) iters++;
-
-    if (pos <= cur->count && key == cur->key[pos]) return;
-
-    searchRec(key, cur->child[pos - 1], iters);
-}
-
-int BTreeShip::search(int key)
-{
-    int iterations = 0;
-    auto t0 = std::chrono::high_resolution_clock::now();
-
-    searchRec(key, rootNode, iterations);
-
-    auto t1 = std::chrono::high_resolution_clock::now();
-    double exec = std::chrono::duration<double>(t1 - t0).count();
-    logOperation("search", iterations, exec);
-    return iterations;
-}
-
-/* ============================================================
- *   Eliminación (alto‑nivel)
- * ============================================================ */
-void BTreeShip::remove(int key)
-{
-    auto start = std::chrono::high_resolution_clock::now();
-    int iterationCount = 0;
-    if (!removeRec(key, rootNode,iterationCount)) {
-        std::cout << "El valor no está en el árbol\n";
-        return;
-    }
-    if (rootNode && rootNode->count == 0) {
-        Node* tmp = rootNode;
-        rootNode = rootNode->child[0];
-        delete tmp;
-    }
-    elementSet.erase(key);
-    auto end = std::chrono::high_resolution_clock::now();
-    double exec = std::chrono::duration<double>(end - start).count();
-
-    logOperation("remove", iterationCount, exec);
-}
-
-/* ============================================================
- *   Eliminación (recursiva)  ‑‑ solo lo imprescindible ‑‑
- *     (algoritmo clásico de B‑tree, ajustando
- *      underflow con merge/shift)
- * ============================================================ */
-bool BTreeShip::removeRec(int key, Node* cur, int &iterationCount)
-{
-    if (!cur) return false;
-    iterationCount ++;
-    int pos;
-    for (pos = 1; pos <= cur->count && key > cur->key[pos]; ++pos);
-
-    /* encontrado en nodo interno/hoja                              */
-    if (pos <= cur->count && key == cur->key[pos]) {
-        if (cur->child[pos - 1]) {             // nodo interno
-            int pred = getPred(cur->child[pos - 1], iterationCount);
-            cur->key[pos] = pred;
-            removeRec(pred, cur->child[pos - 1],iterationCount);
-        } else {                               // hoja
-            for (int i = pos; i < cur->count; ++i) {
-                cur->key [i] = cur->key [i + 1];
-                cur->child[i] = cur->child[i + 1];
-            }
-            --cur->count;
-        }
-    } else {
-        /* seguir bajando                                             */
-        if (!removeRec(key, cur->child[pos - 1],iterationCount)) return false;
-    }
-
-    /* underflow                                                     */
-    if (cur->child[pos - 1] &&
-        cur->child[pos - 1]->count < MIN_KEYS)
-        fixUnderflow(cur, pos - 1, iterationCount);
-
-    return true;
-}
-
-int BTreeShip::getPred(Node* cur, int& iterationCount)
-{
-    if (!cur) return -1; // o lanza una excepción si prefieres
-
-    while (cur->child[cur->count]) {
-        cur = cur->child[cur->count];
+BTreeNode* BTreeNode::searching(int k,int &iterationCount) {
+    int i = 0;
+    while(i < n && k > keys[i]){
+        ++i;
         iterationCount++;
     }
-    return cur->key[cur->count]; // ← esto ya es seguro
+    if(i < n && keys[i] == k) return this;
+    if(leaf) return nullptr;
+    return C[i]->searching(k,iterationCount);
 }
 
-void BTreeShip::fixUnderflow(Node* parent, int pos,int &iterationCount)
-{
-    iterationCount ++;
-    if (pos > 0 && parent->child[pos - 1]->count > MIN_KEYS)
-        shiftRight(parent, pos, iterationCount);
-    else if (pos < parent->count &&
-             parent->child[pos + 1]->count > MIN_KEYS)
-        shiftLeft(parent, pos + 1, iterationCount);
-    else
-        merge(parent, (pos == parent->count) ? pos : pos + 1, iterationCount);
-}
-
-void BTreeShip::shiftLeft(Node* parent, int pos,int& iterationCount)
-{
-    iterationCount ++;
-    Node* left  = parent->child[pos - 1];
-    Node* right = parent->child[pos];
-
-    /* lleva clave del padre a la izquierda                          */
-    ++left->count;
-    left->key [left->count]  = parent->key[pos];
-    left->child[left->count] = right->child[0];
-
-    /* sube primera clave del hermano                               */
-    parent->key[pos] = right->key[1];
-
-    for (int i = 1; i < right->count; ++i) {
-        right->key [i] = right->key [i + 1];
-        right->child[i] = right->child[i + 1];
-        iterationCount ++;
-    }
-    right->child[right->count] = right->child[right->count + 1];
-    --right->count;
-}
-
-void BTreeShip::shiftRight(Node* parent, int pos, int& iterationCount)
-{
-    iterationCount ++;
-    Node* left  = parent->child[pos - 1];
-    Node* right = parent->child[pos];
-
-    for (int i = right->count; i >= 1; --i) {
-        right->key  [i + 1] = right->key  [i];
-        right->child[i + 1] = right->child[i];
-        iterationCount ++;
-    }
-    right->child[1] = right->child[0];
-    right->key  [1] = parent->key[pos];
-    ++right->count;
-
-    parent->key[pos] = left->key[left->count];
-    right->child[0]  = left->child[left->count];
-    --left->count;
-}
-
-void BTreeShip::merge(Node* parent, int pos, int& iterationCount)
-{
+void BTreeNode::insertNonFull(int k,int &iterationCount) {
+    int i = n - 1;
     iterationCount++;
-    Node* left  = parent->child[pos - 1];
-    Node* right = parent->child[pos];
-
-    // Agregamos la clave del padre
-    if (left->count + 1 > MAX_KEYS) {
-        std::cerr << "Error: overflow en merge (clave del padre)\n";
-        return;
+    if(leaf) {
+        while(i >= 0 && keys[i] > k) {
+            iterationCount++;
+            keys[i+1] = keys[i];
+            --i;
+        }
+        keys[i+1] = k;
+        ++n;
+    } else {
+        while(i >= 0 && keys[i] > k){
+            --i;
+            iterationCount++;
+        } 
+        if(C[i+1]->n == 2*T - 1) {
+            splitChild(i+1, C[i+1],iterationCount);
+            if(keys[i+1] < k) ++i;
+        }
+        C[i+1]->insertNonFull(k,iterationCount);
     }
-    ++left->count;
-    left->key [left->count]  = parent->key[pos];
-    left->child[left->count] = right->child[0];
+}
 
-    // Movemos claves del hijo derecho
-    for (int i = 1; i <= right->count; ++i) {
-        if (left->count + 1 > MAX_KEYS) {
-            std::cerr << "Error: overflow en merge (right->key)\n";
+void BTreeNode::splitChild(int i, BTreeNode* y,int &iterationCount) {
+    BTreeNode* z = new BTreeNode(y->leaf);
+    z->n = T - 1;
+    for(int j = 0; j < T - 1; ++j){
+        z->keys[j] = y->keys[j + T];
+        iterationCount++;
+    }
+    if(!y->leaf) {
+        for(int j = 0; j < T; ++j){
+            z->C[j] = y->C[j + T];
+            iterationCount++;
+        }
+    }
+    y->n = T - 1;
+    for(int j = n; j >= i+1; --j){
+        C[j+1] = C[j];
+        iterationCount++;
+    }
+    C[i+1] = z;
+    for(int j = n - 1; j >= i; --j){
+        keys[j+1] = keys[j];
+        iterationCount++;
+    }
+    keys[i] = y->keys[T - 1];
+    ++n;
+}
+
+int BTreeNode::findKey(int k, int &iterationCount) {
+    int idx = 0;
+    while(idx < n && keys[idx] < k){
+        ++idx;
+        iterationCount++;
+    }
+    return idx;
+}
+
+void BTreeNode::remove(int k,int &iterationCount) {
+    int idx = findKey(k,iterationCount);
+    if(idx < n && keys[idx] == k) {
+        if(leaf) removeFromLeaf(idx,iterationCount);
+        else removeFromNonLeaf(idx, iterationCount);
+    } else {
+        if(leaf) {
+            cout << "La clave " << k << " no existe en el árbol\n";
             return;
         }
-        ++left->count;
-        left->key [left->count]  = right->key[i];
-        left->child[left->count] = right->child[i];
+        bool flag = (idx == n);
+        if(C[idx]->n < T) fill(idx,iterationCount);
+        if(flag && idx > n) C[idx-1]->remove(k,iterationCount);
+        else C[idx]->remove(k,iterationCount);
+    }
+}
+
+void BTreeNode::removeFromLeaf(int idx,int &iterationCount) {
+    for(int i = idx+1; i < n; ++i){
+        keys[i-1] = keys[i];
         iterationCount++;
     }
+    --n;
+}
 
-    delete right;
-    parent->child[pos] = nullptr;
+void BTreeNode::removeFromNonLeaf(int idx,int &iterationCount) {
+    int k = keys[idx];
+    if(C[idx]->n >= T) {
+        int pred = getPred(idx,iterationCount);
+        keys[idx] = pred;
+        iterationCount++;
+        C[idx]->remove(pred,iterationCount);
+    } else if(C[idx+1]->n >= T) {
+        int succ = getSucc(idx,iterationCount);
+        keys[idx] = succ;
+        iterationCount++;
+        C[idx+1]->remove(succ,iterationCount);
+    } else {
+        merge(idx,iterationCount);
+        C[idx]->remove(k,iterationCount);
+    }
+}
 
-    for (int i = pos; i < parent->count; ++i) {
-        parent->key[i]   = parent->key[i + 1];
-        parent->child[i] = parent->child[i + 1];
+int BTreeNode::getPred(int idx,int &iterationCount) {
+    BTreeNode* cur = C[idx];
+    while(!cur->leaf){
+        cur = cur->C[cur->n];
+        iterationCount++;
+    } 
+    return cur->keys[cur->n - 1];
+}
+
+int BTreeNode::getSucc(int idx,int &iterationCount) {
+    BTreeNode* cur = C[idx+1];
+    while(!cur->leaf){
+        cur = cur->C[0];
         iterationCount++;
     }
-    parent->child[parent->count] = nullptr;
-    --parent->count;
+    return cur->keys[0];
+}
+
+void BTreeNode::fill(int idx,int &iterationCount) {
+    if(idx != 0 && C[idx-1]->n >= T) borrowFromPrev(idx,iterationCount);
+    else if(idx != n && C[idx+1]->n >= T) borrowFromNext(idx,iterationCount);
+    else {
+        if(idx != n) merge(idx,iterationCount);
+        else merge(idx-1,iterationCount);
+    }
+}
+
+void BTreeNode::borrowFromPrev(int idx, int &iterationCount) {
+    BTreeNode* child = C[idx];
+    BTreeNode* sibling = C[idx-1];
+    for(int i = child->n - 1; i >= 0; --i){
+        child->keys[i+1] = child->keys[i];
+        iterationCount++;
+    }   
+    
+    if(!child->leaf) {
+        for(int i = child->n; i >= 0; --i){
+            child->C[i+1] = child->C[i];
+            iterationCount++;
+        }
+    }
+    child->keys[0] = keys[idx-1];
+    if(!child->leaf) child->C[0] = sibling->C[sibling->n];
+    keys[idx-1] = sibling->keys[sibling->n - 1];
+    ++child->n;
+    --sibling->n;
+}
+
+void BTreeNode::borrowFromNext(int idx,int &iterationCount) {
+    BTreeNode* child = C[idx];
+    BTreeNode* sibling = C[idx+1];
+    child->keys[child->n] = keys[idx];
+    if(!child->leaf) child->C[child->n+1] = sibling->C[0];
+    keys[idx] = sibling->keys[0];
+    for(int i = 1; i < sibling->n; ++i){
+        sibling->keys[i-1] = sibling->keys[i];
+        iterationCount++;
+    } 
+    if(!sibling->leaf) {
+        for(int i = 1; i <= sibling->n; ++i){
+            sibling->C[i-1] = sibling->C[i];
+            iterationCount++;
+        }
+    }
+    ++child->n;
+    --sibling->n;
+}
+
+void BTreeNode::merge(int idx, int &iterationCount) {
+    BTreeNode* child = C[idx];
+    BTreeNode* sibling = C[idx+1];
+    child->keys[T - 1] = keys[idx];
+    for(int i = 0; i < sibling->n; ++i){
+        child->keys[i+T] = sibling->keys[i];
+        iterationCount++;
+    } 
+    if(!child->leaf) {
+        for(int i = 0; i <= sibling->n; ++i){
+            child->C[i+T] = sibling->C[i];
+            iterationCount++;
+        } 
+    }
+    for(int i = idx+1; i < n; ++i){
+        keys[i-1] = keys[i];
+        iterationCount++;
+    }
+    for(int i = idx+2; i <= n; ++i){
+        C[i-1] = C[i];
+        iterationCount++;
+    }
+    child->n += sibling->n + 1;
+    --n;
+    delete sibling;
+}
+
+// Métodos de BTree
+BTreeShip::BTreeShip() :Ship("Btree", 300), root(nullptr) {
+    generateElements();
+}
+
+void BTreeShip::traverse() {
+    if(root) root->traverse();
+}
+
+BTreeNode* BTreeShip::searching(int k,int &iterationCount) {
+    return (root == nullptr) ? nullptr : root->searching(k, iterationCount);
+}
+
+void BTreeShip::insert(int k) {
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    if(root == nullptr) {
+        root = new BTreeNode(true);
+        root->keys[0] = k;
+        root->n = 1;
+        iterationCount++;
+    } else {
+        if(root->n == 2*T - 1) {
+            BTreeNode* s = new BTreeNode(false);
+            s->C[0] = root;
+            s->splitChild(0, root,iterationCount);
+            int i = 0;
+            if(s->keys[0] < k) ++i;
+            s->C[i]->insertNonFull(k,iterationCount);
+            root = s;
+        } else {
+            root->insertNonFull(k,iterationCount);
+        }
+    }
+    elementSet.insert(k);
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("Insert", iterationCount, execTime);
+}
+
+void BTreeShip::remove(int k) {
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    if(!root) {
+        cout << "El árbol está vacío\n";
+        return;
+    }
+    root->remove(k,iterationCount);
+    if(root->n == 0) {
+        BTreeNode* tmp = root;
+        if(root->leaf) root = nullptr;
+        else root = root->C[0];
+        delete tmp;
+    }
+    elementSet.erase(k);
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("Remove", iterationCount, execTime);
 }
 
 void BTreeShip::generateElements(){
     int elements = 0;
-    while(elements < NUM_OF_ELEMENTS){
+    while(elements < 50){
       int value = generateRandom(0,1000);
       if(elementSet.find(value) == elementSet.end()){
         insert(value);
         elements ++;
       }
     }
+  }
+
+  int BTreeShip::search(int k){
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    searching(k, iterationCount);
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("Search", iterationCount, execTime);
+    return iterationCount;
   }
