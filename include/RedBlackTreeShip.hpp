@@ -39,6 +39,7 @@ struct Node {
     void  fixDeletion (Node* x, int &iterationCount);
     void  deleteNode(Node* z, int &iterationCount);
     void deleteSubtree(Node* node);
+    void generateElements();
 
 public:
     RedBlackTreeShip();

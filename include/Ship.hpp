@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <random>
 
 class Ship {
 protected:
@@ -28,7 +29,7 @@ public:
     int                getPrice() const;
     int getElement();
     int getElementInSet();
-    void generateElements();
+    int64_t generateRandom(int64_t min, int64_t max);
 };
 
 #endif // SHIP_HPP

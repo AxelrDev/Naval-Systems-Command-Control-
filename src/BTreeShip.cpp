@@ -9,9 +9,7 @@
 BTreeShip::BTreeShip()
     : Ship("BTree", 200)
 {
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        insert(rand()%1000);
-    }
+    generateElements();
         
 }
 
@@ -131,7 +129,7 @@ void BTreeShip::insert(int key)
     }
     auto end = std::chrono::high_resolution_clock::now();
     double exec = std::chrono::duration<double>(end - start).count();
-    logOperation("insert", ++iterationCount, exec);
+    logOperation("insert", iterationCount, exec);
 
     elementSet.insert(key);
 }
@@ -331,3 +329,14 @@ void BTreeShip::merge(Node* parent, int pos, int& iterationCount)
     parent->child[parent->count] = nullptr;
     --parent->count;
 }
+
+void BTreeShip::generateElements(){
+    int elements = 0;
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,1000);
+      if(elementSet.find(value) == elementSet.end()){
+        insert(value);
+        elements ++;
+      }
+    }
+  }

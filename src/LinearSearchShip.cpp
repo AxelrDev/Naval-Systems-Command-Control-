@@ -75,3 +75,14 @@ void LinearSearchShip::remove(int element) {
     logOperation("remove", iterationCount,
                  std::chrono::duration<double>(end-start).count());
 }
+
+void LinearSearchShip::generateElements(){
+  int elements = 0;
+  while(elements < NUM_OF_ELEMENTS){
+    int value = generateRandom(0,1000);
+    if(elementSet.find(value) == elementSet.end()){
+      insert(value);
+      elements ++;
+    }
+  }
+}

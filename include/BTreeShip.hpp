@@ -45,6 +45,7 @@ private:
     void shiftRight(Node* parent, int pos, int& iterationCount);
     void merge(Node* parent, int pos, int& iterationCount);
     int   getPred    (Node* cur, int& iterationCount);
+    void generateElements();
 
     /* búsqueda */
     void  searchRec  (int key, Node* cur,

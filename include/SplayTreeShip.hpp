@@ -24,6 +24,8 @@ private:
     Node* searchNode(int key, int &iterationCount);
     Node* joinTrees(Node* leftTree, Node* rightTree, int &iterationCount);
 
+    void generateElements();
+
 public:
     SplayTreeShip();
     int  search(int target) override;

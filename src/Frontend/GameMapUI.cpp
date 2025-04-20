@@ -22,8 +22,8 @@ GameMap::GameMap():
   // Game game(10, 10, 5, 100);
   player1 = new Player(GRID_SIZE, GRID_SIZE);
   player2 = new Player(GRID_SIZE, GRID_SIZE);
-  player1->placeShips(NUM_SHIPS+1, -1);
-  player2->placeShips(NUM_SHIPS+1, -1);
+  player1->placeShips(NUM_SHIPS, -1);
+  player2->placeShips(NUM_SHIPS, -1);
   currencyClass = Currency();
   shipTextures.resize(6);
   shipSprites.resize(6);

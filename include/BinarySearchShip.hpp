@@ -10,6 +10,7 @@ private:
     int  maxCapacity;
 
     int sortArray();
+    void generateElements();
 
 public:
     BinarySearchShip();

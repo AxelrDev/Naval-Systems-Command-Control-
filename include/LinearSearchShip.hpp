@@ -12,6 +12,7 @@ private:
     };
     Node* headNode;
 
+    void generateElements();
 public:
     LinearSearchShip();
     ~LinearSearchShip();

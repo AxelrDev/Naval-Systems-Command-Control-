@@ -8,7 +8,7 @@ RedBlackTreeShip::RedBlackTreeShip()
   : Ship("RedBlackTree", PRICE_REDBLACK_TREE),
     rootNode(nullptr)
 {
-    generateElements();
+  generateElements();
 }
 
 
@@ -84,8 +84,10 @@ RedBlackTreeShip::Node* RedBlackTreeShip::insertNode(int key, int &iterationCoun
                       : currentNode->rightChild;
     }
     newNode->parentNode = parentNode;
-    if (!parentNode)
+    if (!parentNode){
         rootNode = newNode;
+        ++iterationCount;
+    }
     else if (key < parentNode->key)
         parentNode->leftChild = newNode;
     else
@@ -307,3 +309,14 @@ void RedBlackTreeShip::fixDeletion(Node* node, int &iterationCount) {
     if (node)
         node->isRed = false;
 }
+
+void RedBlackTreeShip::generateElements(){
+    int elements = 0;
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,1000);
+      if(elementSet.find(value) == elementSet.end()){
+        insert(value);
+        elements ++;
+      }
+    }
+  }

@@ -10,6 +10,7 @@ private:
     int  maxCapacity;
 
     int findIndex(int element);
+    void generateElements();
 
 public:
     SetShip();
