@@ -9,9 +9,14 @@
 BTreeShip::BTreeShip()
     : Ship("BTree", 200)
 {
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i){
-        insert(std::rand() % 1000);
+    int elements = 0;
+  while(elements < NUM_OF_ELEMENTS){
+    int value = rand() % 1000;
+    if(elementSet.find(value) == elementSet.end()){
+      insert(value);
+      elements ++;
     }
+  }
         
 }
 
