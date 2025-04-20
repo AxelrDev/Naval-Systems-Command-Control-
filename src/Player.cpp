@@ -11,7 +11,7 @@ Player::Player(int rows, int cols) : rows(rows), cols(cols) {  // Ejemplo: 3 acc
         changeMatrix[i] = new int[cols];
     }
     initializeBoards();
-    money = 1000;
+    money = 100000;
     improvementPoints = 0; // Inicializa los puntos de mejora.
     shipStorage = GameShip(); // Marca el barco como vacío.
 }

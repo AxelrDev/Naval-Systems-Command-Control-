@@ -13,125 +13,187 @@ int SplayTreeShip::search(int target) {
     int iterationCount = 0;
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    Node* found = searchNode(target);
-    if (found) {
-        splayNode(found);
+    Node* foundNode = searchNode(target, iterationCount);
+    if (foundNode) {
+        splayNode(foundNode, iterationCount);
         ++iterationCount;
     }
 
     auto endTime = std::chrono::high_resolution_clock::now();
-    double execTime = std::chrono::duration<double>(endTime - startTime).count();
-    logOperation("search", iterationCount, execTime);
+    double executionTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("search", iterationCount, executionTime);
     return iterationCount;
 }
 
 void SplayTreeShip::insert(int element) {
     if (elementSet.count(element)) return;
-    Node* newNode = insertNode(element);
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    Node* newNode = insertNode(element, iterationCount);
     if (newNode) {
-        splayNode(newNode);
+        splayNode(newNode, iterationCount);
         elementSet.insert(element);
     }
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double executionTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("insert", iterationCount, executionTime);
 }
 
 void SplayTreeShip::remove(int element) {
-    Node* found = searchNode(element);
-    if (!found) return;
-    splayNode(found);
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-    Node* leftSub  = found->leftChild;
-    Node* rightSub = found->rightChild;
-    if (leftSub)  leftSub->parentNode  = nullptr;
-    if (rightSub) rightSub->parentNode = nullptr;
-    delete found;
+    Node* targetNode = searchNode(element, iterationCount);
+    if (targetNode) {
+        splayNode(targetNode, iterationCount);
+        ++iterationCount;
+        Node* leftSubtree  = targetNode->leftChild;
+        Node* rightSubtree = targetNode->rightChild;
+        if (leftSubtree)  leftSubtree->parentNode  = nullptr;
+        if (rightSubtree) rightSubtree->parentNode = nullptr;
+        delete targetNode;
 
-    rootNode = joinTrees(leftSub, rightSub);
-    elementSet.erase(element);
+        rootNode = joinTrees(leftSubtree, rightSubtree, iterationCount);
+        elementSet.erase(element);
+    }
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double executionTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("remove", iterationCount, executionTime);
 }
 
-void SplayTreeShip::rotateLeft(Node* x) {
-    Node* y = x->rightChild;
-    x->rightChild = y->leftChild;
-    if (y->leftChild) y->leftChild->parentNode = x;
-    y->parentNode = x->parentNode;
-    if (!x->parentNode)             rootNode = y;
-    else if (x == x->parentNode->leftChild) x->parentNode->leftChild  = y;
-    else                                    x->parentNode->rightChild = y;
-    y->leftChild = x;
-    x->parentNode = y;
+void SplayTreeShip::rotateLeft(Node* pivotNode) {
+    Node* childNode = pivotNode->rightChild;
+    pivotNode->rightChild = childNode->leftChild;
+    if (childNode->leftChild)
+        childNode->leftChild->parentNode = pivotNode;
+    childNode->parentNode = pivotNode->parentNode;
+    if (!pivotNode->parentNode)
+        rootNode = childNode;
+    else if (pivotNode == pivotNode->parentNode->leftChild)
+        pivotNode->parentNode->leftChild = childNode;
+    else
+        pivotNode->parentNode->rightChild = childNode;
+    childNode->leftChild = pivotNode;
+    pivotNode->parentNode = childNode;
 }
 
-void SplayTreeShip::rotateRight(Node* y) {
-    Node* x = y->leftChild;
-    y->leftChild = x->rightChild;
-    if (x->rightChild) x->rightChild->parentNode = y;
-    x->parentNode = y->parentNode;
-    if (!y->parentNode)             rootNode = x;
-    else if (y == y->parentNode->rightChild) y->parentNode->rightChild = x;
-    else                                     y->parentNode->leftChild  = x;
-    x->rightChild = y;
-    y->parentNode = x;
+void SplayTreeShip::rotateRight(Node* pivotNode) {
+    Node* childNode = pivotNode->leftChild;
+    pivotNode->leftChild = childNode->rightChild;
+    if (childNode->rightChild)
+        childNode->rightChild->parentNode = pivotNode;
+    childNode->parentNode = pivotNode->parentNode;
+    if (!pivotNode->parentNode)
+        rootNode = childNode;
+    else if (pivotNode == pivotNode->parentNode->rightChild)
+        pivotNode->parentNode->rightChild = childNode;
+    else
+        pivotNode->parentNode->leftChild = childNode;
+    childNode->rightChild = pivotNode;
+    pivotNode->parentNode = childNode;
 }
 
-void SplayTreeShip::splayNode(Node* x) {
-    while (x->parentNode) {
-        if (!x->parentNode->parentNode) {
-            if (x->parentNode->leftChild == x) rotateRight(x->parentNode);
-            else                               rotateLeft(x->parentNode);
-        } else if (x->parentNode->leftChild == x
-                && x->parentNode->parentNode->leftChild == x->parentNode) {
-            rotateRight(x->parentNode->parentNode);
-            rotateRight(x->parentNode);
-        } else if (x->parentNode->rightChild == x
-                && x->parentNode->parentNode->rightChild == x->parentNode) {
-            rotateLeft(x->parentNode->parentNode);
-            rotateLeft(x->parentNode);
-        } else if (x->parentNode->leftChild == x
-                && x->parentNode->parentNode->rightChild == x->parentNode) {
-            rotateRight(x->parentNode);
-            rotateLeft(x->parentNode);
-        } else {
-            rotateLeft(x->parentNode);
-            rotateRight(x->parentNode);
+void SplayTreeShip::splayNode(Node* node, int &iterationCount) {
+    while (node->parentNode) {
+        ++iterationCount;
+        Node* parentNode    = node->parentNode;
+        Node* grandParent   = parentNode->parentNode;
+        // Zig step
+        if (!grandParent) {
+            if (node == parentNode->leftChild)
+                rotateRight(parentNode);
+            else
+                rotateLeft(parentNode);
+        }
+        // Zig-Zig step
+        else if (node == parentNode->leftChild
+              && parentNode == grandParent->leftChild) {
+            iterationCount++;
+            rotateRight(grandParent);
+            rotateRight(parentNode);
+        }
+        else if (node == parentNode->rightChild
+              && parentNode == grandParent->rightChild) {
+            iterationCount++;
+            rotateLeft(grandParent);
+            rotateLeft(parentNode);
+        }
+        // Zig-Zag step
+        else if (node == parentNode->leftChild
+              && parentNode == grandParent->rightChild) {
+            iterationCount++;
+            rotateRight(parentNode);
+            rotateLeft(grandParent);
+        }
+        else {
+            iterationCount++;
+            rotateLeft(parentNode);
+            rotateRight(grandParent);
         }
     }
 }
 
-SplayTreeShip::Node* SplayTreeShip::searchNode(int key) {
-    Node* current = rootNode;
-    while (current) {
-        if (current->key == key) return current;
-        current = (key < current->key)
-                ? current->leftChild
-                : current->rightChild;
+SplayTreeShip::Node* SplayTreeShip::searchNode(int key, int &iterationCount) {
+    Node* currentNode = rootNode;
+    while (currentNode) {
+        ++iterationCount;
+        if (currentNode->key == key)
+            return currentNode;
+        currentNode = (key < currentNode->key)
+                      ? currentNode->leftChild
+                      : currentNode->rightChild;
     }
     return nullptr;
 }
 
-SplayTreeShip::Node* SplayTreeShip::insertNode(int key) {
-    Node* newNode = new Node(key);
-    Node* parent  = nullptr;
-    Node* current = rootNode;
-    while (current) {
-        parent  = current;
-        current = (newNode->key < current->key)
-                ? current->leftChild
-                : current->rightChild;
+SplayTreeShip::Node* SplayTreeShip::insertNode(int key, int &iterationCount) {
+    Node* newNode    = new Node(key);
+    Node* parentNode = nullptr;
+    Node* currentNode= rootNode;
+    while (currentNode) {
+        ++iterationCount;
+        parentNode = currentNode;
+        currentNode= (key < currentNode->key)
+                      ? currentNode->leftChild
+                      : currentNode->rightChild;
     }
-    newNode->parentNode = parent;
-    if (!parent)               rootNode = newNode;
-    else if (newNode->key < parent->key) parent->leftChild  = newNode;
-    else                                  parent->rightChild = newNode;
+    newNode->parentNode = parentNode;
+    if (!parentNode){
+        rootNode = newNode;
+        iterationCount++;
+    }
+    else if (key < parentNode->key)
+        parentNode->leftChild  = newNode;
+    else
+        parentNode->rightChild = newNode;
     return newNode;
 }
 
-SplayTreeShip::Node* SplayTreeShip::joinTrees(Node* leftTree, Node* rightTree) {
+SplayTreeShip::Node* SplayTreeShip::joinTrees(Node* leftTree, Node* rightTree, int &iterationCount) {
     if (!leftTree)  return rightTree;
     if (!rightTree) return leftTree;
     Node* maxNode = leftTree;
-    while (maxNode->rightChild) maxNode = maxNode->rightChild;
-    splayNode(maxNode);
+    while (maxNode->rightChild) {
+        ++iterationCount;
+        maxNode = maxNode->rightChild;
+    }
+    splayNode(maxNode, iterationCount);
+    ++iterationCount;
     maxNode->rightChild    = rightTree;
     rightTree->parentNode  = maxNode;
     return maxNode;
 }
+
+void SplayTreeShip::generateElements(){
+    int elements = 0;
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,1000);
+      if(elementSet.find(value) == elementSet.end()){
+        insert(value);
+        elements ++;
+      }
+    }
+  }

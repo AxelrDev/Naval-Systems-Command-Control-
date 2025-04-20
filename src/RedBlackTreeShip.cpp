@@ -8,7 +8,7 @@ RedBlackTreeShip::RedBlackTreeShip()
   : Ship("RedBlackTree", PRICE_REDBLACK_TREE),
     rootNode(nullptr)
 {
-    generateElements();
+  generateElements();
 }
 
 
@@ -30,9 +30,7 @@ int RedBlackTreeShip::search(int target) {
     while (current) {
         ++iterationCount;
         if (target == current->key) break;
-        current = (target < current->key)
-                ? current->leftChild
-                : current->rightChild;
+        current = (target < current->key) ? current->leftChild : current->rightChild;
     }
     auto endTime = std::chrono::high_resolution_clock::now();
     double execTime = std::chrono::duration<double>(endTime - startTime).count();
@@ -42,125 +40,153 @@ int RedBlackTreeShip::search(int target) {
 
 void RedBlackTreeShip::insert(int element) {
     if (elementSet.count(element)) return;
-    Node* newNode = insertNode(element);
-    if (newNode) fixInsertion(newNode);
+
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    // walk down the tree, counting each comparison/step
+    Node* newNode = insertNode(element, iterationCount);
+    if (newNode) fixInsertion(newNode, iterationCount);
+
     if (rootNode) rootNode->isRed = false;
     elementSet.insert(element);
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("insert", iterationCount, execTime);
 }
 
 void RedBlackTreeShip::remove(int element) {
-    Node* z = searchNode(element);
-    if (!z) return;
-    deleteNode(z);
-    elementSet.erase(element);
-}
+    int iterationCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-RedBlackTreeShip::Node* RedBlackTreeShip::insertNode(int key) {
-    Node* z = new Node(key);
-    Node* y = nullptr;
-    Node* x = rootNode;
-    while (x) {
-        y = x;
-        x = (z->key < x->key) ? x->leftChild : x->rightChild;
+    Node* z = searchNode(element, iterationCount);
+    if (z) {
+        deleteNode(z, iterationCount);
+        elementSet.erase(element);
     }
-    z->parentNode = y;
-    if (!y)       rootNode = z;
-    else if (z->key < y->key) y->leftChild  = z;
-    else                       y->rightChild = z;
-    return z;
+    // even if not found, you’ll still log “remove” with the cost of the failed search
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double execTime = std::chrono::duration<double>(endTime - startTime).count();
+    logOperation("remove", iterationCount, execTime);
 }
 
-void RedBlackTreeShip::fixInsertion(Node* z) {
-    // Repetimos mientras el padre exista, sea rojo y tenga abuelo
-    while (z->parentNode 
-           && z->parentNode->isRed 
-           && z->parentNode->parentNode)
-    {
-        Node* p = z->parentNode;
-        Node* g = p->parentNode;
+RedBlackTreeShip::Node* RedBlackTreeShip::insertNode(int key, int &iterationCount) {
+    Node* newNode = new Node(key);
+    Node* parentNode = nullptr;
+    Node* currentNode = rootNode;
+    while (currentNode) {
+        ++iterationCount;
+        parentNode = currentNode;
+        currentNode = (key < currentNode->key)
+                      ? currentNode->leftChild
+                      : currentNode->rightChild;
+    }
+    newNode->parentNode = parentNode;
+    if (!parentNode){
+        rootNode = newNode;
+        ++iterationCount;
+    }
+    else if (key < parentNode->key)
+        parentNode->leftChild = newNode;
+    else
+        parentNode->rightChild = newNode;
+    return newNode;
+}
 
-        // Si el padre es hijo izquierdo de su abuelo
-        if (p == g->leftChild) {
-            Node* y = g->rightChild;  // tío derecho
-            if (y && y->isRed) {
-                // Caso 1: tío rojo
-                p->isRed = false;
-                y->isRed = false;
-                g->isRed = true;
-                z = g;
+void RedBlackTreeShip::fixInsertion(Node* node, int &iterationCount) {
+    while (node->parentNode && node->parentNode->isRed
+           && node->parentNode->parentNode) {
+        ++iterationCount;
+        Node* parentNode = node->parentNode;
+        Node* grandParent = parentNode->parentNode;
+        if (parentNode == grandParent->leftChild) {
+            Node* uncle = grandParent->rightChild;
+            if (uncle && uncle->isRed) {
+                ++iterationCount;
+                parentNode->isRed = false;
+                uncle->isRed = false;
+                grandParent->isRed = true;
+                node = grandParent;
             } else {
-                // Caso 2: z es hijo derecho → rotación izquierda sobre p
-                if (z == p->rightChild) {
-                    z = p;
-                    rotateLeft(z);
+                if (node == parentNode->rightChild) {
+                    ++iterationCount;
+                    rotateLeft(parentNode);
+                    node = parentNode;
                 }
-                // Caso 3: rotación derecha sobre g
-                p->isRed = false;
-                g->isRed = true;
-                rotateRight(g);
+                ++iterationCount;
+                parentNode->isRed = false;
+                grandParent->isRed = true;
+                rotateRight(grandParent);
             }
-        } 
-        // Espejo: padre es hijo derecho de su abuelo
-        else {
-            Node* y = g->leftChild;   // tío izquierdo
-            if (y && y->isRed) {
-                // Caso 1: tío rojo
-                p->isRed = false;
-                y->isRed = false;
-                g->isRed = true;
-                z = g;
+        } else {
+            Node* uncle = grandParent->leftChild;
+            if (uncle && uncle->isRed) {
+                ++iterationCount;
+                parentNode->isRed = false;
+                uncle->isRed = false;
+                grandParent->isRed = true;
+                node = grandParent;
             } else {
-                // Caso 2: z es hijo izquierdo → rotación derecha sobre p
-                if (z == p->leftChild) {
-                    z = p;
-                    rotateRight(z);
+                if (node == parentNode->leftChild) {
+                    ++iterationCount;
+                    rotateRight(parentNode);
+                    node = parentNode;
                 }
-                // Caso 3: rotación izquierda sobre g
-                p->isRed = false;
-                g->isRed = true;
-                rotateLeft(g);
+                ++iterationCount;
+                parentNode->isRed = false;
+                grandParent->isRed = true;
+                rotateLeft(grandParent);
             }
         }
     }
-
-    // Aseguramos siempre que la raíz sea negra
     if (rootNode)
         rootNode->isRed = false;
 }
 
 
 void RedBlackTreeShip::rotateLeft(Node* x) {
+    // Evita hacer y = x->rightChild cuando ese hijo no exista
+    if (!x || !x->rightChild) return;
+
     Node* y = x->rightChild;
     x->rightChild = y->leftChild;
     if (y->leftChild) y->leftChild->parentNode = x;
     y->parentNode = x->parentNode;
-    if (!x->parentNode)           rootNode = y;
+    if (!x->parentNode)                rootNode = y;
     else if (x == x->parentNode->leftChild)  x->parentNode->leftChild  = y;
-    else                                      x->parentNode->rightChild = y;
-    y->leftChild = x;
+    else                                     x->parentNode->rightChild = y;
+    y->leftChild  = x;
     x->parentNode = y;
 }
 
 void RedBlackTreeShip::rotateRight(Node* y) {
+    // Evita hacer x = y->leftChild cuando ese hijo no exista
+    if (!y || !y->leftChild) return;
+
     Node* x = y->leftChild;
     y->leftChild = x->rightChild;
     if (x->rightChild) x->rightChild->parentNode = y;
     x->parentNode = y->parentNode;
-    if (!y->parentNode)           rootNode = x;
+    if (!y->parentNode)                rootNode = x;
     else if (y == y->parentNode->rightChild) y->parentNode->rightChild = x;
-    else                                      y->parentNode->leftChild  = x;
+    else                                    y->parentNode->leftChild  = x;
     x->rightChild = y;
     y->parentNode = x;
 }
 
-RedBlackTreeShip::Node* RedBlackTreeShip::searchNode(int key) {
-    Node* current = rootNode;
-    while (current && current->key != key) {
-        current = (key < current->key)
-                ? current->leftChild
-                : current->rightChild;
+RedBlackTreeShip::Node* RedBlackTreeShip::searchNode(int key, int &iterationCount) {
+    Node* currentNode = rootNode;
+    while (currentNode) {
+        ++iterationCount;
+        if (currentNode->key == key)
+            return currentNode;
+        currentNode = (key < currentNode->key)
+                      ? currentNode->leftChild
+                      : currentNode->rightChild;
     }
-    return current;
+    return nullptr;
 }
 
 void RedBlackTreeShip::transplant(Node* u, Node* v) {
@@ -175,94 +201,122 @@ RedBlackTreeShip::Node* RedBlackTreeShip::treeMinimum(Node* x) {
     return x;
 }
 
-void RedBlackTreeShip::deleteNode(Node* z) {
-    Node* y = z;
-    bool yOriginalRed = y->isRed;
+void RedBlackTreeShip::deleteNode(Node* node, int &iterationCount) {
+    ++iterationCount;
+    Node* y = node;
+    bool originalColor = y->isRed;
     Node* x = nullptr;
 
-    if (!z->leftChild) {
-        x = z->rightChild;
-        transplant(z, z->rightChild);
-    } else if (!z->rightChild) {
-        x = z->leftChild;
-        transplant(z, z->leftChild);
+    if (!node->leftChild) {
+        ++iterationCount;
+        x = node->rightChild;
+        transplant(node, node->rightChild);
+    } else if (!node->rightChild) {
+        ++iterationCount;
+        x = node->leftChild;
+        transplant(node, node->leftChild);
     } else {
-        y = treeMinimum(z->rightChild);
-        yOriginalRed = y->isRed;
+        ++iterationCount;
+        y = treeMinimum(node->rightChild);
+        originalColor = y->isRed;
         x = y->rightChild;
-        if (y->parentNode == z) {
-            if (x) x->parentNode = y;
-        } else {
+        if (y->parentNode != node) {
             transplant(y, y->rightChild);
-            y->rightChild = z->rightChild;
+            y->rightChild = node->rightChild;
             y->rightChild->parentNode = y;
         }
-        transplant(z, y);
-        y->leftChild = z->leftChild;
+        transplant(node, y);
+        y->leftChild = node->leftChild;
         y->leftChild->parentNode = y;
-        y->isRed = z->isRed;
+        y->isRed = node->isRed;
     }
-    delete z;
-    if (!yOriginalRed) {
-        fixDeletion(x);
-    }
+    delete node;
+    if (!originalColor)
+        fixDeletion(x, iterationCount);
 }
 
-void RedBlackTreeShip::fixDeletion(Node* x) {
-    while (x != rootNode && (!x || !x->isRed)) {
-        Node* p = x ? x->parentNode : nullptr;
-        if (p && x == p->leftChild) {
-            Node* w = p->rightChild;
-            if (w && w->isRed) {
-                w->isRed = false;
-                p->isRed = true;
-                rotateLeft(p);
-                w = p->rightChild;
+void RedBlackTreeShip::fixDeletion(Node* node, int &iterationCount) {
+    while (node != rootNode && (!node || !node->isRed)) {
+        ++iterationCount;
+        Node* parentNode = node ? node->parentNode : nullptr;
+        if (parentNode && node == parentNode->leftChild) {
+            Node* sibling = parentNode->rightChild;
+            if (sibling && sibling->isRed) {
+                ++iterationCount;
+                sibling->isRed = false;
+                parentNode->isRed = true;
+                rotateLeft(parentNode);
+                sibling = parentNode->rightChild;
             }
-            if (w && (!w->leftChild || !w->leftChild->isRed)
-                  && (!w->rightChild || !w->rightChild->isRed)) {
-                w->isRed = true;
-                x = p;
+            if (sibling && (!sibling->leftChild || !sibling->leftChild->isRed)
+                        && (!sibling->rightChild || !sibling->rightChild->isRed)) {
+                ++iterationCount;
+                sibling->isRed = true;
+                node = parentNode;
             } else {
-                if (w && (!w->rightChild || !w->rightChild->isRed)) {
-                    if (w->leftChild) w->leftChild->isRed = false;
-                    w->isRed = true;
-                    rotateRight(w);
-                    w = p->rightChild;
+                if (sibling && (!sibling->rightChild || !sibling->rightChild->isRed)) {
+                    ++iterationCount;
+                    if (sibling->leftChild)
+                        sibling->leftChild->isRed = false;
+                    sibling->isRed = true;
+                    rotateRight(sibling);
+                    sibling = parentNode->rightChild;
                 }
-                if (w) w->isRed = p->isRed;
-                p->isRed = false;
-                if (w && w->rightChild) w->rightChild->isRed = false;
-                rotateLeft(p);
-                x = rootNode;
+                ++iterationCount;
+                if (sibling)
+                    sibling->isRed = parentNode->isRed;
+                parentNode->isRed = false;
+                if (sibling && sibling->rightChild)
+                    sibling->rightChild->isRed = false;
+                rotateLeft(parentNode);
+                node = rootNode;
             }
         } else {
-            if (!p) break;
-            Node* w = p->leftChild;
-            if (w && w->isRed) {
-                w->isRed = false;
-                p->isRed = true;
-                rotateRight(p);
-                w = p->leftChild;
+            if (!parentNode) break;
+            Node* sibling = parentNode->leftChild;
+            if (sibling && sibling->isRed) {
+                ++iterationCount;
+                sibling->isRed = false;
+                parentNode->isRed = true;
+                rotateRight(parentNode);
+                sibling = parentNode->leftChild;
             }
-            if (w && (!w->rightChild || !w->rightChild->isRed)
-                  && (!w->leftChild || !w->leftChild->isRed)) {
-                w->isRed = true;
-                x = p;
+            if (sibling && (!sibling->leftChild || !sibling->leftChild->isRed)
+                        && (!sibling->rightChild || !sibling->rightChild->isRed)) {
+                ++iterationCount;
+                sibling->isRed = true;
+                node = parentNode;
             } else {
-                if (w && (!w->leftChild || !w->leftChild->isRed)) {
-                    if (w->rightChild) w->rightChild->isRed = false;
-                    w->isRed = true;
-                    rotateLeft(w);
-                    w = p->leftChild;
+                if (sibling && (!sibling->leftChild || !sibling->leftChild->isRed)) {
+                    ++iterationCount;
+                    if (sibling->rightChild)
+                        sibling->rightChild->isRed = false;
+                    sibling->isRed = true;
+                    rotateLeft(sibling);
+                    sibling = parentNode->leftChild;
                 }
-                if (w) w->isRed = p->isRed;
-                p->isRed = false;
-                if (w && w->leftChild) w->leftChild->isRed = false;
-                rotateRight(p);
-                x = rootNode;
+                ++iterationCount;
+                if (sibling)
+                    sibling->isRed = parentNode->isRed;
+                parentNode->isRed = false;
+                if (sibling && sibling->leftChild)
+                    sibling->leftChild->isRed = false;
+                rotateRight(parentNode);
+                node = rootNode;
             }
         }
     }
-    if (x) x->isRed = false;
+    if (node)
+        node->isRed = false;
 }
+
+void RedBlackTreeShip::generateElements(){
+    int elements = 0;
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,1000);
+      if(elementSet.find(value) == elementSet.end()){
+        insert(value);
+        elements ++;
+      }
+    }
+  }

@@ -8,11 +8,7 @@ BinarySearchShip::BinarySearchShip()
     elementCount(0), maxCapacity(MAX_NUM_ELEMENTS)
 {
     elementsArray = new int[maxCapacity];
-    for (int i = 0; i < NUM_OF_ELEMENTS; ++i) {
-        int value = rand() % 1000;
-        insert(value);
-        elementSet.insert(value);
-    }
+    generateElements();
 }
 
 BinarySearchShip::~BinarySearchShip() {
@@ -83,3 +79,14 @@ void BinarySearchShip::remove(int element) {
     double execTime = std::chrono::duration<double>(endTime - startTime).count();
     logOperation("remove", iterationCount, execTime);
 }
+
+void BinarySearchShip::generateElements(){
+    int elements = 0;
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,1000);
+      if(elementSet.find(value) == elementSet.end()){
+        insert(value);
+        elements ++;
+      }
+    }
+  }

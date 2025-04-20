@@ -20,7 +20,7 @@ void Ship::logOperation(const std::string& operationType,
             << "Ship: "      << shipName        << "\n"
             << "Operation: " << operationType   << "\n"
             << "Iterations: "<< iterationCount  << "\n"
-            << std::fixed << std::setprecision(6)
+            << std::fixed << std::setprecision(12)
             << "Time: "      << executionTime   << "s\n"
             << "Damage: "    << calculateDamage(iterationCount) << "\n"
             << "----------------------\n";
@@ -38,29 +38,7 @@ int Ship::getPrice() const {
 }
 
 
-int Ship::getElement(){
-    bool exist = true;
-    int element=0;
-    while(exist){
-        element = rand() % 1000;
-        auto it = elementSet.find(element);
-        if(it != elementSet.end()){
-            exist=false;
-        }
-    }
-    return element;
-}
-void Ship::generateElements(){
-  int elements = 0;
-  while(elements < NUM_OF_ELEMENTS){
-    int value = rand() % 1000;
-    if(elementSet.find(value) == elementSet.end()){
-      elementSet.insert(value);
-      insert(value);
-      elements ++;
-    }
-  }
-}
+
 
 int Ship::getElementInSet(){
   int element = -1;
@@ -70,7 +48,13 @@ int Ship::getElementInSet(){
   }
   
   while(elementSet.find(element) == elementSet.end()){
-    element = rand()%1000;
+    element = generateRandom(0,999);
   }
   return element;
+}
+
+int64_t Ship::generateRandom(int64_t min, int64_t max){
+  static thread_local std::mt19937_64 rng(std::random_device{}());
+    std::uniform_int_distribution<int64_t> dist(min, max);
+    return dist(rng);
 }

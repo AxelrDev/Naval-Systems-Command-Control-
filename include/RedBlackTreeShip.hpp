@@ -27,18 +27,19 @@ struct Node {
     void rotateRight(Node* y);
 
     // Inserción
-    void fixInsertion(Node* z);
-    Node* insertNode(int key);
+    void  fixInsertion(Node* z, int &iterationCount);
+    Node* insertNode(int key, int &iterationCount);
 
     // Búsqueda interna
-    Node* searchNode(int key);
+    Node* searchNode(int key, int &iterationCount);
 
     // Eliminación
     void transplant(Node* u, Node* v);
     Node* treeMinimum(Node* x);
-    void fixDeletion(Node* x);
-    void deleteNode(Node* z);
+    void  fixDeletion (Node* x, int &iterationCount);
+    void  deleteNode(Node* z, int &iterationCount);
     void deleteSubtree(Node* node);
+    void generateElements();
 
 public:
     RedBlackTreeShip();
