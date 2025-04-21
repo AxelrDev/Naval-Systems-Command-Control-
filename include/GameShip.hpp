@@ -11,41 +11,104 @@
 
 class GameShip {
 public:
-    // Constructor: recibe la posición (row, col), la vida y el daño.
+    /**
+     * @brief Constructs a GameShip with given position, health, damage and level.
+     * @param row Row position on the board.
+     * @param col Column position on the board.
+     * @param vida Initial health.
+     * @param damage Attack damage value.
+     * @param level Ship level (for upgrades or classification).
+     */
     GameShip(int row, int col, int vida, int damage, int level);
+
+    /**
+     * @brief Default constructor.
+     */
     GameShip();
-    // Retorna true si la casilla (row, col) es la posición del barco.
+    
+    /**
+     * @brief Checks if the ship occupies a specific cell.
+     * @param row Row coordinate to check.
+     * @param col Column coordinate to check.
+     * @return True if the ship occupies the given cell.
+     */
     bool occupies(int row, int col) const;
     
-    // Aplica daño al barco (por ejemplo, 1 punto por disparo) y retorna true si el barco se hunde.
+    /**
+     * @brief Applies damage to the ship.
+     * @param damageAmount Amount of damage to apply.
+     * @return True if the ship is destroyed after applying damage.
+     */
     bool applyDamage(int damageAmount);
     
-    // Getters para la vida y el daño.
+     /**
+     * @brief Gets the ship's current health.
+     * @return Remaining health (vida).
+     */
     int getVida() const;
+
+    /**
+     * @brief Gets the ship's damage value.
+     * @return Damage this ship can deal.
+     */
     int getDamage() const;
     
-    // Getters y setter para la posición.
+     /**
+     * @brief Gets the ship's current row position.
+     * @return Row coordinate.
+     */
     int getRow() const;
+
+    /**
+     * @brief Gets the ship's current column position.
+     * @return Column coordinate.
+     */
     int getCol() const;
+
+    /**
+     * @brief Sets the ship's position.
+     * @param row New row position.
+     * @param col New column position.
+     */
     void setPosition(int row, int col);
 
-    // Get level
+    /**
+     * @brief Gets the ship's level.
+     * @return Ship level.
+     */
     int getLevel();
 
-    // Getter and Setter for empty
+    /**
+     * @brief Checks whether this slot is empty.
+     * @return True if no ship is present.
+     */
     bool getEmpty();
+
+    /**
+     * @brief Marks this slot as empty or occupied.
+     * @param empty True to mark empty, false otherwise.
+     */
     void setEmpty(bool empty);
+
+    /**
+     * @brief Sets the specific type of ship based on its level or configuration.
+     */
     void typeOfShip();
+
+    /**
+     * @brief Gets the ship's underlying implementation (type).
+     * @return Pointer to the Ship object.
+     */
     Ship *getTypeShip();
 
-private:
-    int row;
-    int col;
-    int vida;    // Cantidad de vida del barco.
-    int damage;  // Daño que puede causar (para futuras lógicas, por ejemplo en ataques especiales).
-    int level; 
-    bool empty;
-    Ship *typeShip;
+    private:
+    int row;        ///< Row position of the ship on the board.
+    int col;        ///< Column position of the ship on the board.
+    int vida;       ///< Current health of the ship.
+    int damage;     ///< Attack damage the ship can inflict.
+    int level;      ///< Level of the ship.
+    bool empty;     ///< Indicates if this ship slot is empty.
+    Ship* typeShip; ///< Pointer to the ship's type (e.g., BTree, RedBlackTree, etc.)
 };
 
 #endif // GAMESHIP_HPP

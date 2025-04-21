@@ -1,4 +1,4 @@
-= Project name
+= Naval Systems: Command & Control
 :experimental:
 :nofooter:
 :source-highlighter: pygments
@@ -11,45 +11,96 @@
 [[problem_statement]]
 == Problem statement
 
-#Analysis: Describe the problem to be solved#
+The project consists of developing a turn-based naval combat simulator on a single PC. Each ship represents an algorithm or data structure, and the game focuses on the internal execution of searches and maintenance operations, without the need to represent them visually. The player interacts strategically through actions that affect the ships, which are identified by their names.
 
-Input example:
+[[project_structure]]
+== Project Structure
 
-[source]
+[source, text]
 ----
-include::tests/input001.txt[]
+/assets         # Textures, sounds, fonts
+/bin            # Compiled binary output
+/include        # Source code (.hpp)
+/src            # Source code (.cpp)
+/doc            # Documentation and diagrams
+Makefile        # Build script
+README.adoc     # Project documentation
 ----
-
-Output example:
-
-[source]
-----
-include::tests/output001.txt[]
-----
-
-[[design]]
-== Design of solution
-
-#See the link:design/readme.adoc[design/] folder for an overall design of the solution.#
-
 
 [[user_manual]]
 == User manual
+=== System Requirements
+- OS: Windows or Linux
+- Requires: SFML 2.5+
+- Compiler: C++17 or higher
+
+=== Controls
+- `Left Click`: Remove / Select
+- `Right Click`: Attack / Put
+- `A`: Switch between placing and attacking ships
+- `S`: Toggles between ship selection mode and ship deletion mode.
+
+=== Main Menu
+- *Play:* Start a new game
+- *Info:* View instructions and credits
+- *Exit:* Close the game
+
+=== Info Page
+- *Manual:* Displays game instructions
+- *Credits:* Shows developer information
+- *Back:* Return to the main menu
+
+=== Ship Types (Data Structures)
+Each ship has different performance characteristics depending on the data structure it uses:
+
+|===
+| Ship Type | Data Structure
+
+| LinearSearchShip | Linked List
+| BinarySearchShip | Sorted Array
+| SetShip | Set container
+| RedBlackTreeShip | Red-Black Tree
+| SplayTreeShip | Splay Tree
+| BTreeShip | B-Tree
+|===
+
+=== Game Phases
+1. *Buying Phase:* Spend your starting currency to purchase ships.
+2. *Attack Phase:* Click on enemy cells to launch attacks. Damage is based on operation cost.
+3. *Upgrade Phase:* Use upgrade points to boost ships.
+
+=== In-Game Interface
+- **Grid Map:** Place and attack ships
+- **Buttons:** Buy, upgrade, select ships
+- **Currency:** Displays your available money
+
+=== Rules
+- You have a limited number of actions per turn.
+- Ships lose health when attacked.
+- A ship is destroyed when its health reaches zero.
+- The player who sinks all opponent ships wins.
+
 
 [[build]]
 === Build
 
-#Describe how to compile your solution.#
+To compile the project, make sure you have the SFML library installed and a C++17-compatible compiler.
 
-[[usage]]
-=== Usage
+==== Requirements
+- Clone the GitHub repository
+- SFML 2.5 or higher
+- g++ or another C++17-compliant compiler
+- CMake (optional but recommended)
 
-#Describe how to run your solution, e.g: arguments. Provide examples.#
-
+==== Compilation using make
+You can simply run:
+[source, bash]
+----
+make run
+----
 
 [[credits]]
 == Credits
 
-#Provide your contact information.#
-
-#Give credit to authors of libraries, images, sounds, or any resource you used.#
+Developed by: [SDOC]  
+Built with: C++ and SFML
