@@ -2,7 +2,8 @@
 #define CURRENCY_HPP
 
 #include <iostream>
-#include <vector>   
+#include <vector>
+#include "Constants.hpp"   
 
 /**
  * @class Currency
