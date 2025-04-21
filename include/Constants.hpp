@@ -2,7 +2,7 @@
 #define CONSTANTS_HPP
 
 // Número de elementos que se inicializan aleatoriamente en cada barco
-constexpr int NUM_OF_ELEMENTS    = 1000000;
+constexpr int NUM_OF_ELEMENTS    = 1000;
 
 constexpr int MAX_NUM_ELEMENTS   = NUM_OF_ELEMENTS * 3;
 
