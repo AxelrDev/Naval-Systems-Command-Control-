@@ -7,7 +7,7 @@ Button::Button(const Vector2f& position, const string& textureFile,
     std::cerr << "Error al cargar la textura del botón." << std::endl;
   }
 
-  buttonShape.setSize(size);  // Ajustar el tamaño del botón
+  buttonShape.setSize(size);
   buttonShape.setTexture(&buttonTexture);
   buttonShape.setPosition(position);
 }

@@ -41,14 +41,6 @@ public:
      * @return True if a ship was hit.
      */
     bool receiveShot(int row, int col, int damage);
-    
-    /**
-     * @brief Records the result of a shot fired at the opponent.
-     * @param row Row of the shot.
-     * @param col Column of the shot.
-     * @param hit True if the shot hit a ship.
-     */
-    void recordShot(int row, int col, bool hit);
 
     /**
      * @brief Gets the damage value of a ship at a specific position.
@@ -90,12 +82,6 @@ public:
      * @param newAction The number of actions to assign.
      */
     void setaction(int newAction);
-    
-    /**
-     * @brief Moves a ship to a new position on the board.
-     * @return True if the move was successful.
-     */
-    bool moveShip();
 
     /**
      * @brief Gets the player's current money.
