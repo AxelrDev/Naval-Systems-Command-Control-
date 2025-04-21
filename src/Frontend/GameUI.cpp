@@ -1,9 +1,4 @@
-/**
- * @file main.cpp
- * @brief Entry point of the Naval System game. Manages the game window and main loop.
- *
- * Initializes the SFML window, handles the menu system, and runs the main game loop.
- */
+
 #include "MenuUI.hpp"
 #include <iostream>
 #include "GameMapUI.hpp"
@@ -13,17 +8,6 @@
 #include <stdlib.h>
 using namespace sf;
 
-
-/**
- * @brief Main function that runs the Naval System game.
- * 
- * - Creates the main menu window.
- * - Loads menu music.
- * - Manages state transitions between menu and gameplay.
- * - Initializes and runs the GameMap when the game starts.
- * 
- * @return int Exit status.
- */
 int main() {
   RenderWindow window(VideoMode(910, 512), "Naval System",
       Style::Titlebar | Style::Close);

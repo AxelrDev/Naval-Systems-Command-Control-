@@ -119,14 +119,6 @@ public:
     void printText(RenderWindow& window, const std::string& text, int x, int y, const sf::Color color);
 
     /**
-     * @brief Displays an explosion effect.
-     * @param window SFML window.
-     * @param x Row.
-     * @param y Column.
-     */
-    void smokeExplosion(RenderWindow& window, int x, int y);
-
-    /**
      * @brief Handles the button action when selecting a ship.
      * @param window SFML window.
      */

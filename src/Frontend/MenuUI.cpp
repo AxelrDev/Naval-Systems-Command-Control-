@@ -17,15 +17,15 @@ void Menu::handleEvent(RenderWindow& window, Event& event, bool& isPlaying,
   if (inInfoPage) {
     info.handleEvent(window, event, backToMenu);
     if (backToMenu) {
-      inInfoPage = false;  // Volver al menú principal
-      backToMenu = false;  // Reiniciar la bandera
+      inInfoPage = false;
+      backToMenu = false; 
     }
   } else if (event.type == Event::MouseButtonPressed) {
     if (playButton.isMouseOver(window)) {
       isPlaying = true;
     } else if (infoButton.isMouseOver(window)) {
       inInfoPage = true;
-      info.reset();  // Recargar la pantalla de info al ingresar
+      info.reset();
     } else if (exitButton.isMouseOver(window)) {
       window.close();
     }

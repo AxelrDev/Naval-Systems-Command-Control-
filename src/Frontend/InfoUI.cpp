@@ -22,16 +22,12 @@ void InfoPage::reset() {
         std::endl;
   }
   backgroundSprite.setTexture(manualTexture);
-  // Escalar el fondo a 455x256
-  // float scaleX = 910.0f / backgroundTexture.getSize().x;
-  // float scaleY = 512.0f / backgroundTexture.getSize().y;
-  // backgroundSprite.setScale(scaleX, scaleY);
 }
 
 void InfoPage::handleEvent(RenderWindow& window, Event& event, bool& backToMenu) {
   if (event.type == Event::MouseButtonPressed) {
       if (backButton.isMouseOver(window)) {
-          backToMenu = true;  // Volver al menú principal
+          backToMenu = true; 
       }
       else if (manualButton.isMouseOver(window)) {
           this->backgroundSprite.setTexture(manualTexture);
