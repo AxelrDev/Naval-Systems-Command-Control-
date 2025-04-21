@@ -4,24 +4,46 @@
 #include "Currency.hpp"
 #include "Player.hpp"
 
+/**
+ * @class Game
+ * @brief Manages the core game logic including player turns and board configuration.
+ */
 class Game {
 public:
-    // Constructor: recibe las dimensiones del tablero y el número de barcos.
+    /**
+     * @brief Constructs a Game object with the given board size, number of ships, and increment value.
+     * @param rows Number of rows in the board.
+     * @param cols Number of columns in the board.
+     * @param numShips Number of ships per player.
+     * @param increment Value used for increasing game difficulty or parameters.
+     */
     Game(int rows, int cols, int numShips, int increment);
+
+    /**
+     * @brief Destructor. Cleans up allocated resources.
+     */
     ~Game();
-    // Inicia el juego (modo jugador contra jugador).
+
+    /**
+     * @brief Starts the player vs player game loop.
+     */
     void play();
-    
+
 private:
-    int rows;
-    int cols;
-    int numShips;
-    int increment;
-    Player* player1;
-    Player* player2;
-    Currency* currency;
-    
-    // Procesa el turno de un jugador. 'current' es el jugador activo y 'opponent' su rival.
+    int rows;        ///< Number of rows in the board
+    int cols;        ///< Number of columns in the board
+    int numShips;    ///< Number of ships per player
+    int increment;   ///< Increment value for scaling
+
+    Player* player1; ///< Pointer to the first player
+    Player* player2; ///< Pointer to the second player
+    Currency* currency; ///< Pointer to currency manager
+
+    /**
+     * @brief Processes the turn of the current player against their opponent.
+     * @param current The active player.
+     * @param opponent The rival player.
+     */
     void playerTurn(Player* current, Player* opponent);
 };
 
