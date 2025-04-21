@@ -1,7 +1,8 @@
 #include "Currency.hpp"
 
 Currency::Currency() {
-    shipcost = {100,200,300,400,500,600};
+    shipcost = {PRICE_LINEAR_SEARCH,PRICE_BINARY_SEARCH,PRICE_BTHREE,
+        PRICE_SPLAY_TREE,PRICE_REDBLACK_TREE,PRICE_SET};
 }
 // Currency::~Currency() {}
 

@@ -101,6 +101,8 @@ make run
 
 [[credits]]
 == Credits
-
-Developed by: [SDOC]  
-Built with: C++ and SFML
+- Developed by: [SDOC]  
+- Built with: C++ and SFML 
+- José Pablo Brenes Coto C31289 
+- Jorge Salas Lau C37130 
+- Axel Rojas Retana C36944
