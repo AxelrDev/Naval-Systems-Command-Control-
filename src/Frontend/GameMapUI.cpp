@@ -252,7 +252,7 @@ void GameMap::handleEvent(RenderWindow& window, Event& event) {
         event.mouseButton.y >= 0 && event.mouseButton.y <= GRID_SIZE * CELL_SIZE) {
       handleGridClick(row, col, event.mouseButton.button);
     } else {
-      if(player1->isShipempty() && player2->isShipempty() && (currency > 0) && currency>100) {
+      if(player1->isShipempty() && player2->isShipempty() && (currency > 0) && currency>=100) {
         handleBuyActions(window);
       }
       
