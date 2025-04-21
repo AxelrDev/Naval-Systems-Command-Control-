@@ -13,6 +13,19 @@
 
 The project consists of developing a turn-based naval combat simulator on a single PC. Each ship represents an algorithm or data structure, and the game focuses on the internal execution of searches and maintenance operations, without the need to represent them visually. The player interacts strategically through actions that affect the ships, which are identified by their names.
 
+[[project_structure]]
+== Project Structure
+
+[source, text]
+----
+/assets         # Textures, sounds, fonts
+/bin            # Compiled binary output
+/include        # Source code (.hpp)
+/src            # Source code (.cpp)
+/doc            # Documentation and diagrams
+Makefile        # Build script
+README.adoc     # Project documentation
+----
 
 [[user_manual]]
 == User manual
