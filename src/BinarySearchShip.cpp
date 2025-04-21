@@ -64,7 +64,6 @@ void BinarySearchShip::remove(int element) {
     int iterationCount = 0;
     auto startTime = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < elementCount; ++i) {
-        iterationCount++;
         if (elementsArray[i] == element) {
             for (int j = i; j < elementCount - 1; ++j){
                 elementsArray[j] = elementsArray[j+1];
@@ -83,7 +82,7 @@ void BinarySearchShip::remove(int element) {
 void BinarySearchShip::generateElements(){
     int elements = 0;
     while(elements < NUM_OF_ELEMENTS){
-      int value = generateRandom(0,1000);
+      int value = generateRandom(0,MAX_NUM_ELEMENTS);
       if(elementSet.find(value) == elementSet.end()){
         insert(value);
         elements ++;

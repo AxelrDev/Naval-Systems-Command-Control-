@@ -4,13 +4,14 @@
 #include <iostream>
 #include "Ship.hpp"
 #include "Includes.hpp"
-
+#include "Constants.hpp"
 // Grado mínimo del B-Tree (t)
 const int T = 3;
 
 class BTreeNode {
 public:
     BTreeNode(bool _leaf);
+    ~BTreeNode();
 
     // Recorre el subárbol en orden e imprime las claves
     void traverse();
@@ -50,6 +51,7 @@ private:
 class BTreeShip : public Ship {
 public:
     BTreeShip();
+    ~BTreeShip();
     void traverse();
     BTreeNode* searching(int k,int &iterationCount);
     void insert(int k) override;

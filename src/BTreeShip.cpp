@@ -7,6 +7,14 @@ BTreeNode::BTreeNode(bool _leaf) : n(0), leaf(_leaf) {
         C[i] = nullptr;
 }
 
+BTreeNode::~BTreeNode() {
+    if (!leaf) {
+        for (int i = 0; i <= n; ++i) {
+            delete C[i];
+        }
+    }
+}
+
 void BTreeNode::traverse() {
     int i;
     for(i = 0; i < n; ++i) {
@@ -229,6 +237,9 @@ void BTreeNode::merge(int idx, int &iterationCount) {
 BTreeShip::BTreeShip() :Ship("Btree", 300), root(nullptr) {
     generateElements();
 }
+BTreeShip::~BTreeShip() {
+    delete root; // Esto llama a ~BTreeNode() recursivamente
+}
 
 void BTreeShip::traverse() {
     if(root) root->traverse();
@@ -287,8 +298,8 @@ void BTreeShip::remove(int k) {
 
 void BTreeShip::generateElements(){
     int elements = 0;
-    while(elements < 50){
-      int value = generateRandom(0,1000);
+    while(elements < NUM_OF_ELEMENTS){
+      int value = generateRandom(0,MAX_NUM_ELEMENTS);
       if(elementSet.find(value) == elementSet.end()){
         insert(value);
         elements ++;
